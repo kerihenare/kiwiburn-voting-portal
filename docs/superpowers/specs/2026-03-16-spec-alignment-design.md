@@ -14,7 +14,7 @@ Bring the v0 codebase into full alignment with the PRD and design spec.
 | ORM | Supabase JS client (raw) | Drizzle ORM |
 | Forms | react-hook-form | Tanstack Forms + Zod |
 | Email | None | React Email + Nodemailer |
-| Theme | next-themes (toggle) | System dark mode only |
+| Theme | next-themes (toggle) | Light only (remove theme toggle) |
 
 ### Keep
 
@@ -25,6 +25,11 @@ Bring the v0 codebase into full alignment with the PRD and design spec.
 - `@supabase/ssr`, `@supabase/supabase-js` (auth + client)
 - `next-themes` and ThemeProvider
 - `react-hook-form` and `@hookform/resolvers`
+- Toast/sonner components and imports (design spec: "No toast notifications")
+
+### Font
+
+Inter via Google Fonts, configured in `app/layout.tsx` using `next/font/google`.
 
 ---
 
@@ -124,6 +129,10 @@ RLS policies remain on the Supabase Postgres side. Update them to reference Bett
 4. User clicks link → `/api/auth/*` (Better-Auth handler) verifies, creates session
 5. Redirect to `/`
 
+### Magic link expiry
+
+Tokens expire after **15 minutes**. Configured via Better-Auth's `magicLink.expiresIn` option.
+
 ### Admin detection
 
 - `users.isAdmin` boolean column
@@ -167,11 +176,12 @@ SMTP_FROM=
 | `/` | Community Votes (topic list) | Public |
 | `/votes` | Redirect to `/` | Public |
 | `/votes/[voteId]` | Individual vote page | Public (vote requires auth) |
+| `/votes/[voteId]/success` | Vote success confirmation | Auth |
 | `/sign-in` | Magic link login | Public |
 | `/member-lists` | Member lists overview | Admin |
 | `/member-lists/create` | Create member list | Admin |
 | `/member-lists/[listId]` | Edit member list | Admin |
-| `/member-lists/add-users` | Add users to member list | Admin |
+| `/member-lists/add-users` | Bulk add users via CSV (select list first) | Admin |
 | `/topics` | Topic management | Admin |
 | `/topics/create` | Create topic | Admin |
 | `/topics/[topicId]` | Edit topic | Admin |
@@ -233,6 +243,8 @@ Single centred card:
 - Email input (placeholder: `you@example.com`)
 - Button: "Send login link" → "Sending..." (disabled) on submit
 
+After submission, show confirmation state with "Resend login link" button for email deliverability issues.
+
 ### Vote page (`/votes/[voteId]`)
 
 Card layout:
@@ -242,13 +254,26 @@ Card layout:
 4. Divider
 5. Voting interface or results
 
-**Authenticated + eligible + open:** Two buttons — YES / NO. Stacked mobile, side-by-side desktop. Selected vote: darker background + outline ring. Success: "You voted Yes. You can change your vote while voting is open."
+**Authenticated + eligible + open:** Two buttons — YES / NO. Stacked mobile, side-by-side desktop. Selected vote: darker background + outline ring. After voting, redirect to `/votes/[voteId]/success`. If returning to the vote page after voting, show: "You voted Yes. You can change your vote while voting is open."
 
 **Not authenticated:** Info alert: "Please sign in to cast your vote."
 
 **Not eligible:** Alert: "You are not eligible to vote on this topic."
 
 **Closed:** Result bars (Yes/No percentages), total votes, "You voted: Yes" if applicable.
+
+### Vote success (`/votes/[voteId]/success`)
+
+Displayed after casting a vote (per design spec section 9):
+- Large badge: YES (green) or NO (red)
+- Heading: "Vote recorded"
+- Text: "Your vote to Yes has been securely recorded. Thank you for participating in this KiwiBurn community decision."
+- Button: "View all votes" → links to `/`
+
+### Home page header
+
+- Title: "Community Votes"
+- Subtitle: "View and participate in community decisions."
 
 ### Member lists (`/member-lists`)
 
@@ -258,14 +283,23 @@ Card layout:
 ### Member list edit (`/member-lists/[listId]`)
 
 - Name and description fields (editable)
-- Members section: inline email add form, CSV upload, members table (email, added date, remove)
+- Members section: inline email add form, CSV upload, members table (email, added date, remove button)
+- Remove member: requires confirmation via AlertDialog before deletion
 - Topics section: table of topics using this list
-- Delete list button (disabled if topics exist, requires confirmation)
+- Delete list button (disabled if topics exist, requires confirmation via AlertDialog)
 
 ### Member list create (`/member-lists/create`)
 
 - Form: name (required), description (optional)
 - Button: "Create member list"
+
+### Add users (`/member-lists/add-users`)
+
+Standalone page for bulk-adding users to a member list:
+- Dropdown to select target member list
+- CSV file upload with preview and confirmation
+- Same CSV parsing/validation logic as the member list edit page
+- Results alert after upload
 
 ### Topics (`/topics`)
 
@@ -280,7 +314,7 @@ Card layout:
 ### Topic edit (`/topics/[topicId]`)
 
 - Same fields as create, pre-filled
-- Buttons: "Update topic", "Delete topic" (destructive, requires confirmation)
+- Buttons: "Update topic", "Delete topic" (destructive, requires confirmation via AlertDialog)
 
 ---
 
@@ -327,9 +361,23 @@ All mutations via Next.js server actions in `lib/actions/`.
 - `lib/actions/member-lists.ts` — `createMemberList(data)`, `updateMemberList(id, data)`, `deleteMemberList(id)`
 - `lib/actions/members.ts` — `addMember(listId, email)`, `removeMember(id)`, `uploadMembers(listId, emails[])`
 
+### CSV upload details
+
+`uploadMembers` receives an array of email strings (parsed and validated client-side). Server-side:
+1. Validates each email format (skip invalid)
+2. Bulk inserts with `onConflictDoNothing` for duplicates
+3. Returns `{ added: number, duplicates: number, invalid: number }` so the UI can display a results alert: "X added, Y duplicates, Z invalid"
+
+Client-side CSV parsing:
+1. User selects `.csv` or `.txt` file
+2. Parse rows, extract email column, validate format
+3. Show preview: "Found X valid emails (Y invalid rows skipped)"
+4. User clicks "Upload" to confirm
+5. Display results alert from server response
+
 ### Authorization in actions
 
-Every admin action checks `isAdmin` from the session. Every vote action checks eligibility (authenticated + member of list + topic open). Unauthorized → throw error.
+Every admin action checks `isAdmin` from the session. Every vote action checks eligibility (authenticated + member of list + topic open). Votes cannot be cast or changed after `closesAt` has passed — this is enforced in both the `castVote` action and the UI. Unauthorized → throw error.
 
 ---
 
@@ -354,7 +402,7 @@ Reusable Drizzle query functions in `lib/db/queries.ts`:
 - ARIA: `aria-label` on buttons, `aria-invalid` on fields, `aria-hidden` on decorative icons, `role="alert"` on alerts
 - Semantic HTML: `<form>`, `<table>`, `<header>`, `<section>`, `<nav>`
 - `<html lang="en-NZ">`
-- `color-scheme: light dark`
+- `color-scheme: light` — the colour system (section 7) defines a light palette only. Dark mode is not designed. The `prefers-color-scheme` media query is not used. Shadcn's dark mode class is not applied.
 - Full keyboard navigation with tab and arrow keys
 
 ---
@@ -387,6 +435,7 @@ app/
   error.tsx                  # 500 page
   sign-in/page.tsx           # Magic link sign-in
   votes/[voteId]/page.tsx    # Individual vote page
+  votes/[voteId]/success/page.tsx # Vote success page
   api/auth/[...all]/route.ts # Better-Auth handler
   member-lists/
     page.tsx                 # Member lists overview
@@ -432,3 +481,10 @@ Remove `NEXT_PUBLIC_SUPABASE_URL` and `NEXT_PUBLIC_SUPABASE_ANON_KEY`.
 - Remove `lib/supabase/` directory entirely
 - Remove `scripts/001_create_tables.sql` and `002_enable_rls.sql` (replaced by Drizzle migrations)
 - Remove `styles/globals.css` (duplicate of `app/globals.css`)
+- Remove toast/sonner components and imports
+
+---
+
+## 15. Testing
+
+Testing (Vitest) is out of scope for this alignment phase. It will be addressed in a follow-up once the stack swap and feature implementation are complete.
