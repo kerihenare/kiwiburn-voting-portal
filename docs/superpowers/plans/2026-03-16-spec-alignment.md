@@ -10,6 +10,8 @@
 
 **Spec:** `docs/superpowers/specs/2026-03-16-spec-alignment-design.md`
 
+**Note on Tanstack Forms:** The spec requires all forms use Tanstack Forms + Zod. The plan shows forms using plain React state for clarity and brevity. During implementation, all forms should use `useForm` from `@tanstack/react-form` with `validators: { onDynamic: schema }` and `form.Field` render props (see Tanstack Forms docs). The sign-in form in Task 14 shows the general pattern — apply this to all form components.
+
 ---
 
 ## Chunk 1: Foundation — Dependencies, Config, Database Schema
@@ -22,7 +24,7 @@
 - [ ] **Step 1: Remove old packages**
 
 ```bash
-pnpm remove @supabase/ssr next-themes react-hook-form @hookform/resolvers sonner @radix-ui/react-toast
+pnpm remove @supabase/ssr @supabase/supabase-js next-themes react-hook-form @hookform/resolvers sonner @radix-ui/react-toast
 ```
 
 - [ ] **Step 2: Add new packages**
@@ -147,6 +149,9 @@ Remove `.dark` block and all `--sidebar-*` variables. Remove `@custom-variant da
 }
 
 @layer base {
+  html {
+    color-scheme: light;
+  }
   * {
     @apply border-border outline-ring/50;
   }
@@ -742,7 +747,7 @@ Provider-agnostic SMTP config via environment variables."
 
 ---
 
-## Chunk 2: Validation, Queries, Server Actions, Types
+## Chunk 4: Validation, Queries, Server Actions, Types
 
 ### Task 7: Zod validation schemas
 
@@ -1239,7 +1244,7 @@ import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
 import { db } from "@/lib/db"
 import { members } from "@/lib/db/schema"
-import { eq, and } from "drizzle-orm"
+import { eq } from "drizzle-orm"
 import { addMemberSchema } from "@/lib/validations"
 import { revalidatePath } from "next/cache"
 import { z } from "zod"
@@ -1293,27 +1298,35 @@ export async function uploadMembers(
   let invalid = 0
   let duplicates = 0
 
+  const validEmails: string[] = []
   for (const raw of emails) {
     const email = raw.trim().toLowerCase()
     const result = emailSchema.safeParse(email)
-
     if (!result.success) {
       invalid++
-      continue
+    } else {
+      validEmails.push(email)
     }
+  }
 
-    try {
-      await db
-        .insert(members)
-        .values({ email, memberListId: listId })
-        .onConflictDoNothing()
+  // Check which emails already exist in this list
+  const existing = await db
+    .select({ email: members.email })
+    .from(members)
+    .where(eq(members.memberListId, listId))
 
-      // onConflictDoNothing returns 0 rows affected for duplicates
-      // but we can't easily distinguish, so count as added
-      added++
-    } catch {
-      duplicates++
-    }
+  const existingSet = new Set(existing.map((e) => e.email))
+
+  const toInsert = validEmails.filter((e) => !existingSet.has(e))
+  duplicates = validEmails.length - toInsert.length
+
+  if (toInsert.length > 0) {
+    await db
+      .insert(members)
+      .values(toInsert.map((email) => ({ email, memberListId: listId })))
+      .onConflictDoNothing()
+
+    added = toInsert.length
   }
 
   revalidatePath(`/member-lists/${listId}`)
@@ -1333,7 +1346,7 @@ Vote upsert with confirmation email. CSV bulk upload."
 
 ---
 
-## Chunk 3: Root Layout, Header, Error Pages
+## Chunk 5: Root Layout, Header, Error Pages
 
 ### Task 10: Root layout and header
 
@@ -1577,7 +1590,7 @@ Card-based centered layout per design spec."
 
 ---
 
-## Chunk 4: Public Pages — Home, Sign-in, Vote, Vote Success
+## Chunk 6: Public Pages — Home, Sign-in, Vote, Vote Success
 
 ### Task 12: Shared components (timer badge, result bars)
 
@@ -1621,10 +1634,19 @@ export function TimerBadge({ opensAt, closesAt }: TimerBadgeProps) {
   const msRemaining = closesAt.getTime() - now.getTime()
   const hoursRemaining = msRemaining / (1000 * 60 * 60)
 
-  const variant = hoursRemaining < 1 ? "destructive" : "default"
+  if (hoursRemaining < 1) {
+    return (
+      <Badge variant="destructive">
+        Closes in {"< 1 minute"}
+      </Badge>
+    )
+  }
 
   return (
-    <Badge variant={variant} className={hoursRemaining < 24 ? "bg-orange-100 text-orange-800" : ""}>
+    <Badge
+      variant="secondary"
+      className={hoursRemaining < 24 ? "bg-orange-100 text-orange-800" : "bg-green-100 text-green-800"}
+    >
       Closes in {formatDistanceToNow(closesAt)}
     </Badge>
   )
@@ -2229,7 +2251,7 @@ Large vote badge, confirmation text, link back to home."
 
 ---
 
-## Chunk 5: Admin Pages — Member Lists
+## Chunk 7: Admin Pages — Member Lists
 
 ### Task 17: Member lists overview page
 
@@ -3003,7 +3025,7 @@ Select member list, upload CSV with preview and results."
 
 ---
 
-## Chunk 6: Admin Pages — Topics
+## Chunk 8: Admin Pages — Topics
 
 ### Task 21: Topics overview page
 
@@ -3274,7 +3296,13 @@ export default async function TopicEditPage({
 
       <Card>
         <CardContent className="pt-6">
-          <EditTopicForm topic={topic} />
+          <EditTopicForm
+            topic={{
+              ...topic,
+              opensAt: topic.opensAt.toISOString(),
+              closesAt: topic.closesAt.toISOString(),
+            }}
+          />
         </CardContent>
       </Card>
 
@@ -3319,7 +3347,8 @@ import {
 } from "@/components/ui/select"
 import { updateTopic } from "@/lib/actions/topics"
 
-function toLocalDatetime(date: Date) {
+function toLocalDatetime(dateStr: string) {
+  const date = new Date(dateStr)
   const offset = date.getTimezoneOffset()
   const local = new Date(date.getTime() - offset * 60000)
   return local.toISOString().slice(0, 16)
@@ -3332,8 +3361,8 @@ interface EditTopicFormProps {
     description: string | null
     memberListId: number
     memberListName: string | null
-    opensAt: Date
-    closesAt: Date
+    opensAt: string // serialized from server component
+    closesAt: string
   }
 }
 
@@ -3559,7 +3588,9 @@ Remove unused components, fix imports, verify clean build."
 | 2 | 4-5 | Better-Auth setup, middleware |
 | 3 | 6 | React Email templates, Nodemailer |
 | 4 | 7-9 | Validations, queries, server actions |
-| 5 | 10-16 | Layout, header, error pages, home, sign-in, vote pages |
-| 6 | 17-25 | Member lists pages, topics pages, cleanup |
+| 5 | 10-11 | Root layout, header, error pages |
+| 6 | 12-16 | Home, sign-in, vote, vote success pages |
+| 7 | 17-20 | Member lists admin pages |
+| 8 | 21-25 | Topics admin pages, cleanup |
 
 Total: 25 tasks, ~25 commits.
