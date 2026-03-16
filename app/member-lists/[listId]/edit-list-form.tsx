@@ -1,15 +1,15 @@
 "use client"
 
+import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import { updateMemberList } from "@/lib/actions/member-lists"
-import { useRouter } from "next/navigation"
 
 interface EditListFormProps {
-  list: { id: number; name: string; description: string | null }
+  list: { id: string; name: string; description: string | null }
 }
 
 export function EditListForm({ list }: EditListFormProps) {
@@ -22,7 +22,7 @@ export function EditListForm({ list }: EditListFormProps) {
     e.preventDefault()
     setSubmitting(true)
     try {
-      await updateMemberList(list.id, { name, description })
+      await updateMemberList(list.id, { description, name })
       router.refresh()
     } finally {
       setSubmitting(false)
@@ -30,18 +30,29 @@ export function EditListForm({ list }: EditListFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <Label htmlFor="name">Name</Label>
-        <Input id="name" value={name} onChange={(e) => setName(e.target.value)} required />
+        <Input
+          id="name"
+          onChange={(e) => setName(e.target.value)}
+          required
+          value={name}
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
-        <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Textarea
+          id="description"
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+        />
       </div>
-      <Button type="submit" disabled={submitting}>
-        {submitting ? "Saving..." : "Save changes"}
-      </Button>
+      <div className="flex justify-end">
+        <Button disabled={submitting} type="submit">
+          {submitting ? "Saving\u2026" : "Save changes"}
+        </Button>
+      </div>
     </form>
   )
 }

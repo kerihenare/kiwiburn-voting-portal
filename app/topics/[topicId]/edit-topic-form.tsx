@@ -1,11 +1,10 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -13,7 +12,9 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { updateTopic } from "@/lib/actions/topics"
+import { DeleteTopicButton } from "./delete-topic-button"
 
 function toLocalDatetime(dateStr: string) {
   const date = new Date(dateStr)
@@ -24,10 +25,10 @@ function toLocalDatetime(dateStr: string) {
 
 interface EditTopicFormProps {
   topic: {
-    id: number
+    id: string
     title: string
     description: string | null
-    memberListId: number
+    memberListId: string
     memberListName: string | null
     opensAt: string // serialized from server component
     closesAt: string
@@ -36,7 +37,7 @@ interface EditTopicFormProps {
 
 export function EditTopicForm({ topic }: EditTopicFormProps) {
   const router = useRouter()
-  const [lists, setLists] = useState<{ id: number; name: string }[]>([])
+  const [lists, setLists] = useState<{ id: string; name: string }[]>([])
   const [title, setTitle] = useState(topic.title)
   const [description, setDescription] = useState(topic.description ?? "")
   const [memberListId, setMemberListId] = useState(topic.memberListId)
@@ -57,7 +58,13 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
     setError(null)
 
     try {
-      await updateTopic(topic.id, { title, description, memberListId, opensAt, closesAt })
+      await updateTopic(topic.id, {
+        closesAt,
+        description,
+        memberListId,
+        opensAt,
+        title,
+      })
       router.refresh()
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
@@ -67,24 +74,33 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
+    <form className="space-y-6" onSubmit={handleSubmit}>
       <div className="space-y-2">
         <Label htmlFor="title">Title</Label>
-        <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+        <Input
+          id="title"
+          onChange={(e) => setTitle(e.target.value)}
+          required
+          value={title}
+        />
       </div>
       <div className="space-y-2">
         <Label htmlFor="description">Description</Label>
-        <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+        <Textarea
+          id="description"
+          onChange={(e) => setDescription(e.target.value)}
+          value={description}
+        />
       </div>
       <div className="space-y-2">
         <Label>Member list</Label>
-        <Select value={String(memberListId)} onValueChange={(v) => setMemberListId(parseInt(v, 10))}>
-          <SelectTrigger>
+        <Select onValueChange={setMemberListId} value={memberListId}>
+          <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
             {lists.map((list) => (
-              <SelectItem key={list.id} value={String(list.id)}>
+              <SelectItem key={list.id} value={list.id}>
                 {list.name}
               </SelectItem>
             ))}
@@ -94,17 +110,36 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
         <div className="space-y-2">
           <Label htmlFor="opensAt">Opens at</Label>
-          <Input id="opensAt" type="datetime-local" value={opensAt} onChange={(e) => setOpensAt(e.target.value)} required />
+          <Input
+            id="opensAt"
+            onChange={(e) => setOpensAt(e.target.value)}
+            required
+            type="datetime-local"
+            value={opensAt}
+          />
         </div>
         <div className="space-y-2">
           <Label htmlFor="closesAt">Closes at</Label>
-          <Input id="closesAt" type="datetime-local" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} required />
+          <Input
+            id="closesAt"
+            onChange={(e) => setClosesAt(e.target.value)}
+            required
+            type="datetime-local"
+            value={closesAt}
+          />
         </div>
       </div>
-      {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
-      <Button type="submit" disabled={submitting}>
-        {submitting ? "Saving..." : "Update topic"}
-      </Button>
+      {error && (
+        <p className="text-sm text-destructive" role="alert">
+          {error}
+        </p>
+      )}
+      <div className="flex justify-end gap-2">
+        <DeleteTopicButton topicId={topic.id} />
+        <Button disabled={submitting} type="submit">
+          {submitting ? "Saving\u2026" : "Update topic"}
+        </Button>
+      </div>
     </form>
   )
 }

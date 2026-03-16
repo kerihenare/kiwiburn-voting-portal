@@ -1,12 +1,12 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { and, count, eq, isNull } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { memberLists, topics } from "@/lib/db/schema"
-import { eq, count } from "drizzle-orm"
 import { createMemberListSchema } from "@/lib/validations"
-import { revalidatePath } from "next/cache"
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -24,18 +24,18 @@ export async function createMemberList(input: {
   const result = await db
     .insert(memberLists)
     .values({
-      name: parsed.name,
       description: parsed.description ?? null,
+      name: parsed.name,
     })
     .returning({ id: memberLists.id })
 
   revalidatePath("/member-lists")
-  return { success: true, id: result[0].id }
+  return { id: result[0].id, success: true }
 }
 
 export async function updateMemberList(
-  id: number,
-  input: { name: string; description?: string }
+  id: string,
+  input: { name: string; description?: string },
 ) {
   await requireAdmin()
   const parsed = createMemberListSchema.parse(input)
@@ -43,8 +43,8 @@ export async function updateMemberList(
   await db
     .update(memberLists)
     .set({
-      name: parsed.name,
       description: parsed.description ?? null,
+      name: parsed.name,
       updatedAt: new Date(),
     })
     .where(eq(memberLists.id, id))
@@ -54,20 +54,23 @@ export async function updateMemberList(
   return { success: true }
 }
 
-export async function deleteMemberList(id: number) {
-  await requireAdmin()
+export async function deleteMemberList(id: string) {
+  const session = await requireAdmin()
 
-  // Check if any topics reference this list
+  // Check if any non-deleted topics reference this list
   const topicCount = await db
     .select({ count: count() })
     .from(topics)
-    .where(eq(topics.memberListId, id))
+    .where(and(eq(topics.memberListId, id), isNull(topics.deletedAt)))
 
   if (topicCount[0].count > 0) {
     throw new Error("Cannot delete a member list that has topics")
   }
 
-  await db.delete(memberLists).where(eq(memberLists.id, id))
+  await db
+    .update(memberLists)
+    .set({ deletedAt: new Date(), deletedBy: session.user.id })
+    .where(eq(memberLists.id, id))
 
   revalidatePath("/member-lists")
   return { success: true }

@@ -1,25 +1,28 @@
-import { notFound } from "next/navigation"
-import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
-import { Card, CardContent } from "@/components/ui/card"
-import { Separator } from "@/components/ui/separator"
+import Link from "next/link"
+import { notFound } from "next/navigation"
+import { ResultBars } from "@/components/result-bars"
+import { TimerBadge } from "@/components/timer-badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
-import { TimerBadge } from "@/components/timer-badge"
-import { ResultBars } from "@/components/result-bars"
+import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 import { VoteButtons } from "@/components/vote-buttons"
-import { getTopic, getVoteResults, getUserVoteForTopic, checkEligibility } from "@/lib/db/queries"
+import { auth } from "@/lib/auth"
+import {
+  checkEligibility,
+  getTopic,
+  getUserVoteForTopic,
+  getVoteResults,
+} from "@/lib/db/queries"
 import { getTopicStatus } from "@/lib/types"
-import Link from "next/link"
 
 export default async function VotePage({
   params,
 }: {
   params: Promise<{ voteId: string }>
 }) {
-  const { voteId } = await params
-  const topicId = parseInt(voteId, 10)
-  if (isNaN(topicId)) notFound()
+  const { voteId: topicId } = await params
 
   const topic = await getTopic(topicId)
   if (!topic) notFound()
@@ -38,51 +41,80 @@ export default async function VotePage({
   }
 
   return (
-    <Card className="max-w-2xl mx-auto">
-      <CardContent className="pt-6 space-y-4">
-        <TimerBadge opensAt={topic.opensAt} closesAt={topic.closesAt} />
-        <h1 className="text-2xl font-bold text-[#ab0232]">{topic.title}</h1>
-        {topic.description && (
-          <p className="text-muted-foreground">{topic.description}</p>
-        )}
-        <Separator />
-
-        {status === "closed" ? (
-          <section className="space-y-4">
-            <h2 className="text-lg font-semibold">Results</h2>
-            <ResultBars
-              yesCount={results.yesCount}
-              noCount={results.noCount}
-              totalVotes={results.totalVotes}
-            />
-            {userVote && (
-              <Badge variant="outline">
-                You voted: {userVote.charAt(0).toUpperCase() + userVote.slice(1)}
-              </Badge>
+    <div className="flex flex-1 flex-col items-center justify-center gap-4">
+      <Card className="max-w-2xl w-full">
+        <CardContent className="space-y-6">
+          <div className="flex items-center justify-between">
+            {topic.memberListName && (
+              <p className="mb-0 text-sm text-muted-foreground/60">
+                {topic.memberListName}
+              </p>
             )}
-          </section>
-        ) : !session ? (
-          <Alert>
-            <AlertDescription>
-              Please <Link href="/sign-in" className="underline font-medium">sign in</Link> to cast your vote.
-            </AlertDescription>
-          </Alert>
-        ) : !eligible ? (
-          <Alert variant="destructive">
-            <AlertDescription>
-              You are not eligible to vote on this topic.
-            </AlertDescription>
-          </Alert>
-        ) : status === "scheduled" ? (
-          <Alert>
-            <AlertDescription>
-              Voting has not opened yet. Check back later.
-            </AlertDescription>
-          </Alert>
-        ) : (
-          <VoteButtons topicId={topicId} currentVote={userVote} />
-        )}
-      </CardContent>
-    </Card>
+            <TimerBadge closesAt={topic.closesAt} opensAt={topic.opensAt} />
+          </div>
+          <h1 className="text-2xl font-bold text-accent !mb-0">
+            {topic.title}
+          </h1>
+          {topic.description && (
+            <p className="text-muted-foreground !mt-0">{topic.description}</p>
+          )}
+
+          {status === "closed" ? (
+            <section className="space-y-6">
+              <h2 className="text-lg font-semibold">Results</h2>
+              <ResultBars
+                noCount={results.noCount}
+                totalVotes={results.totalVotes}
+                yesCount={results.yesCount}
+              />
+              {userVote && (
+                <Badge variant="outline">
+                  You voted:{" "}
+                  {userVote.charAt(0).toUpperCase() + userVote.slice(1)}
+                </Badge>
+              )}
+            </section>
+          ) : !session ? (
+            <Button asChild className="w-full">
+              <Link href="/sign-in">Sign in to vote</Link>
+            </Button>
+          ) : !eligible ? (
+            <Alert variant="destructive">
+              <AlertDescription>
+                You are not eligible to vote on this topic.
+              </AlertDescription>
+            </Alert>
+          ) : status === "scheduled" ? (
+            <Alert>
+              <AlertDescription>
+                Voting has not opened yet. Check back later.
+              </AlertDescription>
+            </Alert>
+          ) : (
+            <VoteButtons currentVote={userVote} topicId={topicId} />
+          )}
+        </CardContent>
+      </Card>
+      <Button asChild className="text-muted-foreground" variant="ghost">
+        <Link href="/">
+          <svg
+            aria-hidden="true"
+            className="mr-1"
+            fill="none"
+            height="16"
+            stroke="currentColor"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            strokeWidth="2"
+            viewBox="0 0 24 24"
+            width="16"
+            xmlns="http://www.w3.org/2000/svg"
+          >
+            <path d="m15 18-6-6 6-6" />
+          </svg>
+          Back to votes
+        </Link>
+      </Button>
+    </div>
   )
 }

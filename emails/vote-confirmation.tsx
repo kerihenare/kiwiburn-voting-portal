@@ -26,14 +26,14 @@ export default function VoteConfirmationEmail({
         <Container style={container}>
           <Heading style={heading}>Vote recorded</Heading>
           <Text style={text}>
-            Your vote of <strong>{vote.toUpperCase()}</strong> on &ldquo;{topicTitle}&rdquo; has
-            been securely recorded.
+            Your vote of <strong>{vote.toUpperCase()}</strong> on &ldquo;
+            {topicTitle}&rdquo; has been securely recorded.
           </Text>
           <Text style={text}>
-            Thank you for participating in this KiwiBurn community decision.
-            You can change your vote while voting is open.
+            Thank you for participating in this KiwiBurn community decision. You
+            can change your vote while voting is open.
           </Text>
-          <Button style={button} href={`${process.env.BETTER_AUTH_URL}`}>
+          <Button href={`${process.env.BETTER_AUTH_URL}`} style={button}>
             View all votes
           </Button>
         </Container>
@@ -43,15 +43,19 @@ export default function VoteConfirmationEmail({
 }
 
 const main = { backgroundColor: "#f3f4f6", fontFamily: "Inter, sans-serif" }
-const container = { margin: "0 auto", padding: "40px 20px", maxWidth: "480px" }
-const heading = { color: "#ab0232", fontSize: "24px", fontWeight: "bold" as const }
+const container = { margin: "0 auto", maxWidth: "480px", padding: "40px 20px" }
+const heading = {
+  color: "#ab0232",
+  fontSize: "24px",
+  fontWeight: "bold" as const,
+}
 const text = { color: "#000000", fontSize: "16px", lineHeight: "24px" }
 const button = {
   backgroundColor: "#ed7703",
-  color: "#ffffff",
-  padding: "12px 24px",
   borderRadius: "8px",
+  color: "#ffffff",
   fontSize: "16px",
   fontWeight: "bold" as const,
+  padding: "12px 24px",
   textDecoration: "none",
 }

@@ -1,132 +1,90 @@
 import { notFound } from "next/navigation"
-import { getMemberList } from "@/lib/db/queries"
-import { getTopicStatus } from "@/lib/types"
 import { Card, CardContent } from "@/components/ui/card"
-import { Badge } from "@/components/ui/badge"
-import { Separator } from "@/components/ui/separator"
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table"
-import Link from "next/link"
-import { EditListForm } from "./edit-list-form"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
+import { requireAdmin } from "@/lib/auth-guard"
+import { getMemberList } from "@/lib/db/queries"
 import { AddMemberForm } from "./add-member-form"
-import { UploadMembersForm } from "./upload-members-form"
-import { RemoveMemberButton } from "./remove-member-button"
 import { DeleteListButton } from "./delete-list-button"
+import { EditListForm } from "./edit-list-form"
+import { MembersTable } from "./members-table"
+import { ListTopicsTable } from "./topics-table"
+import { UploadMembersForm } from "./upload-members-form"
 
 export default async function MemberListEditPage({
   params,
 }: {
   params: Promise<{ listId: string }>
 }) {
-  const { listId } = await params
-  const id = parseInt(listId, 10)
-  if (isNaN(id)) notFound()
+  await requireAdmin()
+  const { listId: id } = await params
 
   const list = await getMemberList(id)
   if (!list) notFound()
 
+  const serializedMembers = list.members.map((m) => ({
+    createdAt: m.createdAt.toISOString(),
+    email: m.email,
+    id: m.id,
+  }))
+
+  const serializedTopics = list.topics.map((t) => ({
+    closesAt: t.closesAt.toISOString(),
+    id: t.id,
+    opensAt: t.opensAt.toISOString(),
+    title: t.title,
+  }))
+
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-[#ab0232]">{list.name}</h1>
+    <div className="space-y-6">
+      <Tabs defaultValue="edit">
+        <div className="flex items-center justify-between">
+          <h1 className="text-2xl font-bold text-accent">{list.name}</h1>
+          <TabsList>
+            <TabsTrigger value="edit">Edit</TabsTrigger>
+            <TabsTrigger value="members">Members</TabsTrigger>
+            <TabsTrigger value="topics">Topics</TabsTrigger>
+          </TabsList>
+        </div>
 
-      <Card>
-        <CardContent className="pt-6">
-          <EditListForm list={list} />
-        </CardContent>
-      </Card>
+        <TabsContent className="space-y-6" value="edit">
+          <Card>
+            <CardContent className="">
+              <EditListForm list={list} />
+            </CardContent>
+          </Card>
+          {!list.topics.length && <DeleteListButton listId={id} />}
+        </TabsContent>
 
-      <Card>
-        <CardContent className="pt-6 space-y-4">
-          <h2 className="text-lg font-semibold">Members</h2>
-          <div className="flex gap-2">
-            <AddMemberForm listId={id} />
-          </div>
-          <UploadMembersForm listId={id} />
-          <Separator />
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Email</TableHead>
-                <TableHead>Added</TableHead>
-                <TableHead className="w-20"></TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {list.members.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={3} className="text-center text-muted-foreground py-4">
-                    No members yet.
-                  </TableCell>
-                </TableRow>
+        <TabsContent className="space-y-6" value="members">
+          <Card>
+            <CardContent className="space-y-3">
+              <div className="flex gap-2 items-start">
+                <AddMemberForm listId={id} />
+                <UploadMembersForm listId={id} />
+              </div>
+            </CardContent>
+          </Card>
+          <Card>
+            <CardContent>
+              <MembersTable data={serializedMembers} listId={id} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+
+        <TabsContent value="topics">
+          <Card>
+            <CardContent className=" space-y-6">
+              {serializedTopics.length > 0 ? (
+                <ListTopicsTable data={serializedTopics} />
               ) : (
-                list.members.map((member) => (
-                  <TableRow key={member.id}>
-                    <TableCell>{member.email}</TableCell>
-                    <TableCell className="text-muted-foreground">
-                      {member.createdAt.toLocaleDateString()}
-                    </TableCell>
-                    <TableCell>
-                      <RemoveMemberButton memberId={member.id} listId={id} />
-                    </TableCell>
-                  </TableRow>
-                ))
+                <p className="text-center text-muted-foreground py-8">
+                  No topics linked to this list.
+                </p>
               )}
-            </TableBody>
-          </Table>
-        </CardContent>
-      </Card>
-
-      {list.topics.length > 0 && (
-        <Card>
-          <CardContent className="pt-6 space-y-4">
-            <h2 className="text-lg font-semibold">Topics</h2>
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Title</TableHead>
-                  <TableHead>Status</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {list.topics.map((topic) => {
-                  const status = getTopicStatus(topic.opensAt, topic.closesAt)
-                  return (
-                    <TableRow key={topic.id}>
-                      <TableCell>
-                        <Link href={`/topics/${topic.id}`} className="text-primary hover:underline">
-                          {topic.title}
-                        </Link>
-                      </TableCell>
-                      <TableCell>
-                        <Badge
-                          variant={status === "open" ? "default" : "secondary"}
-                          className={
-                            status === "open"
-                              ? "bg-green-100 text-green-800"
-                              : status === "scheduled"
-                                ? "bg-blue-100 text-blue-800"
-                                : ""
-                          }
-                        >
-                          {status.charAt(0).toUpperCase() + status.slice(1)}
-                        </Badge>
-                      </TableCell>
-                    </TableRow>
-                  )
-                })}
-              </TableBody>
-            </Table>
-          </CardContent>
-        </Card>
-      )}
-
-      <DeleteListButton listId={id} hasTopics={list.topics.length > 0} />
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   )
 }

@@ -1,9 +1,9 @@
 "use client"
 
-import { Card, CardContent } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
 
-export default function Error({
+export default function ErrorPage({
   reset,
 }: {
   error: Error & { digest?: string }
@@ -12,7 +12,7 @@ export default function Error({
   return (
     <div className="flex items-center justify-center min-h-[60vh]">
       <Card className="max-w-md w-full text-center">
-        <CardContent className="pt-8 pb-8 space-y-4">
+        <CardContent className="pt-8 pb-8 space-y-6">
           <h1 className="text-2xl font-bold text-foreground">
             Something went wrong
           </h1>

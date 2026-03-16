@@ -1,13 +1,13 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { z } from "zod"
+import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { members } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
 import { addMemberSchema } from "@/lib/validations"
-import { revalidatePath } from "next/cache"
-import { z } from "zod"
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -15,7 +15,7 @@ async function requireAdmin() {
   return session
 }
 
-export async function addMember(listId: number, input: { email: string }) {
+export async function addMember(listId: string, input: { email: string }) {
   await requireAdmin()
   const parsed = addMemberSchema.parse(input)
 
@@ -25,10 +25,7 @@ export async function addMember(listId: number, input: { email: string }) {
       memberListId: listId,
     })
   } catch (error: unknown) {
-    if (
-      error instanceof Error &&
-      error.message.includes("unique")
-    ) {
+    if (error instanceof Error && error.message.includes("unique")) {
       throw new Error("This email is already in the list")
     }
     throw error
@@ -38,7 +35,7 @@ export async function addMember(listId: number, input: { email: string }) {
   return { success: true }
 }
 
-export async function removeMember(id: number, listId: number) {
+export async function removeMember(id: string, listId: string) {
   await requireAdmin()
 
   await db.delete(members).where(eq(members.id, id))
@@ -47,10 +44,7 @@ export async function removeMember(id: number, listId: number) {
   return { success: true }
 }
 
-export async function uploadMembers(
-  listId: number,
-  emails: string[]
-) {
+export async function uploadMembers(listId: string, emails: string[]) {
   await requireAdmin()
 
   const emailSchema = z.string().email()

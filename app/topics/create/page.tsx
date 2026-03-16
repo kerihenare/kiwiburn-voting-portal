@@ -1,12 +1,11 @@
 "use client"
 
-import { useState, useEffect } from "react"
 import { useRouter } from "next/navigation"
+import { useEffect, useState } from "react"
+import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
-import { Textarea } from "@/components/ui/textarea"
-import { Button } from "@/components/ui/button"
 import {
   Select,
   SelectContent,
@@ -14,14 +13,15 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select"
+import { Textarea } from "@/components/ui/textarea"
 import { createTopic } from "@/lib/actions/topics"
 
 export default function CreateTopicPage() {
   const router = useRouter()
-  const [lists, setLists] = useState<{ id: number; name: string }[]>([])
+  const [lists, setLists] = useState<{ id: string; name: string }[]>([])
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
-  const [memberListId, setMemberListId] = useState<number | null>(null)
+  const [memberListId, setMemberListId] = useState<string | null>(null)
   const [opensAt, setOpensAt] = useState("")
   const [closesAt, setClosesAt] = useState("")
   const [submitting, setSubmitting] = useState(false)
@@ -40,7 +40,7 @@ export default function CreateTopicPage() {
     setError(null)
 
     try {
-      await createTopic({ title, description, memberListId, opensAt, closesAt })
+      await createTopic({ closesAt, description, memberListId, opensAt, title })
       router.push("/topics")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
@@ -50,27 +50,36 @@ export default function CreateTopicPage() {
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
-      <h1 className="text-2xl font-bold text-[#ab0232]">Create topic</h1>
+      <h1 className="text-2xl font-bold text-accent">Create topic</h1>
       <Card>
         <CardContent className="pt-6">
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
-              <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+              <Input
+                id="title"
+                onChange={(e) => setTitle(e.target.value)}
+                required
+                value={title}
+              />
             </div>
             <div className="space-y-2">
               <Label htmlFor="description">Description</Label>
-              <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} />
+              <Textarea
+                id="description"
+                onChange={(e) => setDescription(e.target.value)}
+                value={description}
+              />
             </div>
             <div className="space-y-2">
               <Label>Member list</Label>
-              <Select onValueChange={(v) => setMemberListId(parseInt(v, 10))}>
+              <Select onValueChange={setMemberListId}>
                 <SelectTrigger>
                   <SelectValue placeholder="Select a member list" />
                 </SelectTrigger>
                 <SelectContent>
                   {lists.map((list) => (
-                    <SelectItem key={list.id} value={String(list.id)}>
+                    <SelectItem key={list.id} value={list.id}>
                       {list.name}
                     </SelectItem>
                   ))}
@@ -80,15 +89,31 @@ export default function CreateTopicPage() {
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <Label htmlFor="opensAt">Opens at</Label>
-                <Input id="opensAt" type="datetime-local" value={opensAt} onChange={(e) => setOpensAt(e.target.value)} required />
+                <Input
+                  id="opensAt"
+                  onChange={(e) => setOpensAt(e.target.value)}
+                  required
+                  type="datetime-local"
+                  value={opensAt}
+                />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="closesAt">Closes at</Label>
-                <Input id="closesAt" type="datetime-local" value={closesAt} onChange={(e) => setClosesAt(e.target.value)} required />
+                <Input
+                  id="closesAt"
+                  onChange={(e) => setClosesAt(e.target.value)}
+                  required
+                  type="datetime-local"
+                  value={closesAt}
+                />
               </div>
             </div>
-            {error && <p className="text-sm text-destructive" role="alert">{error}</p>}
-            <Button type="submit" disabled={submitting || !memberListId}>
+            {error && (
+              <p className="text-sm text-destructive" role="alert">
+                {error}
+              </p>
+            )}
+            <Button disabled={submitting || !memberListId} type="submit">
               {submitting ? "Creating..." : "Create topic"}
             </Button>
           </form>

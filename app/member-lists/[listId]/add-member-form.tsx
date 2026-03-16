@@ -1,12 +1,12 @@
 "use client"
 
-import { useState } from "react"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import { addMember } from "@/lib/actions/members"
 import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { Button } from "@/components/ui/button"
+import { Input } from "@/components/ui/input"
+import { addMember } from "@/lib/actions/members"
 
-export function AddMemberForm({ listId }: { listId: number }) {
+export function AddMemberForm({ listId }: { listId: string }) {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [submitting, setSubmitting] = useState(false)
@@ -28,21 +28,25 @@ export function AddMemberForm({ listId }: { listId: number }) {
   }
 
   return (
-    <form onSubmit={handleSubmit} className="flex gap-2 items-end w-full">
+    <form className="flex gap-2 items-start flex-1" onSubmit={handleSubmit}>
       <div className="flex-1">
         <Input
-          type="email"
-          placeholder="email@example.com"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          required
-          aria-label="Email address"
           aria-invalid={error ? true : undefined}
+          aria-label="Email address"
+          onChange={(e) => setEmail(e.target.value)}
+          placeholder="email@example.com"
+          required
+          type="email"
+          value={email}
         />
-        {error && <p className="text-sm text-destructive mt-1" role="alert">{error}</p>}
+        {error && (
+          <p className="text-sm text-destructive mt-1" role="alert">
+            {error}
+          </p>
+        )}
       </div>
-      <Button type="submit" disabled={submitting} size="sm">
-        {submitting ? "Adding..." : "Add"}
+      <Button disabled={submitting} type="submit">
+        {submitting ? "Adding\u2026" : "Add member"}
       </Button>
     </form>
   )

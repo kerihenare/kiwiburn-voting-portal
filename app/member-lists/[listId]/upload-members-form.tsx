@@ -1,20 +1,25 @@
 "use client"
 
-import { useState, useRef } from "react"
-import { Button } from "@/components/ui/button"
-import { Alert, AlertDescription } from "@/components/ui/alert"
-import { uploadMembers } from "@/lib/actions/members"
 import { useRouter } from "next/navigation"
+import { useCallback, useRef, useState } from "react"
+import { Alert, AlertDescription } from "@/components/ui/alert"
+import { Button } from "@/components/ui/button"
+import { uploadMembers } from "@/lib/actions/members"
 
-export function UploadMembersForm({ listId }: { listId: number }) {
+export function UploadMembersForm({ listId }: { listId: string }) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
   const [emails, setEmails] = useState<string[]>([])
   const [invalidCount, setInvalidCount] = useState(0)
   const [uploading, setUploading] = useState(false)
-  const [result, setResult] = useState<{ added: number; duplicates: number; invalid: number } | null>(null)
+  const [dragging, setDragging] = useState(false)
+  const [result, setResult] = useState<{
+    added: number
+    duplicates: number
+    invalid: number
+  } | null>(null)
 
-  function parseFile(file: File) {
+  const parseFile = useCallback((file: File) => {
     const reader = new FileReader()
     reader.onload = (e) => {
       const text = e.target?.result as string
@@ -25,7 +30,6 @@ export function UploadMembersForm({ listId }: { listId: number }) {
       let invalid = 0
 
       for (const line of lines) {
-        // Take first column (CSV support)
         const email = line.split(",")[0].trim().toLowerCase()
         if (emailRegex.test(email)) {
           valid.push(email)
@@ -39,7 +43,7 @@ export function UploadMembersForm({ listId }: { listId: number }) {
       setResult(null)
     }
     reader.readAsText(file)
-  }
+  }, [])
 
   async function handleUpload() {
     setUploading(true)
@@ -55,39 +59,62 @@ export function UploadMembersForm({ listId }: { listId: number }) {
     }
   }
 
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+    setDragging(false)
+    const file = e.dataTransfer.files[0]
+    if (file) parseFile(file)
+  }
+
   return (
-    <div className="space-y-3">
-      <div className="flex gap-2 items-center">
-        <input
-          ref={fileRef}
-          type="file"
-          accept=".csv,.txt"
-          onChange={(e) => {
-            const file = e.target.files?.[0]
-            if (file) parseFile(file)
-          }}
-          className="text-sm"
-        />
-      </div>
+    <div className="shrink-0">
+      <input
+        accept=".csv,.txt"
+        className="hidden"
+        onChange={(e) => {
+          const file = e.target.files?.[0]
+          if (file) parseFile(file)
+        }}
+        ref={fileRef}
+        type="file"
+      />
+
+      <Button
+        className={dragging ? "bg-primary/10 border-primary" : ""}
+        onClick={() => fileRef.current?.click()}
+        onDragLeave={() => setDragging(false)}
+        onDragOver={(e) => {
+          e.preventDefault()
+          setDragging(true)
+        }}
+        onDrop={handleDrop}
+        type="button"
+        variant="outline"
+      >
+        Bulk upload
+      </Button>
 
       {emails.length > 0 && (
-        <div className="space-y-2">
+        <div className="mt-3 space-y-2">
           <p className="text-sm text-muted-foreground">
-            Found {emails.length} valid emails
-            {invalidCount > 0 && ` (${invalidCount} invalid rows skipped)`}
+            {emails.length} email{emails.length !== 1 && "s"} found
+            {invalidCount > 0 && ` (${invalidCount} invalid skipped)`}
           </p>
-          <Button onClick={handleUpload} disabled={uploading} size="sm">
-            {uploading ? "Uploading..." : "Upload"}
+          <Button disabled={uploading} onClick={handleUpload} size="sm">
+            {uploading ? "Uploading\u2026" : `Upload ${emails.length}`}
           </Button>
         </div>
       )}
 
       {result && (
-        <Alert>
-          <AlertDescription>
-            {result.added} added, {result.duplicates} duplicates, {result.invalid} invalid
-          </AlertDescription>
-        </Alert>
+        <div className="mt-3">
+          <Alert>
+            <AlertDescription>
+              {result.added} added, {result.duplicates} duplicate
+              {result.duplicates !== 1 && "s"}, {result.invalid} invalid
+            </AlertDescription>
+          </Alert>
+        </div>
       )}
     </div>
   )

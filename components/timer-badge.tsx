@@ -1,5 +1,12 @@
+"use client"
+
+import { format, formatDistanceToNow, isFuture, isPast } from "date-fns"
 import { Badge } from "@/components/ui/badge"
-import { formatDistanceToNow, isPast, isFuture } from "date-fns"
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 
 interface TimerBadgeProps {
   opensAt: Date
@@ -11,17 +18,29 @@ export function TimerBadge({ opensAt, closesAt }: TimerBadgeProps) {
 
   if (isFuture(opensAt)) {
     return (
-      <Badge variant="secondary" className="bg-blue-100 text-blue-800">
-        Opens in {formatDistanceToNow(opensAt)}
-      </Badge>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge className="bg-blue-100 text-blue-800" variant="secondary">
+            Opens in {formatDistanceToNow(opensAt)}
+          </Badge>
+        </TooltipTrigger>
+        <TooltipContent>{format(opensAt, "d MMM yyyy, h:mm a")}</TooltipContent>
+      </Tooltip>
     )
   }
 
   if (isPast(closesAt)) {
     return (
-      <Badge variant="secondary" className="bg-gray-100 text-gray-600">
-        Closed {formatDistanceToNow(closesAt, { addSuffix: true })}
-      </Badge>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge className="bg-gray-100 text-gray-600" variant="secondary">
+            Closed {formatDistanceToNow(closesAt, { addSuffix: true })}
+          </Badge>
+        </TooltipTrigger>
+        <TooltipContent>
+          {format(closesAt, "d MMM yyyy, h:mm a")}
+        </TooltipContent>
+      </Tooltip>
     )
   }
 
@@ -31,18 +50,32 @@ export function TimerBadge({ opensAt, closesAt }: TimerBadgeProps) {
 
   if (hoursRemaining < 1) {
     return (
-      <Badge variant="destructive">
-        Closes in {"< 1 minute"}
-      </Badge>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Badge variant="destructive">Closes in {"< 1 minute"}</Badge>
+        </TooltipTrigger>
+        <TooltipContent>
+          {format(closesAt, "d MMM yyyy, h:mm a")}
+        </TooltipContent>
+      </Tooltip>
     )
   }
 
   return (
-    <Badge
-      variant="secondary"
-      className={hoursRemaining < 24 ? "bg-orange-100 text-orange-800" : "bg-green-100 text-green-800"}
-    >
-      Closes in {formatDistanceToNow(closesAt)}
-    </Badge>
+    <Tooltip>
+      <TooltipTrigger asChild>
+        <Badge
+          className={
+            hoursRemaining < 24
+              ? "bg-orange-100 text-orange-800"
+              : "bg-green-100 text-green-800"
+          }
+          variant="secondary"
+        >
+          Closes in {formatDistanceToNow(closesAt)}
+        </Badge>
+      </TooltipTrigger>
+      <TooltipContent>{format(closesAt, "d MMM yyyy, h:mm a")}</TooltipContent>
+    </Tooltip>
   )
 }

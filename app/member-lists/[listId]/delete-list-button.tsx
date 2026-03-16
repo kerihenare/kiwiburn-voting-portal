@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +13,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import { deleteMemberList } from "@/lib/actions/member-lists"
 
-export function DeleteListButton({ listId, hasTopics }: { listId: number; hasTopics: boolean }) {
+export function DeleteListButton({ listId }: { listId: string }) {
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
 
@@ -33,20 +33,23 @@ export function DeleteListButton({ listId, hasTopics }: { listId: number; hasTop
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive" disabled={hasTopics}>
-          {hasTopics ? "Cannot delete (has topics)" : "Delete member list"}
-        </Button>
+        <Button variant="destructive">Delete member list</Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete member list?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the member list and all its members. This action cannot be undone.
+            This will permanently delete the member list and all its members.
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={deleting}
+            onClick={handleDelete}
+          >
             {deleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>

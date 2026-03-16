@@ -1,7 +1,7 @@
-import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
-import { getAllMemberLists } from "@/lib/db/queries"
 import { NextResponse } from "next/server"
+import { auth } from "@/lib/auth"
+import { getAllMemberLists } from "@/lib/db/queries"
 
 export async function GET() {
   const session = await auth.api.getSession({ headers: await headers() })

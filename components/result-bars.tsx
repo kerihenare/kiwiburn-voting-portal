@@ -1,5 +1,3 @@
-import { Progress } from "@/components/ui/progress"
-
 interface ResultBarsProps {
   yesCount: number
   noCount: number
@@ -7,26 +5,32 @@ interface ResultBarsProps {
 }
 
 export function ResultBars({ yesCount, noCount, totalVotes }: ResultBarsProps) {
-  const yesPercent = totalVotes > 0 ? Math.round((yesCount / totalVotes) * 100) : 0
-  const noPercent = totalVotes > 0 ? Math.round((noCount / totalVotes) * 100) : 0
+  const yesPercent =
+    totalVotes > 0 ? Math.round((yesCount / totalVotes) * 100) : 0
+  const noPercent =
+    totalVotes > 0 ? Math.round((noCount / totalVotes) * 100) : 0
 
   return (
-    <div className="space-y-3">
-      <div className="space-y-1">
-        <div className="flex justify-between text-sm">
-          <span className="font-medium">Yes</span>
-          <span className="text-muted-foreground">{yesPercent}%</span>
-        </div>
-        <Progress value={yesPercent} className="h-3 [&>div]:bg-green-500" />
+    <div className="space-y-1">
+      <div className="flex justify-between text-sm font-medium">
+        <span>Yes</span>
+        <span>No</span>
       </div>
-      <div className="space-y-1">
-        <div className="flex justify-between text-sm">
-          <span className="font-medium">No</span>
-          <span className="text-muted-foreground">{noPercent}%</span>
-        </div>
-        <Progress value={noPercent} className="h-3 [&>div]:bg-red-500" />
+      <div className="flex h-3 gap-0.5 rounded-full overflow-hidden">
+        <div
+          className="bg-green-500 rounded-l-full"
+          style={{ width: `${yesPercent}%` }}
+        />
+        <div
+          className="bg-red-500 rounded-r-full"
+          style={{ width: `${noPercent}%` }}
+        />
       </div>
-      <p className="text-sm text-muted-foreground">{totalVotes} votes</p>
+      <div className="flex justify-between text-sm text-muted-foreground">
+        <span>{yesPercent}%</span>
+        <span>{totalVotes} votes</span>
+        <span>{noPercent}%</span>
+      </div>
     </div>
   )
 }

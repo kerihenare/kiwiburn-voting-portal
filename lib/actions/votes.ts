@@ -1,16 +1,15 @@
 "use server"
 
-import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
-import { votes, topics, users } from "@/lib/db/schema"
-import { eq, and } from "drizzle-orm"
-import { castVoteSchema } from "@/lib/validations"
 import { checkEligibility, getTopic } from "@/lib/db/queries"
+import { votes } from "@/lib/db/schema"
 import { sendVoteConfirmationEmail } from "@/lib/email"
 import { getTopicStatus } from "@/lib/types"
+import { castVoteSchema } from "@/lib/validations"
 
-export async function castVote(input: { topicId: number; vote: string }) {
+export async function castVote(input: { topicId: string; vote: string }) {
   const parsed = castVoteSchema.parse(input)
 
   const session = await auth.api.getSession({ headers: await headers() })
@@ -33,8 +32,8 @@ export async function castVote(input: { topicId: number; vote: string }) {
       vote: parsed.vote,
     })
     .onConflictDoUpdate({
+      set: { updatedAt: new Date(), vote: parsed.vote },
       target: [votes.topicId, votes.userId],
-      set: { vote: parsed.vote, updatedAt: new Date() },
     })
 
   // Send confirmation email (non-blocking)

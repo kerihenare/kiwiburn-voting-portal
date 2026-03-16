@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +13,16 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import { removeMember } from "@/lib/actions/members"
 
-export function RemoveMemberButton({ memberId, listId }: { memberId: number; listId: number }) {
+export function RemoveMemberButton({
+  memberId,
+  listId,
+}: {
+  memberId: string
+  listId: string
+}) {
   const router = useRouter()
   const [removing, setRemoving] = useState(false)
 
@@ -33,7 +39,11 @@ export function RemoveMemberButton({ memberId, listId }: { memberId: number; lis
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" size="sm" className="text-destructive hover:text-destructive">
+        <Button
+          className="text-destructive hover:bg-destructive hover:text-white"
+          size="sm"
+          variant="ghost"
+        >
           Remove
         </Button>
       </AlertDialogTrigger>
@@ -41,12 +51,13 @@ export function RemoveMemberButton({ memberId, listId }: { memberId: number; lis
         <AlertDialogHeader>
           <AlertDialogTitle>Remove member?</AlertDialogTitle>
           <AlertDialogDescription>
-            This member will be removed from the list and will no longer be eligible to vote on topics associated with this list.
+            This member will be removed from the list and will no longer be
+            eligible to vote on topics associated with this list.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleRemove} disabled={removing}>
+          <AlertDialogAction disabled={removing} onClick={handleRemove}>
             {removing ? "Removing..." : "Remove"}
           </AlertDialogAction>
         </AlertDialogFooter>

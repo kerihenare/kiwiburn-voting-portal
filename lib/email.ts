@@ -1,16 +1,16 @@
-import nodemailer from "nodemailer"
 import { render } from "@react-email/components"
+import nodemailer from "nodemailer"
 import MagicLinkEmail from "@/emails/magic-link"
 import VoteConfirmationEmail from "@/emails/vote-confirmation"
 
 function getTransport() {
   return nodemailer.createTransport({
+    auth: {
+      pass: process.env.SMTP_PASS,
+      user: process.env.SMTP_USER,
+    },
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
-    auth: {
-      user: process.env.SMTP_USER,
-      pass: process.env.SMTP_PASS,
-    },
   })
 }
 
@@ -26,9 +26,9 @@ export async function sendMagicLinkEmail({
 
   await transport.sendMail({
     from: process.env.SMTP_FROM,
-    to: email,
-    subject: "Sign in to Kiwiburn Voting Portal",
     html,
+    subject: "Sign in to Kiwiburn Voting Portal",
+    to: email,
   })
 }
 
@@ -46,8 +46,8 @@ export async function sendVoteConfirmationEmail({
 
   await transport.sendMail({
     from: process.env.SMTP_FROM,
-    to: email,
-    subject: `Vote recorded — ${topicTitle}`,
     html,
+    subject: `Vote recorded — ${topicTitle}`,
+    to: email,
   })
 }

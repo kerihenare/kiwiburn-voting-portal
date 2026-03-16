@@ -1,12 +1,12 @@
 "use server"
 
-import { auth } from "@/lib/auth"
+import { eq } from "drizzle-orm"
+import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { topics } from "@/lib/db/schema"
-import { eq } from "drizzle-orm"
 import { createTopicSchema } from "@/lib/validations"
-import { revalidatePath } from "next/cache"
 
 async function requireAdmin() {
   const session = await auth.api.getSession({ headers: await headers() })
@@ -17,7 +17,7 @@ async function requireAdmin() {
 export async function createTopic(input: {
   title: string
   description?: string
-  memberListId: number
+  memberListId: string
   opensAt: string
   closesAt: string
 }) {
@@ -25,11 +25,11 @@ export async function createTopic(input: {
   const parsed = createTopicSchema.parse(input)
 
   await db.insert(topics).values({
-    title: parsed.title,
+    closesAt: new Date(parsed.closesAt),
     description: parsed.description ?? null,
     memberListId: parsed.memberListId,
     opensAt: new Date(parsed.opensAt),
-    closesAt: new Date(parsed.closesAt),
+    title: parsed.title,
   })
 
   revalidatePath("/topics")
@@ -38,14 +38,14 @@ export async function createTopic(input: {
 }
 
 export async function updateTopic(
-  id: number,
+  id: string,
   input: {
     title: string
     description?: string
-    memberListId: number
+    memberListId: string
     opensAt: string
     closesAt: string
-  }
+  },
 ) {
   await requireAdmin()
   const parsed = createTopicSchema.parse(input)
@@ -53,11 +53,11 @@ export async function updateTopic(
   await db
     .update(topics)
     .set({
-      title: parsed.title,
+      closesAt: new Date(parsed.closesAt),
       description: parsed.description ?? null,
       memberListId: parsed.memberListId,
       opensAt: new Date(parsed.opensAt),
-      closesAt: new Date(parsed.closesAt),
+      title: parsed.title,
       updatedAt: new Date(),
     })
     .where(eq(topics.id, id))
@@ -68,10 +68,13 @@ export async function updateTopic(
   return { success: true }
 }
 
-export async function deleteTopic(id: number) {
-  await requireAdmin()
+export async function deleteTopic(id: string) {
+  const session = await requireAdmin()
 
-  await db.delete(topics).where(eq(topics.id, id))
+  await db
+    .update(topics)
+    .set({ deletedAt: new Date(), deletedBy: session.user.id })
+    .where(eq(topics.id, id))
 
   revalidatePath("/topics")
   revalidatePath("/")

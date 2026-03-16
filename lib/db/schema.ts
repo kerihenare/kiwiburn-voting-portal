@@ -1,95 +1,104 @@
 import {
+  boolean,
   pgTable,
   text,
-  serial,
-  integer,
-  boolean,
   timestamp,
   unique,
+  uuid,
 } from "drizzle-orm/pg-core"
+import { v7 as uuidv7 } from "uuid"
 
 // Better-Auth managed tables
-export const users = pgTable("user", {
-  id: text("id").primaryKey(),
+// NOTE: Better Auth's Drizzle adapter looks up tables by export name (user, session, verification)
+export const user = pgTable("user", {
+  createdAt: timestamp("created_at").notNull().defaultNow(),
   email: text("email").unique().notNull(),
-  name: text("name"),
   emailVerified: boolean("email_verified").notNull().default(false),
+  id: text("id").primaryKey(),
   image: text("image"),
   isAdmin: boolean("is_admin").notNull().default(false),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  name: text("name"),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
 
 export const session = pgTable("session", {
-  id: text("id").primaryKey(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
   expiresAt: timestamp("expires_at").notNull(),
-  token: text("token").unique().notNull(),
+  id: text("id").primaryKey(),
   ipAddress: text("ip_address"),
+  token: text("token").unique().notNull(),
+  updatedAt: timestamp("updated_at").notNull().defaultNow(),
   userAgent: text("user_agent"),
   userId: text("user_id")
     .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
+    .references(() => user.id, { onDelete: "cascade" }),
 })
 
 export const verification = pgTable("verification", {
+  createdAt: timestamp("created_at").defaultNow(),
+  expiresAt: timestamp("expires_at").notNull(),
   id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
-  value: text("value").notNull(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
   updatedAt: timestamp("updated_at").defaultNow(),
+  value: text("value").notNull(),
 })
 
 // Application tables
 export const memberLists = pgTable("member_lists", {
-  id: serial("id").primaryKey(),
-  name: text("name").notNull(),
-  description: text("description"),
   createdAt: timestamp("created_at").notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at"),
+  deletedBy: text("deleted_by").references(() => user.id),
+  description: text("description"),
+  id: uuid("id").primaryKey().$defaultFn(uuidv7),
+  name: text("name").notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
 
 export const members = pgTable(
   "members",
   {
-    id: serial("id").primaryKey(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
     email: text("email").notNull(),
-    memberListId: integer("member_list_id")
+    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    memberListId: uuid("member_list_id")
       .notNull()
       .references(() => memberLists.id, { onDelete: "cascade" }),
-    createdAt: timestamp("created_at").notNull().defaultNow(),
   },
-  (table) => [unique("members_email_list_unique").on(table.email, table.memberListId)]
+  (table) => [
+    unique("members_email_list_unique").on(table.email, table.memberListId),
+  ],
 )
 
 export const topics = pgTable("topics", {
-  id: serial("id").primaryKey(),
-  title: text("title").notNull(),
+  closesAt: timestamp("closes_at").notNull(),
+  createdAt: timestamp("created_at").notNull().defaultNow(),
+  deletedAt: timestamp("deleted_at"),
+  deletedBy: text("deleted_by").references(() => user.id),
   description: text("description"),
-  memberListId: integer("member_list_id")
+  id: uuid("id").primaryKey().$defaultFn(uuidv7),
+  memberListId: uuid("member_list_id")
     .notNull()
     .references(() => memberLists.id),
   opensAt: timestamp("opens_at").notNull(),
-  closesAt: timestamp("closes_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
+  title: text("title").notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
 
 export const votes = pgTable(
   "votes",
   {
-    id: serial("id").primaryKey(),
-    topicId: integer("topic_id")
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    topicId: uuid("topic_id")
       .notNull()
       .references(() => topics.id, { onDelete: "cascade" }),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
     userId: text("user_id")
       .notNull()
-      .references(() => users.id),
+      .references(() => user.id),
     vote: text("vote").notNull(), // 'yes' or 'no'
-    createdAt: timestamp("created_at").notNull().defaultNow(),
-    updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
-  (table) => [unique("votes_topic_user_unique").on(table.topicId, table.userId)]
+  (table) => [
+    unique("votes_topic_user_unique").on(table.topicId, table.userId),
+  ],
 )

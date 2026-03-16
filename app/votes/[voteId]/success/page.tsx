@@ -1,20 +1,18 @@
-import { notFound, redirect } from "next/navigation"
-import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
-import { Card, CardContent } from "@/components/ui/card"
+import Link from "next/link"
+import { notFound, redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
+import { Card, CardContent } from "@/components/ui/card"
+import { auth } from "@/lib/auth"
 import { getTopic, getUserVoteForTopic } from "@/lib/db/queries"
-import Link from "next/link"
 
 export default async function VoteSuccessPage({
   params,
 }: {
   params: Promise<{ voteId: string }>
 }) {
-  const { voteId } = await params
-  const topicId = parseInt(voteId, 10)
-  if (isNaN(topicId)) notFound()
+  const { voteId: topicId } = await params
 
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect("/sign-in")
@@ -42,9 +40,9 @@ export default async function VoteSuccessPage({
           </Badge>
           <h1 className="text-2xl font-bold">Vote recorded</h1>
           <p className="text-muted-foreground">
-            Your vote of <strong>{isYes ? "Yes" : "No"}</strong> on &ldquo;{topic.title}&rdquo; has
-            been securely recorded. Thank you for participating in this KiwiBurn
-            community decision.
+            Your vote of <strong>{isYes ? "Yes" : "No"}</strong> on &ldquo;
+            {topic.title}&rdquo; has been securely recorded. Thank you for
+            participating in this KiwiBurn community decision.
           </p>
           <Button asChild>
             <Link href="/">View all votes</Link>

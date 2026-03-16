@@ -12,10 +12,10 @@ export const auth = betterAuth({
   }),
   plugins: [
     magicLink({
+      expiresIn: 900, // 15 minutes
       sendMagicLink: async ({ email, url }) => {
         await sendMagicLinkEmail({ email, url })
       },
-      expiresIn: 900, // 15 minutes
     }),
   ],
   session: {
@@ -27,12 +27,10 @@ export const auth = betterAuth({
   user: {
     additionalFields: {
       isAdmin: {
-        type: "boolean",
         defaultValue: false,
         input: false,
+        type: "boolean",
       },
     },
   },
 })
-
-export type Session = typeof auth.$Infer.Session

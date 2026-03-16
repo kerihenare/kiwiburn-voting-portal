@@ -27,7 +27,7 @@ export default function MagicLinkEmail({ url }: MagicLinkEmailProps) {
             This link will expire in 15 minutes.
           </Text>
           <Section style={buttonSection}>
-            <Button style={button} href={url}>
+            <Button href={url} style={button}>
               Sign in to Kiwiburn
             </Button>
           </Section>
@@ -41,17 +41,21 @@ export default function MagicLinkEmail({ url }: MagicLinkEmailProps) {
 }
 
 const main = { backgroundColor: "#f3f4f6", fontFamily: "Inter, sans-serif" }
-const container = { margin: "0 auto", padding: "40px 20px", maxWidth: "480px" }
-const heading = { color: "#ab0232", fontSize: "24px", fontWeight: "bold" as const }
+const container = { margin: "0 auto", maxWidth: "480px", padding: "40px 20px" }
+const heading = {
+  color: "#ab0232",
+  fontSize: "24px",
+  fontWeight: "bold" as const,
+}
 const text = { color: "#000000", fontSize: "16px", lineHeight: "24px" }
-const buttonSection = { textAlign: "center" as const, margin: "32px 0" }
+const buttonSection = { margin: "32px 0", textAlign: "center" as const }
 const button = {
   backgroundColor: "#ed7703",
-  color: "#ffffff",
-  padding: "12px 24px",
   borderRadius: "8px",
+  color: "#ffffff",
   fontSize: "16px",
   fontWeight: "bold" as const,
+  padding: "12px 24px",
   textDecoration: "none",
 }
 const footer = { color: "#666666", fontSize: "14px" }

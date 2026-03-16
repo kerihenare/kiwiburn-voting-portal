@@ -1,35 +1,32 @@
-import { auth } from "@/lib/auth"
-import { headers } from "next/headers"
-import { NextRequest, NextResponse } from "next/server"
+import { type NextRequest, NextResponse } from "next/server"
 
 const adminRoutes = ["/member-lists", "/topics"]
 
-export async function middleware(request: NextRequest) {
+export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
 
   const isAdminRoute = adminRoutes.some(
-    (route) => pathname === route || pathname.startsWith(`${route}/`)
+    (route) => pathname === route || pathname.startsWith(`${route}/`),
   )
 
+  const response = NextResponse.next()
+  response.headers.set("x-current-path", pathname)
+
   if (!isAdminRoute) {
-    return NextResponse.next()
+    return response
   }
 
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  })
+  // Lightweight cookie check in middleware (edge-compatible).
+  // Full auth + admin verification happens in the page/layout server components.
+  const sessionCookie = request.cookies.get("better-auth.session_token")
 
-  if (!session) {
+  if (!sessionCookie?.value) {
     const signInUrl = new URL("/sign-in", request.url)
     signInUrl.searchParams.set("callbackUrl", pathname)
     return NextResponse.redirect(signInUrl)
   }
 
-  if (!session.user.isAdmin) {
-    return NextResponse.redirect(new URL("/", request.url))
-  }
-
-  return NextResponse.next()
+  return response
 }
 
 export const config = {

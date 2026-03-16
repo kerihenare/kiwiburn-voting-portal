@@ -10,7 +10,30 @@
       "Bash(git commit:*)",
       "Bash(git:*)",
       "Bash(npx tsc:*)",
-      "Bash(pnpm build:*)"
+      "Bash(pnpm build:*)",
+      "Bash(find:*)",
+      "Bash(pnpm dev:*)",
+      "Bash(kill:*)",
+      "Bash(pnpm test:*)",
+      "Bash(pnpm drizzle-kit:*)",
+      "Bash(npx drizzle-kit:*)",
+      "Bash(pnpm:*)",
+      "Bash(grep:*)",
+      "Bash(npx vitest:*)",
+      "Bash(source:*)",
+      "Bash(npx tsx:*)",
+      "Bash(ls:*)",
+      "mcp__plugin_playwright_playwright__browser_navigate",
+      "mcp__plugin_playwright_playwright__browser_take_screenshot",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(node:*)",
+      "mcp__plugin_playwright_playwright__browser_close",
+      "mcp__plugin_playwright_playwright__browser_hover",
+      "Bash(docker exec:*)",
+      "Bash(docker restart:*)",
+      "mcp__plugin_playwright_playwright__browser_press_key",
+      "Bash(docker compose:*)",
+      "Bash(psql:*)"
     ]
   }
 }

@@ -1,29 +1,34 @@
-import Link from "next/link"
-import { auth } from "@/lib/auth"
 import { headers } from "next/headers"
+import Link from "next/link"
 import { SignOutButton } from "@/components/sign-out-button"
+import { auth } from "@/lib/auth"
 
 export async function Header() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  const headersList = await headers()
+  const session = await auth.api.getSession({ headers: headersList })
+  const pathname = headersList.get("x-current-path")
 
   return (
     <header className="bg-[#332d2d] text-white">
       <nav className="container mx-auto px-4 max-w-4xl flex items-center justify-between h-14">
         <div className="flex items-center gap-6">
-          <Link href="/" className="font-bold text-lg">
+          <Link
+            className="font-bold text-lg rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
+            href="/"
+          >
             Kiwiburn
           </Link>
           {session?.user.isAdmin && (
             <>
               <Link
+                className="text-sm text-white/80 hover:text-white rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                 href="/member-lists"
-                className="text-sm text-white/80 hover:text-white"
               >
                 Member Lists
               </Link>
               <Link
+                className="text-sm text-white/80 hover:text-white rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
                 href="/topics"
-                className="text-sm text-white/80 hover:text-white"
               >
                 Topics
               </Link>
@@ -33,17 +38,19 @@ export async function Header() {
         <div className="flex items-center gap-4">
           {session ? (
             <>
-              <span className="text-sm text-white/70">{session.user.email}</span>
+              <span className="text-sm text-white/70">
+                {session.user.email}
+              </span>
               <SignOutButton />
             </>
-          ) : (
+          ) : pathname !== "/sign-in" ? (
             <Link
+              className="text-sm bg-black/25 text-white px-3 py-1.5 rounded-md hover:bg-black/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
               href="/sign-in"
-              className="text-sm bg-primary text-primary-foreground px-3 py-1.5 rounded-md hover:opacity-90"
             >
               Sign in
             </Link>
-          )}
+          ) : null}
         </div>
       </nav>
     </header>

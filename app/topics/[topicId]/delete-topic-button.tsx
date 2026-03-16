@@ -1,8 +1,7 @@
 "use client"
 
-import { useState } from "react"
 import { useRouter } from "next/navigation"
-import { Button } from "@/components/ui/button"
+import { useState } from "react"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -14,9 +13,10 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog"
+import { Button } from "@/components/ui/button"
 import { deleteTopic } from "@/lib/actions/topics"
 
-export function DeleteTopicButton({ topicId }: { topicId: number }) {
+export function DeleteTopicButton({ topicId }: { topicId: string }) {
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
 
@@ -33,18 +33,28 @@ export function DeleteTopicButton({ topicId }: { topicId: number }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button variant="destructive">Delete topic</Button>
+        <Button
+          className="text-destructive hover:bg-destructive hover:text-white"
+          variant="ghost"
+        >
+          Delete topic
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>Delete topic?</AlertDialogTitle>
           <AlertDialogDescription>
-            This will permanently delete the topic and all associated votes. This action cannot be undone.
+            This will permanently delete the topic and all associated votes.
+            This action cannot be undone.
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
-          <AlertDialogAction onClick={handleDelete} disabled={deleting} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+          <AlertDialogAction
+            className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            disabled={deleting}
+            onClick={handleDelete}
+          >
             {deleting ? "Deleting..." : "Delete"}
           </AlertDialogAction>
         </AlertDialogFooter>
