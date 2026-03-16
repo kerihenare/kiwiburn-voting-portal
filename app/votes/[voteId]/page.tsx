@@ -46,7 +46,7 @@ export default async function VotePage({
         <CardContent className="space-y-6">
           <div className="flex items-center justify-between">
             {topic.memberListName && (
-              <p className="mb-0 text-sm text-muted-foreground/60">
+              <p className="mb-0 text-sm text-muted-foreground">
                 {topic.memberListName}
               </p>
             )}

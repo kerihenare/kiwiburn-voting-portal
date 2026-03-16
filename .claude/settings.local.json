@@ -33,7 +33,12 @@
       "Bash(docker restart:*)",
       "mcp__plugin_playwright_playwright__browser_press_key",
       "Bash(docker compose:*)",
-      "Bash(psql:*)"
+      "Bash(psql:*)",
+      "Bash(sleep:*)",
+      "mcp__plugin_playwright_playwright__browser_run_code",
+      "Bash(npx lighthouse:*)",
+      "Bash(pkill:*)",
+      "Bash(curl:*)"
     ]
   }
 }
