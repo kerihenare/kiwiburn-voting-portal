@@ -1,2 +1,1 @@
-# kiwiburn-voter-portal
-Kiwiburn Voter Portal
+# Kiwiburn Voting Portal
