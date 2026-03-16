@@ -1,91 +1,70 @@
-import Link from 'next/link'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
-import { Badge } from '@/components/ui/badge'
-import { Button } from '@/components/ui/button'
-import { Clock, Users, Vote } from 'lucide-react'
-import type { Topic } from '@/lib/types'
+import Link from "next/link"
+import { Card, CardContent, CardFooter } from "@/components/ui/card"
+import { Badge } from "@/components/ui/badge"
+import { Button } from "@/components/ui/button"
+import { Separator } from "@/components/ui/separator"
+import { TimerBadge } from "@/components/timer-badge"
+import { ResultBars } from "@/components/result-bars"
+import { getTopicStatus } from "@/lib/types"
 
 interface TopicCardProps {
-  topic: Topic & {
-    total_votes?: number
-    total_members?: number
+  topic: {
+    id: number
+    title: string
+    description: string | null
+    memberListName: string | null
+    opensAt: Date
+    closesAt: Date
+    yesCount: number
+    noCount: number
+    totalVotes: number
   }
-  userHasVoted?: boolean
+  userVote?: string | null
 }
 
-export function TopicCard({ topic, userHasVoted }: TopicCardProps) {
-  const isOpen = topic.voting_open
-  const closesAt = topic.closes_at ? new Date(topic.closes_at) : null
-  const isClosed = closesAt && closesAt < new Date()
-
-  const formatClosingDate = (date: Date) => {
-    return date.toLocaleDateString('en-NZ', {
-      weekday: 'short',
-      day: 'numeric',
-      month: 'short',
-      hour: 'numeric',
-      minute: '2-digit',
-    })
-  }
+export function TopicCard({ topic, userVote }: TopicCardProps) {
+  const status = getTopicStatus(topic.opensAt, topic.closesAt)
 
   return (
-    <Card className="flex flex-col h-full hover:shadow-md transition-shadow">
-      <CardHeader className="flex-1">
-        <div className="flex items-start justify-between gap-2 mb-2">
-          <Badge variant={isOpen && !isClosed ? 'default' : 'secondary'}>
-            {isClosed ? 'Closed' : isOpen ? 'Open' : 'Not yet open'}
-          </Badge>
-          {userHasVoted && (
-            <Badge variant="outline" className="text-primary border-primary">
-              Voted
+    <Card>
+      <CardContent className="pt-6 space-y-3">
+        <TimerBadge opensAt={topic.opensAt} closesAt={topic.closesAt} />
+        {topic.memberListName && (
+          <p className="text-sm text-muted-foreground">{topic.memberListName}</p>
+        )}
+        <h2 className="text-lg font-bold text-[#ab0232]">{topic.title}</h2>
+        {topic.description && (
+          <p className="text-sm text-muted-foreground line-clamp-2">
+            {topic.description}
+          </p>
+        )}
+        {status === "closed" && (
+          <ResultBars
+            yesCount={topic.yesCount}
+            noCount={topic.noCount}
+            totalVotes={topic.totalVotes}
+          />
+        )}
+      </CardContent>
+      <Separator />
+      <CardFooter className="flex items-center justify-between py-3">
+        <div>
+          {userVote && (
+            <Badge variant="outline">
+              You voted: {userVote.charAt(0).toUpperCase() + userVote.slice(1)}
             </Badge>
           )}
         </div>
-        <CardTitle className="text-xl leading-tight">{topic.title}</CardTitle>
-        {topic.description && (
-          <CardDescription className="line-clamp-3 mt-2">
-            {topic.description}
-          </CardDescription>
-        )}
-      </CardHeader>
-      <CardContent className="pt-0">
-        <div className="flex flex-col gap-3">
-          <div className="flex items-center gap-4 text-sm text-muted-foreground">
-            {closesAt && (
-              <div className="flex items-center gap-1">
-                <Clock className="h-4 w-4" />
-                <span>{isClosed ? 'Closed' : `Closes ${formatClosingDate(closesAt)}`}</span>
-              </div>
-            )}
-            {topic.total_members !== undefined && (
-              <div className="flex items-center gap-1">
-                <Users className="h-4 w-4" />
-                <span>{topic.total_members} eligible</span>
-              </div>
-            )}
-          </div>
-          {topic.total_votes !== undefined && topic.total_members !== undefined && (
-            <div className="w-full bg-secondary rounded-full h-2">
-              <div 
-                className="bg-primary h-2 rounded-full transition-all"
-                style={{ 
-                  width: `${topic.total_members > 0 ? (topic.total_votes / topic.total_members) * 100 : 0}%` 
-                }}
-              />
-            </div>
-          )}
-          <Button 
-            asChild 
-            variant={isOpen && !isClosed ? 'default' : 'outline'}
-            className="w-full"
-          >
-            <Link href={`/vote/${topic.id}`}>
-              <Vote className="h-4 w-4 mr-2" />
-              {isClosed ? 'View results' : userHasVoted ? 'Change vote' : 'Cast your vote'}
-            </Link>
-          </Button>
-        </div>
-      </CardContent>
+        <Button asChild size="sm">
+          <Link href={`/votes/${topic.id}`}>
+            {status === "closed"
+              ? "View results"
+              : userVote
+                ? "Change vote"
+                : "Vote now"}
+          </Link>
+        </Button>
+      </CardFooter>
     </Card>
   )
 }
