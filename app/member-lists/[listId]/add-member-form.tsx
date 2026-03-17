@@ -57,6 +57,7 @@ const AddMemberRow = glide("form", {
   alignItems: "items-start",
   display: "flex",
   flex: "flex-1",
+  flexDirection: ["flex-col", "sm:flex-row"],
   gap: "gap-2",
 })
 
