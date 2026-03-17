@@ -2,15 +2,16 @@ import { notFound } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth-guard"
 import { getAllMemberLists, getTopic } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 import { EditTopicForm } from "./edit-topic-form"
 
-export default async function TopicEditPage({
-  params,
-}: {
+interface TopicEditPageProps {
   params: Promise<{ topicId: string }>
-}) {
+}
+
+export default async function TopicEditPage(props: TopicEditPageProps) {
   await requireAdmin()
-  const { topicId: id } = await params
+  const { topicId: id } = await props.params
 
   const [topic, memberLists] = await Promise.all([
     getTopic(id),
@@ -19,8 +20,8 @@ export default async function TopicEditPage({
   if (!topic) notFound()
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-accent">Edit topic</h1>
+    <PageContent>
+      <PageTitle>Edit topic</PageTitle>
 
       <Card>
         <CardContent>
@@ -35,6 +36,16 @@ export default async function TopicEditPage({
           />
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   )
 }
+
+const PageContent = glide("div", {
+  other: "space-y-6",
+})
+
+const PageTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
