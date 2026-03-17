@@ -5,8 +5,13 @@ import { useCallback, useRef, useState } from "react"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Button } from "@/components/ui/button"
 import { uploadMembers } from "@/lib/actions/members"
+import { glide } from "@/lib/glidepath"
 
-export function UploadMembersForm({ listId }: { listId: string }) {
+interface UploadMembersFormProps {
+  listId: string
+}
+
+export function UploadMembersForm(props: UploadMembersFormProps) {
   const router = useRouter()
   const fileRef = useRef<HTMLInputElement>(null)
   const [emails, setEmails] = useState<string[]>([])
@@ -48,7 +53,7 @@ export function UploadMembersForm({ listId }: { listId: string }) {
   async function handleUpload() {
     setUploading(true)
     try {
-      const res = await uploadMembers(listId, emails)
+      const res = await uploadMembers(props.listId, emails)
       setResult(res)
       setEmails([])
       setInvalidCount(0)
@@ -67,7 +72,7 @@ export function UploadMembersForm({ listId }: { listId: string }) {
   }
 
   return (
-    <div className="shrink-0">
+    <UploadWrapper>
       <input
         accept=".csv,.txt"
         className="hidden"
@@ -95,27 +100,45 @@ export function UploadMembersForm({ listId }: { listId: string }) {
       </Button>
 
       {emails.length > 0 && (
-        <div className="mt-3 space-y-2">
-          <p className="text-sm text-muted-foreground">
+        <PreviewSection>
+          <PreviewText>
             {emails.length} email{emails.length !== 1 && "s"} found
             {invalidCount > 0 && ` (${invalidCount} invalid skipped)`}
-          </p>
+          </PreviewText>
           <Button disabled={uploading} onClick={handleUpload} size="sm">
             {uploading ? "Uploading\u2026" : `Upload ${emails.length}`}
           </Button>
-        </div>
+        </PreviewSection>
       )}
 
       {result && (
-        <div className="mt-3">
+        <ResultSection>
           <Alert>
             <AlertDescription>
               {result.added} added, {result.duplicates} duplicate
               {result.duplicates !== 1 && "s"}, {result.invalid} invalid
             </AlertDescription>
           </Alert>
-        </div>
+        </ResultSection>
       )}
-    </div>
+    </UploadWrapper>
   )
 }
+
+const UploadWrapper = glide("div", {
+  flexShrink: "shrink-0",
+})
+
+const PreviewSection = glide("div", {
+  marginTop: "mt-3",
+  other: "space-y-2",
+})
+
+const PreviewText = glide("p", {
+  color: "text-muted-foreground",
+  fontSize: "text-sm",
+})
+
+const ResultSection = glide("div", {
+  marginTop: "mt-3",
+})
