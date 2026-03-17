@@ -5,5 +5,5 @@
  * @returns The flattened class names
  */
 export function flattenClassNames(classNames: string | string[]): string {
-  return typeof classNames === "string" ? classNames : classNames.join(" ");
+  return typeof classNames === "string" ? classNames : classNames.join(" ")
 }

@@ -3,14 +3,14 @@ import {
   createElement,
   type JSX,
   type JSXElementConstructor,
-} from "react";
-import { twMerge } from "tailwind-merge";
+} from "react"
+import { twMerge } from "tailwind-merge"
 
 import type {
   GlidePathFunction,
   GlidepathObject,
-} from "./types/glidepath-types";
-import { flattenClassNames } from "./utils";
+} from "./types/glidepath-types"
+import { flattenClassNames } from "./utils"
 
 /**
  * Glidepath component
@@ -24,25 +24,25 @@ export function glide<
   T extends keyof JSX.IntrinsicElements | JSXElementConstructor<any>,
 >(Component: T, styles: GlidepathObject | GlidePathFunction<T>) {
   const classNames =
-    typeof styles === "function" ? styles : flattenGlidepathObject(styles);
+    typeof styles === "function" ? styles : flattenGlidepathObject(styles)
 
   const StyledComponent = (props: ComponentProps<typeof Component>) => {
     const compiledClassName =
       typeof classNames === "string"
         ? classNames
-        : flattenGlidepathObject(classNames(props));
+        : flattenGlidepathObject(classNames(props))
 
     const className = props.className
       ? twMerge(`${compiledClassName} ${props.className}`)
-      : compiledClassName;
+      : compiledClassName
 
     return createElement(Component, {
       ...props,
       className,
-    });
-  };
+    })
+  }
 
-  return StyledComponent as T;
+  return StyledComponent as T
 }
 
 /**
@@ -56,26 +56,26 @@ function flattenGlidepathObject(obj: GlidepathObject) {
     string,
     string | string[]
   > & {
-    lineHeight: string | string[];
-    other: string | string[];
-  };
+    lineHeight: string | string[]
+    other: string | string[]
+  }
 
-  const classNames: string[] = [];
+  const classNames: string[] = []
 
   for (const value of Object.values(rest)) {
-    classNames.push(flattenClassNames(value));
+    classNames.push(flattenClassNames(value))
   }
 
   if (other) {
-    classNames.push(flattenClassNames(other));
+    classNames.push(flattenClassNames(other))
   }
 
   // Line height must be last to override other styles
   if (lineHeight) {
-    classNames.push(flattenClassNames(lineHeight));
+    classNames.push(flattenClassNames(lineHeight))
   }
 
-  return classNames.join(" ");
+  return classNames.join(" ")
 }
 
-export type { GlidepathObject };
+export type { GlidepathObject }

@@ -5,7 +5,7 @@ import type {
   MaxWidthName,
   SizeValue,
   SpacingValue,
-} from "./utility-types";
+} from "./utility-types"
 
 /**
  * Tailwind values
@@ -22,7 +22,7 @@ export interface TailwindValues {
     | "aspect-square"
     | "aspect-video"
     | "aspect-auto"
-    | (`aspect-${string}` & {});
+    | (`aspect-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/columns */
   columns:
@@ -40,7 +40,7 @@ export interface TailwindValues {
     | "columns-6xl"
     | "columns-7xl"
     | "columns-auto"
-    | (`columns-${string}` & {});
+    | (`columns-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/break-after */
   breakAfter:
@@ -51,7 +51,7 @@ export interface TailwindValues {
     | "break-after-page"
     | "break-after-left"
     | "break-after-right"
-    | "break-after-column";
+    | "break-after-column"
 
   /** @see https://tailwindcss.com/docs/break-before */
   breakBefore:
@@ -62,20 +62,20 @@ export interface TailwindValues {
     | "break-before-page"
     | "break-before-left"
     | "break-before-right"
-    | "break-before-column";
+    | "break-before-column"
 
   /** @see https://tailwindcss.com/docs/break-inside */
   breakInside:
     | "break-inside-auto"
     | "break-inside-avoid"
     | "break-inside-avoid-page"
-    | "break-inside-column";
+    | "break-inside-column"
 
   /** @see https://tailwindcss.com/docs/box-decoration-break */
-  boxDecorationBreak: "box-decoration-clone" | "box-decoration-slice";
+  boxDecorationBreak: "box-decoration-clone" | "box-decoration-slice"
 
   /** @see https://tailwindcss.com/docs/box-sizing */
-  boxSizing: "box-border" | "box-content";
+  boxSizing: "box-border" | "box-content"
 
   /** @see https://tailwindcss.com/docs/display */
   display:
@@ -100,7 +100,7 @@ export interface TailwindValues {
     | "table-row"
     | "list-item"
     | "hidden"
-    | "sr-only";
+    | "sr-only"
 
   /** @see https://tailwindcss.com/docs/float */
   float:
@@ -108,7 +108,7 @@ export interface TailwindValues {
     | "float-left"
     | "float-none"
     | "float-start"
-    | "float-end";
+    | "float-end"
 
   /** @see https://tailwindcss.com/docs/clear */
   clear:
@@ -117,10 +117,10 @@ export interface TailwindValues {
     | "clear-both"
     | "clear-none"
     | "clear-start"
-    | "clear-end";
+    | "clear-end"
 
   /** @see https://tailwindcss.com/docs/isolation */
-  isolation: "isolate" | "isolation-auto";
+  isolation: "isolate" | "isolation-auto"
 
   /** @see https://tailwindcss.com/docs/object-fit */
   objectFit:
@@ -128,7 +128,7 @@ export interface TailwindValues {
     | "object-cover"
     | "object-fill"
     | "object-none"
-    | "object-scale-down";
+    | "object-scale-down"
 
   /** @see https://tailwindcss.com/docs/object-position */
   objectPosition:
@@ -141,7 +141,7 @@ export interface TailwindValues {
     | "object-right-bottom"
     | "object-right-top"
     | "object-top"
-    | (`object-${string}` & {});
+    | (`object-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/overflow */
   overflow:
@@ -149,7 +149,7 @@ export interface TailwindValues {
     | "overflow-hidden"
     | "overflow-clip"
     | "overflow-visible"
-    | "overflow-scroll";
+    | "overflow-scroll"
 
   /** @see https://tailwindcss.com/docs/overflow */
   overflowX:
@@ -157,7 +157,7 @@ export interface TailwindValues {
     | "overflow-x-hidden"
     | "overflow-x-clip"
     | "overflow-x-visible"
-    | "overflow-x-scroll";
+    | "overflow-x-scroll"
 
   /** @see https://tailwindcss.com/docs/overflow */
   overflowY:
@@ -165,78 +165,78 @@ export interface TailwindValues {
     | "overflow-y-hidden"
     | "overflow-y-clip"
     | "overflow-y-visible"
-    | "overflow-y-scroll";
+    | "overflow-y-scroll"
 
   /** @see https://tailwindcss.com/docs/overscroll-behavior */
   overscrollBehavior:
     | "overscroll-auto"
     | "overscroll-contain"
-    | "overscroll-none";
+    | "overscroll-none"
 
   /** @see https://tailwindcss.com/docs/overscroll-behavior */
   overscrollBehaviorX:
     | "overscroll-x-auto"
     | "overscroll-x-contain"
-    | "overscroll-x-none";
+    | "overscroll-x-none"
 
   /** @see https://tailwindcss.com/docs/overscroll-behavior */
   overscrollBehaviorY:
     | "overscroll-y-auto"
     | "overscroll-y-contain"
-    | "overscroll-y-none";
+    | "overscroll-y-none"
 
   /** @see https://tailwindcss.com/docs/position */
-  position: "static" | "fixed" | "absolute" | "relative" | "sticky";
+  position: "static" | "fixed" | "absolute" | "relative" | "sticky"
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  inset: `inset-${SpacingValue}` | `-inset-${SpacingValue}`;
+  inset: `inset-${SpacingValue}` | `-inset-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  insetX: `inset-x-${SpacingValue}` | `-inset-x-${SpacingValue}`;
+  insetX: `inset-x-${SpacingValue}` | `-inset-x-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  insetY: `inset-y-${SpacingValue}` | `-inset-y-${SpacingValue}`;
+  insetY: `inset-y-${SpacingValue}` | `-inset-y-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  top: `top-${SpacingValue}` | `-top-${SpacingValue}`;
+  top: `top-${SpacingValue}` | `-top-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  right: `right-${SpacingValue}` | `-right-${SpacingValue}`;
+  right: `right-${SpacingValue}` | `-right-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  bottom: `bottom-${SpacingValue}` | `-bottom-${SpacingValue}`;
+  bottom: `bottom-${SpacingValue}` | `-bottom-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  left: `left-${SpacingValue}` | `-left-${SpacingValue}`;
+  left: `left-${SpacingValue}` | `-left-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  start: `start-${SpacingValue}` | `-start-${SpacingValue}`;
+  start: `start-${SpacingValue}` | `-start-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/top-right-bottom-left */
-  end: `end-${SpacingValue}` | `-end-${SpacingValue}`;
+  end: `end-${SpacingValue}` | `-end-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/visibility */
-  visibility: "visible" | "invisible" | "collapse";
+  visibility: "visible" | "invisible" | "collapse"
 
   /** @see https://tailwindcss.com/docs/z-index */
-  zIndex: "z-auto" | (`z-${string}` & {}) | `-z-${string}`;
+  zIndex: "z-auto" | (`z-${string}` & {}) | `-z-${string}`
 
   // -------------------------------------------------------------------------
   // Flexbox & Grid
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/flex-basis */
-  flexBasis: `basis-${SpacingValue}`;
+  flexBasis: `basis-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/flex-direction */
   flexDirection:
     | "flex-row"
     | "flex-row-reverse"
     | "flex-col"
-    | "flex-col-reverse";
+    | "flex-col-reverse"
 
   /** @see https://tailwindcss.com/docs/flex-wrap */
-  flexWrap: "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap";
+  flexWrap: "flex-wrap" | "flex-wrap-reverse" | "flex-nowrap"
 
   /** @see https://tailwindcss.com/docs/flex */
   flex:
@@ -244,13 +244,13 @@ export interface TailwindValues {
     | "flex-auto"
     | "flex-initial"
     | "flex-none"
-    | (`flex-${string}` & {});
+    | (`flex-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/flex-grow */
-  flexGrow: "grow" | `grow-${string}`;
+  flexGrow: "grow" | `grow-${string}`
 
   /** @see https://tailwindcss.com/docs/flex-shrink */
-  flexShrink: "shrink" | `shrink-${string}`;
+  flexShrink: "shrink" | `shrink-${string}`
 
   /** @see https://tailwindcss.com/docs/order */
   order:
@@ -258,43 +258,43 @@ export interface TailwindValues {
     | "order-last"
     | "order-none"
     | (`order-${string}` & {})
-    | `-order-${string}`;
+    | `-order-${string}`
 
   /** @see https://tailwindcss.com/docs/grid-template-columns */
   gridTemplateColumns:
     | "grid-cols-none"
     | "grid-cols-subgrid"
-    | (`grid-cols-${string}` & {});
+    | (`grid-cols-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-column */
-  gridColumnSpan: (`col-span-${string}` & {}) | "col-span-full";
+  gridColumnSpan: (`col-span-${string}` & {}) | "col-span-full"
 
   /** @see https://tailwindcss.com/docs/grid-column */
-  gridColumnStart: "col-start-auto" | (`col-start-${string}` & {});
+  gridColumnStart: "col-start-auto" | (`col-start-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-column */
-  gridColumnEnd: "col-end-auto" | (`col-end-${string}` & {});
+  gridColumnEnd: "col-end-auto" | (`col-end-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-column */
-  gridColumnAuto: "col-auto";
+  gridColumnAuto: "col-auto"
 
   /** @see https://tailwindcss.com/docs/grid-template-rows */
   gridTemplateRows:
     | "grid-rows-none"
     | "grid-rows-subgrid"
-    | (`grid-rows-${string}` & {});
+    | (`grid-rows-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-row */
-  gridRowSpan: (`row-span-${string}` & {}) | "row-span-full";
+  gridRowSpan: (`row-span-${string}` & {}) | "row-span-full"
 
   /** @see https://tailwindcss.com/docs/grid-row */
-  gridRowStart: "row-start-auto" | (`row-start-${string}` & {});
+  gridRowStart: "row-start-auto" | (`row-start-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-row */
-  gridRowEnd: "row-end-auto" | (`row-end-${string}` & {});
+  gridRowEnd: "row-end-auto" | (`row-end-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-row */
-  gridRowAuto: "row-auto";
+  gridRowAuto: "row-auto"
 
   /** @see https://tailwindcss.com/docs/grid-auto-flow */
   gridAutoFlow:
@@ -302,7 +302,7 @@ export interface TailwindValues {
     | "grid-flow-col"
     | "grid-flow-dense"
     | "grid-flow-row-dense"
-    | "grid-flow-col-dense";
+    | "grid-flow-col-dense"
 
   /** @see https://tailwindcss.com/docs/grid-auto-columns */
   gridAutoColumns:
@@ -310,7 +310,7 @@ export interface TailwindValues {
     | "auto-cols-min"
     | "auto-cols-max"
     | "auto-cols-fr"
-    | (`auto-cols-${string}` & {});
+    | (`auto-cols-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grid-auto-rows */
   gridAutoRows:
@@ -318,16 +318,16 @@ export interface TailwindValues {
     | "auto-rows-min"
     | "auto-rows-max"
     | "auto-rows-fr"
-    | (`auto-rows-${string}` & {});
+    | (`auto-rows-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/gap */
-  gap: `gap-${string}`;
+  gap: `gap-${string}`
 
   /** @see https://tailwindcss.com/docs/gap */
-  gapX: `gap-x-${string}`;
+  gapX: `gap-x-${string}`
 
   /** @see https://tailwindcss.com/docs/gap */
-  gapY: `gap-y-${string}`;
+  gapY: `gap-y-${string}`
 
   /** @see https://tailwindcss.com/docs/justify-content */
   justifyContent:
@@ -338,7 +338,7 @@ export interface TailwindValues {
     | "justify-between"
     | "justify-around"
     | "justify-evenly"
-    | "justify-stretch";
+    | "justify-stretch"
 
   /** @see https://tailwindcss.com/docs/justify-items */
   justifyItems:
@@ -346,7 +346,7 @@ export interface TailwindValues {
     | "justify-items-end"
     | "justify-items-center"
     | "justify-items-stretch"
-    | "justify-items-normal";
+    | "justify-items-normal"
 
   /** @see https://tailwindcss.com/docs/justify-self */
   justifySelf:
@@ -354,7 +354,7 @@ export interface TailwindValues {
     | "justify-self-start"
     | "justify-self-end"
     | "justify-self-center"
-    | "justify-self-stretch";
+    | "justify-self-stretch"
 
   /** @see https://tailwindcss.com/docs/align-content */
   alignContent:
@@ -366,7 +366,7 @@ export interface TailwindValues {
     | "content-around"
     | "content-evenly"
     | "content-baseline"
-    | "content-stretch";
+    | "content-stretch"
 
   /** @see https://tailwindcss.com/docs/align-items */
   alignItems:
@@ -374,7 +374,7 @@ export interface TailwindValues {
     | "items-end"
     | "items-center"
     | "items-baseline"
-    | "items-stretch";
+    | "items-stretch"
 
   /** @see https://tailwindcss.com/docs/align-self */
   alignSelf:
@@ -383,7 +383,7 @@ export interface TailwindValues {
     | "self-end"
     | "self-center"
     | "self-stretch"
-    | "self-baseline";
+    | "self-baseline"
 
   /** @see https://tailwindcss.com/docs/place-content */
   placeContent:
@@ -394,7 +394,7 @@ export interface TailwindValues {
     | "place-content-around"
     | "place-content-evenly"
     | "place-content-baseline"
-    | "place-content-stretch";
+    | "place-content-stretch"
 
   /** @see https://tailwindcss.com/docs/place-items */
   placeItems:
@@ -402,7 +402,7 @@ export interface TailwindValues {
     | "place-items-end"
     | "place-items-center"
     | "place-items-baseline"
-    | "place-items-stretch";
+    | "place-items-stretch"
 
   /** @see https://tailwindcss.com/docs/place-self */
   placeSelf:
@@ -410,96 +410,96 @@ export interface TailwindValues {
     | "place-self-start"
     | "place-self-end"
     | "place-self-center"
-    | "place-self-stretch";
+    | "place-self-stretch"
 
   // -------------------------------------------------------------------------
   // Spacing
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/padding */
-  padding: `p-${SpacingValue}`;
+  padding: `p-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingX: `px-${SpacingValue}`;
+  paddingX: `px-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingY: `py-${SpacingValue}`;
+  paddingY: `py-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingTop: `pt-${SpacingValue}`;
+  paddingTop: `pt-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingRight: `pr-${SpacingValue}`;
+  paddingRight: `pr-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingBottom: `pb-${SpacingValue}`;
+  paddingBottom: `pb-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingLeft: `pl-${SpacingValue}`;
+  paddingLeft: `pl-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingStart: `ps-${SpacingValue}`;
+  paddingStart: `ps-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/padding */
-  paddingEnd: `pe-${SpacingValue}`;
+  paddingEnd: `pe-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  margin: `m-${SpacingValue}` | `-m-${SpacingValue}`;
+  margin: `m-${SpacingValue}` | `-m-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginX: `mx-${SpacingValue}` | `-mx-${SpacingValue}`;
+  marginX: `mx-${SpacingValue}` | `-mx-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginY: `my-${SpacingValue}` | `-my-${SpacingValue}`;
+  marginY: `my-${SpacingValue}` | `-my-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginTop: `mt-${SpacingValue}` | `-mt-${SpacingValue}`;
+  marginTop: `mt-${SpacingValue}` | `-mt-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginRight: `mr-${SpacingValue}` | `-mr-${SpacingValue}`;
+  marginRight: `mr-${SpacingValue}` | `-mr-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginBottom: `mb-${SpacingValue}` | `-mb-${SpacingValue}`;
+  marginBottom: `mb-${SpacingValue}` | `-mb-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginLeft: `ml-${SpacingValue}` | `-ml-${SpacingValue}`;
+  marginLeft: `ml-${SpacingValue}` | `-ml-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginStart: `ms-${SpacingValue}` | `-ms-${SpacingValue}`;
+  marginStart: `ms-${SpacingValue}` | `-ms-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/margin */
-  marginEnd: `me-${SpacingValue}` | `-me-${SpacingValue}`;
+  marginEnd: `me-${SpacingValue}` | `-me-${SpacingValue}`
 
   /** @see https://tailwindcss.com/docs/space */
-  spaceX: (`space-x-${string}` & {}) | `-space-x-${string}` | "space-x-reverse";
+  spaceX: (`space-x-${string}` & {}) | `-space-x-${string}` | "space-x-reverse"
 
   /** @see https://tailwindcss.com/docs/space */
-  spaceY: (`space-y-${string}` & {}) | `-space-y-${string}` | "space-y-reverse";
+  spaceY: (`space-y-${string}` & {}) | `-space-y-${string}` | "space-y-reverse"
 
   // -------------------------------------------------------------------------
   // Sizing
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/width */
-  width: `w-${SizeValue}`;
+  width: `w-${SizeValue}`
 
   /** @see https://tailwindcss.com/docs/min-width */
-  minWidth: `min-w-${SizeValue}`;
+  minWidth: `min-w-${SizeValue}`
 
   /** @see https://tailwindcss.com/docs/max-width */
-  maxWidth: `max-w-${MaxWidthName}`;
+  maxWidth: `max-w-${MaxWidthName}`
 
   /** @see https://tailwindcss.com/docs/height */
-  height: `h-${SizeValue}`;
+  height: `h-${SizeValue}`
 
   /** @see https://tailwindcss.com/docs/min-height */
-  minHeight: `min-h-${SizeValue}`;
+  minHeight: `min-h-${SizeValue}`
 
   /** @see https://tailwindcss.com/docs/max-height */
-  maxHeight: `max-h-${SizeValue}` | "max-h-none";
+  maxHeight: `max-h-${SizeValue}` | "max-h-none"
 
   /** @see https://tailwindcss.com/docs/size */
-  size: `size-${SizeValue}`;
+  size: `size-${SizeValue}`
 
   // -------------------------------------------------------------------------
   // Typography
@@ -512,7 +512,7 @@ export interface TailwindValues {
     | "font-mono"
     | "font-sans"
     | "font-serif"
-    | (`font-${string}` & {});
+    | (`font-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/font-size */
   fontSize:
@@ -529,13 +529,13 @@ export interface TailwindValues {
     | "text-7xl"
     | "text-8xl"
     | "text-9xl"
-    | (`text-${string}` & {});
+    | (`text-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/font-smoothing */
-  fontSmoothing: "antialiased" | "subpixel-antialiased";
+  fontSmoothing: "antialiased" | "subpixel-antialiased"
 
   /** @see https://tailwindcss.com/docs/font-style */
-  fontStyle: "italic" | "not-italic";
+  fontStyle: "italic" | "not-italic"
 
   /** @see https://tailwindcss.com/docs/font-weight */
   fontWeight:
@@ -548,7 +548,7 @@ export interface TailwindValues {
     | "font-bold"
     | "font-extrabold"
     | "font-black"
-    | (`font-${string}` & {});
+    | (`font-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/font-variant-numeric */
   fontVariantNumeric:
@@ -560,7 +560,7 @@ export interface TailwindValues {
     | "proportional-nums"
     | "tabular-nums"
     | "diagonal-fractions"
-    | "stacked-fractions";
+    | "stacked-fractions"
 
   /** @see https://tailwindcss.com/docs/letter-spacing */
   letterSpacing:
@@ -571,10 +571,10 @@ export interface TailwindValues {
     | "tracking-wider"
     | "tracking-widest"
     | (`tracking-${string}` & {})
-    | (`-tracking-${string}` & {});
+    | (`-tracking-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/line-clamp */
-  lineClamp: "line-clamp-none" | (`line-clamp-${string}` & {});
+  lineClamp: "line-clamp-none" | (`line-clamp-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/line-height */
   lineHeight:
@@ -584,20 +584,20 @@ export interface TailwindValues {
     | "leading-normal"
     | "leading-relaxed"
     | "leading-loose"
-    | (`leading-${string}` & {});
+    | (`leading-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/list-style-image */
-  listStyleImage: "list-image-none" | (`list-image-${string}` & {});
+  listStyleImage: "list-image-none" | (`list-image-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/list-style-position */
-  listStylePosition: "list-inside" | "list-outside";
+  listStylePosition: "list-inside" | "list-outside"
 
   /** @see https://tailwindcss.com/docs/list-style-type */
   listStyleType:
     | "list-none"
     | "list-disc"
     | "list-decimal"
-    | (`list-${string}` & {});
+    | (`list-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/text-align */
   textAlign:
@@ -606,16 +606,16 @@ export interface TailwindValues {
     | "text-right"
     | "text-justify"
     | "text-start"
-    | "text-end";
+    | "text-end"
 
   /** @see https://tailwindcss.com/docs/text-color */
-  color: `text-${ColorWithOpacity}`;
+  color: `text-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/text-decoration */
-  textDecoration: "underline" | "overline" | "line-through" | "no-underline";
+  textDecoration: "underline" | "overline" | "line-through" | "no-underline"
 
   /** @see https://tailwindcss.com/docs/text-decoration-color */
-  textDecorationColor: `decoration-${ColorWithOpacity}`;
+  textDecorationColor: `decoration-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/text-decoration-style */
   textDecorationStyle:
@@ -623,7 +623,7 @@ export interface TailwindValues {
     | "decoration-double"
     | "decoration-dotted"
     | "decoration-dashed"
-    | "decoration-wavy";
+    | "decoration-wavy"
 
   /** @see https://tailwindcss.com/docs/text-decoration-thickness */
   textDecorationThickness:
@@ -634,7 +634,7 @@ export interface TailwindValues {
     | "decoration-2"
     | "decoration-4"
     | "decoration-8"
-    | (`decoration-${string}` & {});
+    | (`decoration-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/text-underline-offset */
   textUnderlineOffset:
@@ -644,19 +644,19 @@ export interface TailwindValues {
     | "underline-offset-2"
     | "underline-offset-4"
     | "underline-offset-8"
-    | (`underline-offset-${string}` & {});
+    | (`underline-offset-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/text-transform */
-  textTransform: "uppercase" | "lowercase" | "capitalize" | "normal-case";
+  textTransform: "uppercase" | "lowercase" | "capitalize" | "normal-case"
 
   /** @see https://tailwindcss.com/docs/text-overflow */
-  textOverflow: "truncate" | "text-ellipsis" | "text-clip";
+  textOverflow: "truncate" | "text-ellipsis" | "text-clip"
 
   /** @see https://tailwindcss.com/docs/text-wrap */
-  textWrap: "text-wrap" | "text-nowrap" | "text-balance" | "text-pretty";
+  textWrap: "text-wrap" | "text-nowrap" | "text-balance" | "text-pretty"
 
   /** @see https://tailwindcss.com/docs/text-indent */
-  textIndent: `indent-${string}` | `indent-${string}`;
+  textIndent: `indent-${string}` | `indent-${string}`
 
   /** @see https://tailwindcss.com/docs/vertical-align */
   verticalAlign:
@@ -668,7 +668,7 @@ export interface TailwindValues {
     | "align-text-bottom"
     | "align-sub"
     | "align-super"
-    | (`align-${string}` & {});
+    | (`align-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/whitespace */
   whitespace:
@@ -677,42 +677,42 @@ export interface TailwindValues {
     | "whitespace-pre"
     | "whitespace-pre-line"
     | "whitespace-pre-wrap"
-    | "whitespace-break-spaces";
+    | "whitespace-break-spaces"
 
   /** @see https://tailwindcss.com/docs/word-break */
-  wordBreak: "break-normal" | "break-all" | "break-keep";
+  wordBreak: "break-normal" | "break-all" | "break-keep"
 
   /** @see https://tailwindcss.com/docs/overflow-wrap */
-  overflowWrap: "wrap-break-word" | "wrap-anywhere" | "wrap-normal";
+  overflowWrap: "wrap-break-word" | "wrap-anywhere" | "wrap-normal"
 
   /** @see https://tailwindcss.com/docs/hyphens */
-  hyphens: "hyphens-none" | "hyphens-manual" | "hyphens-auto";
+  hyphens: "hyphens-none" | "hyphens-manual" | "hyphens-auto"
 
   /** @see https://tailwindcss.com/docs/content */
-  content: "content-none" | (`content-${string}` & {});
+  content: "content-none" | (`content-${string}` & {})
 
   // -------------------------------------------------------------------------
   // Backgrounds
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/background-attachment */
-  backgroundAttachment: "bg-fixed" | "bg-local" | "bg-scroll";
+  backgroundAttachment: "bg-fixed" | "bg-local" | "bg-scroll"
 
   /** @see https://tailwindcss.com/docs/background-clip */
   backgroundClip:
     | "bg-clip-border"
     | "bg-clip-padding"
     | "bg-clip-content"
-    | "bg-clip-text";
+    | "bg-clip-text"
 
   /** @see https://tailwindcss.com/docs/background-color */
-  backgroundColor: `bg-${ColorWithOpacity}`;
+  backgroundColor: `bg-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/background-origin */
   backgroundOrigin:
     | "bg-origin-border"
     | "bg-origin-padding"
-    | "bg-origin-content";
+    | "bg-origin-content"
 
   /** @see https://tailwindcss.com/docs/background-position */
   backgroundPosition:
@@ -725,7 +725,7 @@ export interface TailwindValues {
     | "bg-right-bottom"
     | "bg-right-top"
     | "bg-top"
-    | (`bg-${string}` & {});
+    | (`bg-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/background-repeat */
   backgroundRepeat:
@@ -734,10 +734,10 @@ export interface TailwindValues {
     | "bg-repeat-x"
     | "bg-repeat-y"
     | "bg-repeat-round"
-    | "bg-repeat-space";
+    | "bg-repeat-space"
 
   /** @see https://tailwindcss.com/docs/background-size */
-  backgroundSize: "bg-auto" | "bg-cover" | "bg-contain" | (`bg-${string}` & {});
+  backgroundSize: "bg-auto" | "bg-cover" | "bg-contain" | (`bg-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/background-image */
   backgroundImage:
@@ -752,104 +752,104 @@ export interface TailwindValues {
     | "bg-linear-to-bl"
     | "bg-linear-to-l"
     | "bg-linear-to-tl"
-    | (`bg-linear-${string}` & {});
+    | (`bg-linear-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientFrom: `from-${ColorWithOpacity}`;
+  gradientFrom: `from-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientVia: `via-${ColorWithOpacity}`;
+  gradientVia: `via-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientTo: `to-${ColorWithOpacity}`;
+  gradientTo: `to-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientFromPosition: `from-${string}`;
+  gradientFromPosition: `from-${string}`
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientViaPosition: `via-${string}`;
+  gradientViaPosition: `via-${string}`
 
   /** @see https://tailwindcss.com/docs/gradient-color-stops */
-  gradientToPosition: `to-${string}`;
+  gradientToPosition: `to-${string}`
 
   // -------------------------------------------------------------------------
   // Borders
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadius: "rounded" | "rounded-none" | `rounded-${BorderRadiusSize}`;
+  borderRadius: "rounded" | "rounded-none" | `rounded-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusStart: "rounded-s" | `rounded-s-${BorderRadiusSize}`;
+  borderRadiusStart: "rounded-s" | `rounded-s-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusEnd: "rounded-e" | `rounded-e-${BorderRadiusSize}`;
+  borderRadiusEnd: "rounded-e" | `rounded-e-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusTop: "rounded-t" | `rounded-t-${BorderRadiusSize}`;
+  borderRadiusTop: "rounded-t" | `rounded-t-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusRight: "rounded-r" | `rounded-r-${BorderRadiusSize}`;
+  borderRadiusRight: "rounded-r" | `rounded-r-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusBottom: "rounded-b" | `rounded-b-${BorderRadiusSize}`;
+  borderRadiusBottom: "rounded-b" | `rounded-b-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusLeft: "rounded-l" | `rounded-l-${BorderRadiusSize}`;
+  borderRadiusLeft: "rounded-l" | `rounded-l-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusTopLeft: "rounded-tl" | `rounded-tl-${BorderRadiusSize}`;
+  borderRadiusTopLeft: "rounded-tl" | `rounded-tl-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusTopRight: "rounded-tr" | `rounded-tr-${BorderRadiusSize}`;
+  borderRadiusTopRight: "rounded-tr" | `rounded-tr-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusBottomRight: "rounded-br" | `rounded-br-${BorderRadiusSize}`;
+  borderRadiusBottomRight: "rounded-br" | `rounded-br-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusBottomLeft: "rounded-bl" | `rounded-bl-${BorderRadiusSize}`;
+  borderRadiusBottomLeft: "rounded-bl" | `rounded-bl-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusStartStart: "rounded-ss" | `rounded-ss-${BorderRadiusSize}`;
+  borderRadiusStartStart: "rounded-ss" | `rounded-ss-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusStartEnd: "rounded-se" | `rounded-se-${BorderRadiusSize}`;
+  borderRadiusStartEnd: "rounded-se" | `rounded-se-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusEndStart: "rounded-es" | `rounded-es-${BorderRadiusSize}`;
+  borderRadiusEndStart: "rounded-es" | `rounded-es-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-radius */
-  borderRadiusEndEnd: "rounded-ee" | `rounded-ee-${BorderRadiusSize}`;
+  borderRadiusEndEnd: "rounded-ee" | `rounded-ee-${BorderRadiusSize}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidth: "border" | `border-${string}`;
+  borderWidth: "border" | `border-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthX: "border-x" | `border-x-${string}`;
+  borderWidthX: "border-x" | `border-x-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthY: "border-y" | `border-y-${string}`;
+  borderWidthY: "border-y" | `border-y-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthTop: "border-t" | `border-t-${string}`;
+  borderWidthTop: "border-t" | `border-t-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthRight: "border-r" | `border-r-${string}`;
+  borderWidthRight: "border-r" | `border-r-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthBottom: "border-b" | "border-b-0" | `border-b-${string}`;
+  borderWidthBottom: "border-b" | "border-b-0" | `border-b-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthLeft: "border-l" | `border-l-${string}`;
+  borderWidthLeft: "border-l" | `border-l-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthStart: "border-s" | `border-s-${string}`;
+  borderWidthStart: "border-s" | `border-s-${string}`
 
   /** @see https://tailwindcss.com/docs/border-width */
-  borderWidthEnd: "border-e" | `border-e-${string}`;
+  borderWidthEnd: "border-e" | `border-e-${string}`
 
   /** @see https://tailwindcss.com/docs/border-color */
-  borderColor: `border-${ColorWithOpacity}`;
+  borderColor: `border-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/border-style */
   borderStyle:
@@ -858,7 +858,7 @@ export interface TailwindValues {
     | "border-dotted"
     | "border-double"
     | "border-hidden"
-    | "border-none";
+    | "border-none"
 
   /** @see https://tailwindcss.com/docs/divide-width */
   divideX:
@@ -868,7 +868,7 @@ export interface TailwindValues {
     | "divide-x-4"
     | "divide-x-8"
     | (`divide-x-${string}` & {})
-    | "divide-x-reverse";
+    | "divide-x-reverse"
 
   /** @see https://tailwindcss.com/docs/divide-width */
   divideY:
@@ -878,10 +878,10 @@ export interface TailwindValues {
     | "divide-y-4"
     | "divide-y-8"
     | (`divide-y-${string}` & {})
-    | "divide-y-reverse";
+    | "divide-y-reverse"
 
   /** @see https://tailwindcss.com/docs/divide-color */
-  divideColor: `divide-${ColorWithOpacity}`;
+  divideColor: `divide-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/divide-style */
   divideStyle:
@@ -889,7 +889,7 @@ export interface TailwindValues {
     | "divide-dashed"
     | "divide-dotted"
     | "divide-double"
-    | "divide-none";
+    | "divide-none"
 
   /** @see https://tailwindcss.com/docs/outline-width */
   outlineWidth:
@@ -898,10 +898,10 @@ export interface TailwindValues {
     | "outline-2"
     | "outline-4"
     | "outline-8"
-    | (`outline-${string}` & {});
+    | (`outline-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/outline-color */
-  outlineColor: `outline-${ColorWithOpacity}`;
+  outlineColor: `outline-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/outline-style */
   outlineStyle:
@@ -909,10 +909,10 @@ export interface TailwindValues {
     | "outline-none"
     | "outline-dashed"
     | "outline-dotted"
-    | "outline-double";
+    | "outline-double"
 
   /** @see https://tailwindcss.com/docs/outline-offset */
-  outlineOffset: `outline-offset-${string}` | `-outline-offset-${string}`;
+  outlineOffset: `outline-offset-${string}` | `-outline-offset-${string}`
 
   /** @see https://tailwindcss.com/docs/ring-width */
   ringWidth:
@@ -923,10 +923,10 @@ export interface TailwindValues {
     | "ring-2"
     | "ring-4"
     | "ring-8"
-    | (`ring-${string}` & {});
+    | (`ring-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/ring-color */
-  ringColor: `ring-${ColorWithOpacity}`;
+  ringColor: `ring-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/ring-offset-width */
   ringOffsetWidth:
@@ -935,10 +935,10 @@ export interface TailwindValues {
     | "ring-offset-2"
     | "ring-offset-4"
     | "ring-offset-8"
-    | (`ring-offset-${string}` & {});
+    | (`ring-offset-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/ring-offset-color */
-  ringOffsetColor: `ring-offset-${ColorWithOpacity}`;
+  ringOffsetColor: `ring-offset-${ColorWithOpacity}`
 
   // -------------------------------------------------------------------------
   // Effects
@@ -954,19 +954,19 @@ export interface TailwindValues {
     | "shadow-2xl"
     | "shadow-inner"
     | "shadow-none"
-    | (`shadow-${string}` & {});
+    | (`shadow-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/box-shadow-color */
-  boxShadowColor: `shadow-${ColorWithOpacity}`;
+  boxShadowColor: `shadow-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/opacity */
-  opacity: `opacity-${string}`;
+  opacity: `opacity-${string}`
 
   /** @see https://tailwindcss.com/docs/mix-blend-mode */
-  mixBlendMode: `mix-blend-${BlendMode}`;
+  mixBlendMode: `mix-blend-${BlendMode}`
 
   /** @see https://tailwindcss.com/docs/background-blend-mode */
-  backgroundBlendMode: `bg-blend-${BlendMode}`;
+  backgroundBlendMode: `bg-blend-${BlendMode}`
 
   // -------------------------------------------------------------------------
   // Filters
@@ -982,13 +982,13 @@ export interface TailwindValues {
     | "blur-xl"
     | "blur-2xl"
     | "blur-3xl"
-    | (`blur-${string}` & {});
+    | (`blur-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/brightness */
-  brightness: `brightness-${string}`;
+  brightness: `brightness-${string}`
 
   /** @see https://tailwindcss.com/docs/contrast */
-  contrast: `contrast-${string}`;
+  contrast: `contrast-${string}`
 
   /** @see https://tailwindcss.com/docs/drop-shadow */
   dropShadow:
@@ -999,22 +999,22 @@ export interface TailwindValues {
     | "drop-shadow-xl"
     | "drop-shadow-2xl"
     | "drop-shadow-none"
-    | (`drop-shadow-${string}` & {});
+    | (`drop-shadow-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/grayscale */
-  grayscale: "grayscale" | `grayscale-${string}`;
+  grayscale: "grayscale" | `grayscale-${string}`
 
   /** @see https://tailwindcss.com/docs/hue-rotate */
-  hueRotate: `hue-rotate-${string}` | `hue-rotate-${string}`;
+  hueRotate: `hue-rotate-${string}` | `hue-rotate-${string}`
 
   /** @see https://tailwindcss.com/docs/invert */
-  invert: "invert" | `invert-${string}`;
+  invert: "invert" | `invert-${string}`
 
   /** @see https://tailwindcss.com/docs/saturate */
-  saturate: `saturate-${string}`;
+  saturate: `saturate-${string}`
 
   /** @see https://tailwindcss.com/docs/sepia */
-  sepia: "sepia" | `sepia-${string}`;
+  sepia: "sepia" | `sepia-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-blur */
   backdropBlur:
@@ -1026,55 +1026,55 @@ export interface TailwindValues {
     | "backdrop-blur-xl"
     | "backdrop-blur-2xl"
     | "backdrop-blur-3xl"
-    | (`backdrop-blur-${string}` & {});
+    | (`backdrop-blur-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/backdrop-brightness */
-  backdropBrightness: `backdrop-brightness-${string}`;
+  backdropBrightness: `backdrop-brightness-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-contrast */
-  backdropContrast: `backdrop-contrast-${string}`;
+  backdropContrast: `backdrop-contrast-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-grayscale */
-  backdropGrayscale: "backdrop-grayscale" | `backdrop-grayscale-${string}`;
+  backdropGrayscale: "backdrop-grayscale" | `backdrop-grayscale-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-hue-rotate */
   backdropHueRotate:
     | `backdrop-hue-rotate-${string}`
-    | `-backdrop-hue-rotate-${string}`;
+    | `-backdrop-hue-rotate-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-invert */
-  backdropInvert: "backdrop-invert" | `backdrop-invert-${string}`;
+  backdropInvert: "backdrop-invert" | `backdrop-invert-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-opacity */
-  backdropOpacity: `backdrop-opacity-${string}`;
+  backdropOpacity: `backdrop-opacity-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-saturate */
-  backdropSaturate: `backdrop-saturate-${string}`;
+  backdropSaturate: `backdrop-saturate-${string}`
 
   /** @see https://tailwindcss.com/docs/backdrop-sepia */
-  backdropSepia: "backdrop-sepia" | `backdrop-sepia-${string}`;
+  backdropSepia: "backdrop-sepia" | `backdrop-sepia-${string}`
 
   // -------------------------------------------------------------------------
   // Tables
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/border-collapse */
-  borderCollapse: "border-collapse" | "border-separate";
+  borderCollapse: "border-collapse" | "border-separate"
 
   /** @see https://tailwindcss.com/docs/border-spacing */
-  borderSpacing: `border-spacing-${string}`;
+  borderSpacing: `border-spacing-${string}`
 
   /** @see https://tailwindcss.com/docs/border-spacing */
-  borderSpacingX: `border-spacing-x-${string}`;
+  borderSpacingX: `border-spacing-x-${string}`
 
   /** @see https://tailwindcss.com/docs/border-spacing */
-  borderSpacingY: `border-spacing-y-${string}`;
+  borderSpacingY: `border-spacing-y-${string}`
 
   /** @see https://tailwindcss.com/docs/table-layout */
-  tableLayout: "table-auto" | "table-fixed";
+  tableLayout: "table-auto" | "table-fixed"
 
   /** @see https://tailwindcss.com/docs/caption-side */
-  captionSide: "caption-top" | "caption-bottom";
+  captionSide: "caption-top" | "caption-bottom"
 
   // -------------------------------------------------------------------------
   // Transitions & Animation
@@ -1089,13 +1089,13 @@ export interface TailwindValues {
     | "transition-opacity"
     | "transition-shadow"
     | "transition-transform"
-    | (`transition-${string}` & {});
+    | (`transition-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/transition-behavior */
-  transitionBehavior: "transition-normal" | "transition-discrete";
+  transitionBehavior: "transition-normal" | "transition-discrete"
 
   /** @see https://tailwindcss.com/docs/transition-duration */
-  transitionDuration: `duration-${string}`;
+  transitionDuration: `duration-${string}`
 
   /** @see https://tailwindcss.com/docs/transition-timing-function */
   transitionTimingFunction:
@@ -1103,10 +1103,10 @@ export interface TailwindValues {
     | "ease-in"
     | "ease-out"
     | "ease-in-out"
-    | (`ease-${string}` & {});
+    | (`ease-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/transition-delay */
-  transitionDelay: `delay-${string}`;
+  transitionDelay: `delay-${string}`
 
   /** @see https://tailwindcss.com/docs/animation */
   animation:
@@ -1115,14 +1115,14 @@ export interface TailwindValues {
     | "animate-ping"
     | "animate-pulse"
     | "animate-bounce"
-    | (`animate-${string}` & {});
+    | (`animate-${string}` & {})
 
   // -------------------------------------------------------------------------
   // Transforms
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/backface-visibility */
-  backfaceVisibility: "backface-visible" | "backface-hidden";
+  backfaceVisibility: "backface-visible" | "backface-hidden"
 
   /** @see https://tailwindcss.com/docs/perspective */
   perspective:
@@ -1132,7 +1132,7 @@ export interface TailwindValues {
     | "perspective-midrange"
     | "perspective-distant"
     | "perspective-none"
-    | (`perspective-${string}` & {});
+    | (`perspective-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/perspective-origin */
   perspectiveOrigin:
@@ -1145,10 +1145,10 @@ export interface TailwindValues {
     | "origin-bottom-left"
     | "origin-left"
     | "origin-top-left"
-    | (`origin-${string}` & {});
+    | (`origin-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/rotate */
-  rotate: `rotate-${string}` | `-rotate-${string}`;
+  rotate: `rotate-${string}` | `-rotate-${string}`
 
   /** @see https://tailwindcss.com/docs/scale */
   scale:
@@ -1157,7 +1157,7 @@ export interface TailwindValues {
     | (`scale-${string}` & {})
     | `-scale-${string}`
     | `scale-${"x" | "y" | "z"}-${string}`
-    | `-scale-${"x" | "y" | "z"}-${string}`;
+    | `-scale-${"x" | "y" | "z"}-${string}`
 
   /** @see https://tailwindcss.com/docs/skew */
   skew:
@@ -1166,14 +1166,14 @@ export interface TailwindValues {
     | `skew-x-${string}`
     | `-skew-x-${string}`
     | `skew-y-${string}`
-    | `-skew-y-${string}`;
+    | `-skew-y-${string}`
 
   /** @see https://tailwindcss.com/docs/transform */
   transform:
     | "transform-none"
     | "transform-gpu"
     | "transform-cpu"
-    | (`transform-${string}` & {});
+    | (`transform-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/transform-origin */
   transformOrigin:
@@ -1186,25 +1186,25 @@ export interface TailwindValues {
     | "origin-bottom-left"
     | "origin-left"
     | "origin-top-left"
-    | (`origin-${string}` & {});
+    | (`origin-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/transform-style */
-  transformStyle: "transform-3d" | "transform-flat";
+  transformStyle: "transform-3d" | "transform-flat"
 
   /** @see https://tailwindcss.com/docs/translate */
   translate:
     | `translate-${"x" | "y" | "z"}-${"full" | "px" | SpacingValue}`
-    | `-translate-${"x" | "y" | "z"}-${"full" | "px" | SpacingValue}`;
+    | `-translate-${"x" | "y" | "z"}-${"full" | "px" | SpacingValue}`
 
   // -------------------------------------------------------------------------
   // Interactivity
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/accent-color */
-  accentColor: `accent-${ColorWithOpacity}` | "accent-auto";
+  accentColor: `accent-${ColorWithOpacity}` | "accent-auto"
 
   /** @see https://tailwindcss.com/docs/appearance */
-  appearance: "appearance-none" | "appearance-auto";
+  appearance: "appearance-none" | "appearance-auto"
 
   /** @see https://tailwindcss.com/docs/cursor */
   cursor:
@@ -1244,83 +1244,79 @@ export interface TailwindValues {
     | "cursor-nwse-resize"
     | "cursor-zoom-in"
     | "cursor-zoom-out"
-    | (`cursor-${string}` & {});
+    | (`cursor-${string}` & {})
 
   /** @see https://tailwindcss.com/docs/caret-color */
-  caretColor: `caret-${ColorWithOpacity}`;
+  caretColor: `caret-${ColorWithOpacity}`
 
   /** @see https://tailwindcss.com/docs/pointer-events */
-  pointerEvents: "pointer-events-none" | "pointer-events-auto";
+  pointerEvents: "pointer-events-none" | "pointer-events-auto"
 
   /** @see https://tailwindcss.com/docs/resize */
-  resize: "resize" | "resize-none" | "resize-y" | "resize-x";
+  resize: "resize" | "resize-none" | "resize-y" | "resize-x"
 
   /** @see https://tailwindcss.com/docs/scroll-behavior */
-  scrollBehavior: "scroll-auto" | "scroll-smooth";
+  scrollBehavior: "scroll-auto" | "scroll-smooth"
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMargin: `scroll-m-${string}` | `-scroll-m-${string}`;
+  scrollMargin: `scroll-m-${string}` | `-scroll-m-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginX: `scroll-mx-${string}` | `-scroll-mx-${string}`;
+  scrollMarginX: `scroll-mx-${string}` | `-scroll-mx-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginY: `scroll-my-${string}` | `-scroll-my-${string}`;
+  scrollMarginY: `scroll-my-${string}` | `-scroll-my-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginTop: `scroll-mt-${string}` | `-scroll-mt-${string}`;
+  scrollMarginTop: `scroll-mt-${string}` | `-scroll-mt-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginRight: `scroll-mr-${string}` | `-scroll-mr-${string}`;
+  scrollMarginRight: `scroll-mr-${string}` | `-scroll-mr-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginBottom: `scroll-mb-${string}` | `-scroll-mb-${string}`;
+  scrollMarginBottom: `scroll-mb-${string}` | `-scroll-mb-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginLeft: `scroll-ml-${string}` | `-scroll-ml-${string}`;
+  scrollMarginLeft: `scroll-ml-${string}` | `-scroll-ml-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginStart: `scroll-ms-${string}` | `-scroll-ms-${string}`;
+  scrollMarginStart: `scroll-ms-${string}` | `-scroll-ms-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-margin */
-  scrollMarginEnd: `scroll-me-${string}` | `-scroll-me-${string}`;
+  scrollMarginEnd: `scroll-me-${string}` | `-scroll-me-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPadding: `scroll-p-${string}`;
+  scrollPadding: `scroll-p-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingX: `scroll-px-${string}`;
+  scrollPaddingX: `scroll-px-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingY: `scroll-py-${string}`;
+  scrollPaddingY: `scroll-py-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingTop: `scroll-pt-${string}`;
+  scrollPaddingTop: `scroll-pt-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingRight: `scroll-pr-${string}`;
+  scrollPaddingRight: `scroll-pr-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingBottom: `scroll-pb-${string}`;
+  scrollPaddingBottom: `scroll-pb-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingLeft: `scroll-pl-${string}`;
+  scrollPaddingLeft: `scroll-pl-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingStart: `scroll-ps-${string}`;
+  scrollPaddingStart: `scroll-ps-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-padding */
-  scrollPaddingEnd: `scroll-pe-${string}`;
+  scrollPaddingEnd: `scroll-pe-${string}`
 
   /** @see https://tailwindcss.com/docs/scroll-snap-align */
-  scrollSnapAlign:
-    | "snap-start"
-    | "snap-end"
-    | "snap-center"
-    | "snap-align-none";
+  scrollSnapAlign: "snap-start" | "snap-end" | "snap-center" | "snap-align-none"
 
   /** @see https://tailwindcss.com/docs/scroll-snap-stop */
-  scrollSnapStop: "snap-normal" | "snap-always";
+  scrollSnapStop: "snap-normal" | "snap-always"
 
   /** @see https://tailwindcss.com/docs/scroll-snap-type */
   scrollSnapType:
@@ -1329,7 +1325,7 @@ export interface TailwindValues {
     | "snap-y"
     | "snap-both"
     | "snap-mandatory"
-    | "snap-proximity";
+    | "snap-proximity"
 
   /** @see https://tailwindcss.com/docs/touch-action */
   touchAction:
@@ -1342,10 +1338,10 @@ export interface TailwindValues {
     | "touch-pan-up"
     | "touch-pan-down"
     | "touch-pinch-zoom"
-    | "touch-manipulation";
+    | "touch-manipulation"
 
   /** @see https://tailwindcss.com/docs/user-select */
-  userSelect: "select-none" | "select-text" | "select-all" | "select-auto";
+  userSelect: "select-none" | "select-text" | "select-all" | "select-auto"
 
   /** @see https://tailwindcss.com/docs/will-change */
   willChange:
@@ -1353,28 +1349,28 @@ export interface TailwindValues {
     | "will-change-scroll"
     | "will-change-contents"
     | "will-change-transform"
-    | (`will-change-${string}` & {});
+    | (`will-change-${string}` & {})
 
   // -------------------------------------------------------------------------
   // SVG
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/fill */
-  fill: `fill-${ColorWithOpacity}` | "fill-none";
+  fill: `fill-${ColorWithOpacity}` | "fill-none"
 
   /** @see https://tailwindcss.com/docs/stroke */
-  stroke: `stroke-${ColorWithOpacity}` | "stroke-none";
+  stroke: `stroke-${ColorWithOpacity}` | "stroke-none"
 
   /** @see https://tailwindcss.com/docs/stroke-width */
-  strokeWidth: `stroke-${string}`;
+  strokeWidth: `stroke-${string}`
 
   // -------------------------------------------------------------------------
   // Accessibility
   // -------------------------------------------------------------------------
 
   /** @see https://tailwindcss.com/docs/screen-readers */
-  screenReaders: "sr-only" | "not-sr-only";
+  screenReaders: "sr-only" | "not-sr-only"
 
   /** @see https://tailwindcss.com/docs/forced-color-adjust */
-  forcedColorAdjust: "forced-color-adjust-auto" | "forced-color-adjust-none";
+  forcedColorAdjust: "forced-color-adjust-auto" | "forced-color-adjust-none"
 }
