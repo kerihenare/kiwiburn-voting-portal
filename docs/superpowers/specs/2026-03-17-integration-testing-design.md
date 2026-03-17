@@ -11,6 +11,10 @@ Add end-to-end browser tests using Playwright against a real PostgreSQL database
 - **Magic link auth via DB** — read verification tokens directly from the database rather than capturing emails
 - **CI from the start** — GitHub Actions with PostgreSQL service container
 
+## Dependencies
+
+Add `@playwright/test` as a dev dependency: `pnpm add -D @playwright/test`
+
 ## Test Infrastructure
 
 ### Test Database
@@ -96,7 +100,7 @@ Used at the start of every test that needs an authenticated user. For the sign-i
 
 ### `ineligible-voter.spec.ts` — Eligibility Enforcement
 
-- Seed a user NOT in the topic's member list -> authenticate -> navigate to topic -> vote buttons disabled/absent or action rejected
+- Seed a user in member list A (so they can sign in — the `sendMagicLink` hook requires membership in *any* list), and a topic assigned to member list B (user not in B) -> authenticate -> navigate to topic -> vote buttons disabled/absent or action rejected
 
 ### `admin-topics.spec.ts` — Topic Management
 
