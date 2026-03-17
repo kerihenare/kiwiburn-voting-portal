@@ -5,6 +5,7 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardFooter } from "@/components/ui/card"
 import { Separator } from "@/components/ui/separator"
+import { glide } from "@/lib/glidepath"
 import { getTopicStatus } from "@/lib/types"
 
 interface TopicCardProps {
@@ -22,52 +23,52 @@ interface TopicCardProps {
   userVote?: string | null
 }
 
-export function TopicCard({ topic, userVote }: TopicCardProps) {
-  const status = getTopicStatus(topic.opensAt, topic.closesAt)
+export function TopicCard(props: TopicCardProps) {
+  const status = getTopicStatus(props.topic.opensAt, props.topic.closesAt)
 
   return (
     <Card>
       <CardContent className="space-y-3">
-        <div className="flex items-center justify-between">
-          {topic.memberListName && (
-            <p className="mb-0 text-sm text-muted-foreground">
-              {topic.memberListName}
-            </p>
+        <TopicHeader>
+          {props.topic.memberListName && (
+            <ListName>{props.topic.memberListName}</ListName>
           )}
-          <TimerBadge closesAt={topic.closesAt} opensAt={topic.opensAt} />
-        </div>
-        <h2 className="text-2xl font-bold text-accent !mb-0">{topic.title}</h2>
-        {topic.description && (
-          <p className="text-base text-muted-foreground line-clamp-2 !mt-0">
-            {topic.description}
-          </p>
+          <TimerBadge
+            closesAt={props.topic.closesAt}
+            opensAt={props.topic.opensAt}
+          />
+        </TopicHeader>
+        <TopicTitle>{props.topic.title}</TopicTitle>
+        {props.topic.description && (
+          <TopicDescription>{props.topic.description}</TopicDescription>
         )}
         {status === "closed" && (
           <>
             <Separator className="mx-0 my-6 w-full opacity-50" />
             <ResultBars
-              noCount={topic.noCount}
-              totalVotes={topic.totalVotes}
-              yesCount={topic.yesCount}
+              noCount={props.topic.noCount}
+              totalVotes={props.topic.totalVotes}
+              yesCount={props.topic.yesCount}
             />
           </>
         )}
       </CardContent>
-      {status === "open" && userVote !== undefined && (
+      {status === "open" && props.userVote !== undefined && (
         <>
           <Separator className="opacity-50" />
           <CardFooter className="flex items-center justify-between">
             <div>
-              {userVote && (
+              {props.userVote && (
                 <Badge variant="outline">
                   You voted:{" "}
-                  {userVote.charAt(0).toUpperCase() + userVote.slice(1)}
+                  {props.userVote.charAt(0).toUpperCase() +
+                    props.userVote.slice(1)}
                 </Badge>
               )}
             </div>
             <Button asChild size="sm">
-              <Link href={`/votes/${topic.id}`}>
-                {userVote ? "Change vote" : "Vote now"}
+              <Link href={`/votes/${props.topic.id}`}>
+                {props.userVote ? "Change vote" : "Vote now"}
               </Link>
             </Button>
           </CardFooter>
@@ -76,3 +77,28 @@ export function TopicCard({ topic, userVote }: TopicCardProps) {
     </Card>
   )
 }
+
+const TopicHeader = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  justifyContent: "justify-between",
+})
+
+const ListName = glide("p", {
+  color: "text-muted-foreground",
+  fontSize: "text-sm",
+  margin: "mb-0",
+})
+
+const TopicTitle = glide("h2", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+  other: "!mb-0",
+})
+
+const TopicDescription = glide("p", {
+  color: "text-muted-foreground",
+  fontSize: "text-base",
+  other: "line-clamp-2 !mt-0",
+})
