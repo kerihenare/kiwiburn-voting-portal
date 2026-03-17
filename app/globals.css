@@ -29,6 +29,35 @@
   --radius: 0.5rem;
 }
 
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: oklch(0.15 0.01 30);
+    --foreground: oklch(0.93 0.01 60);
+    --card: oklch(0.2 0.01 30);
+    --card-foreground: oklch(0.93 0.01 60);
+    --popover: oklch(0.2 0.01 30);
+    --popover-foreground: oklch(0.93 0.01 60);
+    --primary: oklch(0.65 0.19 55);
+    --primary-foreground: oklch(0.1 0 0);
+    --secondary: oklch(0.25 0.01 30);
+    --secondary-foreground: oklch(0.9 0.01 60);
+    --muted: oklch(0.25 0.01 30);
+    --muted-foreground: oklch(0.65 0.02 60);
+    --accent: oklch(0.55 0.2 15);
+    --accent-foreground: oklch(1 0 0);
+    --destructive: oklch(0.6 0.22 25);
+    --destructive-foreground: oklch(1 0 0);
+    --border: oklch(0.3 0.01 30);
+    --input: oklch(0.25 0.01 30);
+    --ring: oklch(0.65 0.19 55);
+    --chart-1: oklch(0.65 0.19 55);
+    --chart-2: oklch(0.55 0.2 15);
+    --chart-3: oklch(0.6 0.15 40);
+    --chart-4: oklch(0.75 0.12 80);
+    --chart-5: oklch(0.7 0.08 100);
+  }
+}
+
 @theme inline {
   --font-sans: 'Inter', 'Inter Fallback', sans-serif;
   --font-mono: 'Geist Mono', 'Geist Mono Fallback';
@@ -64,7 +93,7 @@
 
 @layer base {
   html {
-    color-scheme: light;
+    color-scheme: light dark;
   }
   * {
     @apply border-border outline-ring/50;
