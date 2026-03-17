@@ -1,36 +1,72 @@
+import { glide } from "@/lib/glidepath"
+
 interface ResultBarsProps {
   yesCount: number
   noCount: number
   totalVotes: number
 }
 
-export function ResultBars({ yesCount, noCount, totalVotes }: ResultBarsProps) {
+export function ResultBars(props: ResultBarsProps) {
   const yesPercent =
-    totalVotes > 0 ? Math.round((yesCount / totalVotes) * 100) : 0
+    props.totalVotes > 0
+      ? Math.round((props.yesCount / props.totalVotes) * 100)
+      : 0
   const noPercent =
-    totalVotes > 0 ? Math.round((noCount / totalVotes) * 100) : 0
+    props.totalVotes > 0
+      ? Math.round((props.noCount / props.totalVotes) * 100)
+      : 0
 
   return (
-    <div className="space-y-1">
-      <div className="flex justify-between text-sm font-medium">
+    <ResultWrapper>
+      <LabelRow>
         <span>Yes</span>
         <span>No</span>
-      </div>
-      <div className="flex h-3 gap-0.5 rounded-full overflow-hidden">
-        <div
-          className="bg-green-500 rounded-l-full"
-          style={{ width: `${yesPercent}%` }}
-        />
-        <div
-          className="bg-red-500 rounded-r-full"
-          style={{ width: `${noPercent}%` }}
-        />
-      </div>
-      <div className="flex justify-between text-sm text-muted-foreground">
+      </LabelRow>
+      <BarTrack>
+        <YesBar style={{ width: `${yesPercent}%` }} />
+        <NoBar style={{ width: `${noPercent}%` }} />
+      </BarTrack>
+      <PercentRow>
         <span>{yesPercent}%</span>
-        <span>{totalVotes} votes</span>
+        <span>{props.totalVotes} votes</span>
         <span>{noPercent}%</span>
-      </div>
-    </div>
+      </PercentRow>
+    </ResultWrapper>
   )
 }
+
+const ResultWrapper = glide("div", {
+  other: "space-y-1",
+})
+
+const LabelRow = glide("div", {
+  display: "flex",
+  fontSize: "text-sm",
+  fontWeight: "font-medium",
+  justifyContent: "justify-between",
+})
+
+const BarTrack = glide("div", {
+  borderRadius: "rounded-full",
+  display: "flex",
+  gap: "gap-0.5",
+  height: "h-3",
+  overflow: "overflow-hidden",
+})
+
+const YesBar = glide("div", {
+  backgroundColor: "bg-green-500",
+  borderRadius: "rounded-l-full",
+})
+
+const NoBar = glide("div", {
+  backgroundColor: "bg-red-500",
+  borderRadius: "rounded-r-full",
+})
+
+const PercentRow = glide("div", {
+  color: "text-muted-foreground",
+  display: "flex",
+  fontSize: "text-sm",
+  justifyContent: "justify-between",
+})
