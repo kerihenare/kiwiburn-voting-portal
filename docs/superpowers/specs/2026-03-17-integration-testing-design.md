@@ -15,7 +15,7 @@ Add end-to-end browser tests using Playwright against a real PostgreSQL database
 
 ### Test Database
 
-A `voting_portal_test` database in the existing Docker PostgreSQL container. The global setup script creates this database if it doesn't exist (via a direct `CREATE DATABASE IF NOT EXISTS` query against the default `voting_portal` database). This is more robust than a Docker init script, which only runs on fresh data directories — existing developers with a `pgdata` volume would otherwise need to manually create the database.
+A `voting_portal_test` database in the existing Docker PostgreSQL container. The global setup script creates this database if it doesn't exist (by querying `SELECT 1 FROM pg_database WHERE datname = 'voting_portal_test'` and running `CREATE DATABASE voting_portal_test` only if not found). This is more robust than a Docker init script, which only runs on fresh data directories — existing developers with a `pgdata` volume would otherwise need to manually create the database.
 
 ### Schema Management
 
@@ -35,7 +35,9 @@ Playwright starts the Next.js dev server automatically via its `webServer` confi
 
 ### Environment
 
-A `.env.test` file (gitignored) with test-specific values. A `.env.test.example` committed as reference — requires adding `!.env.test.example` to `.gitignore` (current pattern `.env*` with only `!.env.example` exempted would exclude it).
+A `.env.test` file (gitignored) with test-specific values. A `.env.test.example` committed as reference — requires adding `!.env.test.example` to `.gitignore` (the file has duplicate `.env*` patterns at lines 69-71 and 160-161; add the exemption to the second block or consolidate the duplicates).
+
+Playwright output directories (`test-results/` and `playwright-report/`) must also be added to `.gitignore`.
 
 The Playwright `webServer` config passes env vars from `.env.test` to the Next.js dev server via its `env` option, since Next.js does not natively load `.env.test` files. The `dotenv` package (or Playwright's built-in env file support) reads `.env.test` in the Playwright config.
 
@@ -64,11 +66,13 @@ All return the created records so tests can reference IDs.
 
 Used at the start of every test that needs an authenticated user. For the sign-in flow test itself, the steps are the assertions.
 
+**Important:** The user must be pre-seeded in the `user` table (via `seedUser`) before calling `authenticateAs`, because `disableSignUp: true` means Better Auth will not create user records during magic link verification. The user must also be in a member list for the `sendMagicLink` hook to pass the `isEmailInAnyMemberList` check.
+
 ### Reset Helper (`test/e2e/helpers/reset.ts`)
 
 `resetDatabase()`:
 
-- Executes a single `TRUNCATE user, session, verification, member_lists, members, topics, votes CASCADE` statement — CASCADE handles foreign key dependencies regardless of order
+- Executes a single `TRUNCATE "user", session, verification, member_lists, members, topics, votes CASCADE` statement (`"user"` must be quoted — it's a PostgreSQL reserved word) — CASCADE handles foreign key dependencies regardless of order
 - Called in `beforeEach` for each test file
 
 ## Test Suites
