@@ -15,11 +15,11 @@ Add end-to-end browser tests using Playwright against a real PostgreSQL database
 
 ### Test Database
 
-A `voting_portal_test` database in the existing Docker PostgreSQL container. The `docker-compose.yml` gets an init script that creates this second database on first run.
+A `voting_portal_test` database in the existing Docker PostgreSQL container. The global setup script creates this database if it doesn't exist (via a direct `CREATE DATABASE IF NOT EXISTS` query against the default `voting_portal` database). This is more robust than a Docker init script, which only runs on fresh data directories — existing developers with a `pgdata` volume would otherwise need to manually create the database.
 
 ### Schema Management
 
-Before the test suite runs, a global setup script pushes the Drizzle schema to the test database programmatically (same mechanism as `drizzle-kit push`).
+Before the test suite runs, a global setup script pushes the Drizzle schema to the test database by shelling out to `npx drizzle-kit push --force` with `DATABASE_URL` set to the test database URL. This reuses the existing `drizzle.config.ts` without duplicating schema logic.
 
 ### Data Isolation
 
@@ -35,7 +35,9 @@ Playwright starts the Next.js dev server automatically via its `webServer` confi
 
 ### Environment
 
-A `.env.test` file (gitignored) with test-specific values. A `.env.test.example` committed as reference.
+A `.env.test` file (gitignored) with test-specific values. A `.env.test.example` committed as reference — requires adding `!.env.test.example` to `.gitignore` (current pattern `.env*` with only `!.env.example` exempted would exclude it).
+
+The Playwright `webServer` config passes env vars from `.env.test` to the Next.js dev server via its `env` option, since Next.js does not natively load `.env.test` files. The `dotenv` package (or Playwright's built-in env file support) reads `.env.test` in the Playwright config.
 
 ## Test Helpers & Auth Strategy
 
@@ -45,7 +47,7 @@ Functions to set up test data:
 
 - `seedUser(email, opts?)` — Insert into `user` table, optionally set `isAdmin: true`
 - `seedMemberList(name, emails[])` — Create a member list and its members
-- `seedTopic(memberListId, opts?)` — Create a topic with configurable `opensAt`/`closesAt` (defaults to currently open)
+- `seedTopic(memberListId, opts?)` — Create a topic with configurable `opensAt`/`closesAt` (defaults to currently open) and `isActive` (defaults to `true` — the schema defaults to `false`, but tests need visible topics)
 - `seedVote(topicId, userId, vote)` — Insert a vote directly
 
 All return the created records so tests can reference IDs.
@@ -56,8 +58,8 @@ All return the created records so tests can reference IDs.
 
 1. Navigate to `/sign-in`
 2. Fill in the email and submit
-3. Query the `verification` table for the most recent token matching that email
-4. Construct the magic link URL and navigate to it
+3. Query the `verification` table for the most recent row where `identifier` matches the email — the `value` column contains the token
+4. Construct the magic link URL: `/api/auth/magic-link/verify?token={value}` and navigate to it
 5. Wait for redirect to confirm the session is active
 
 Used at the start of every test that needs an authenticated user. For the sign-in flow test itself, the steps are the assertions.
@@ -66,7 +68,7 @@ Used at the start of every test that needs an authenticated user. For the sign-i
 
 `resetDatabase()`:
 
-- Truncates all tables in dependency order (votes, members, topics, member_lists, session, verification, user) with CASCADE
+- Executes a single `TRUNCATE user, session, verification, member_lists, members, topics, votes CASCADE` statement — CASCADE handles foreign key dependencies regardless of order
 - Called in `beforeEach` for each test file
 
 ## Test Suites
@@ -74,7 +76,7 @@ Used at the start of every test that needs an authenticated user. For the sign-i
 ### `sign-in.spec.ts` — Magic Link Auth Flow
 
 - Enter email for a user in a member list -> token created in DB -> navigate to magic link -> redirected to home authenticated
-- Enter email for a non-member -> appropriate error/rejection
+- Enter email for a non-member -> magic link request is rejected (the app's `sendMagicLink` hook checks `isEmailInAnyMemberList` and throws `FORBIDDEN` if not found) -> user sees error message
 
 ### `vote.spec.ts` — Eligible Member Voting
 
@@ -83,6 +85,10 @@ Used at the start of every test that needs an authenticated user. For the sign-i
 ### `change-vote.spec.ts` — Vote Modification
 
 - Seed a user with an existing vote -> authenticate -> change vote from yes to no -> see updated result -> DB reflects the change (upsert)
+
+### `closed-topic.spec.ts` — Closed Topic Enforcement
+
+- Seed a user, member list, and topic with `closesAt` in the past -> authenticate -> navigate to topic -> voting is disabled, results are shown
 
 ### `ineligible-voter.spec.ts` — Eligibility Enforcement
 
@@ -114,6 +120,7 @@ test/
       sign-in.spec.ts
       vote.spec.ts
       change-vote.spec.ts
+      closed-topic.spec.ts
       ineligible-voter.spec.ts
       admin-topics.spec.ts
       admin-member-lists.spec.ts
@@ -125,7 +132,7 @@ playwright.config.ts     # Top-level config
 ## Playwright Configuration
 
 - `testDir: ./test/e2e/specs`
-- `webServer`: starts `pnpm dev` with test env vars, waits for `http://localhost:3000`
+- `webServer`: starts `pnpm dev --port 3001` with test env vars (loaded from `.env.test`), waits for `http://localhost:3001` — uses port 3001 to avoid conflicts with a running dev server
 - `globalSetup`: points to `test/e2e/global-setup.ts`
 - Single project: Chromium only (Firefox/WebKit can be added later)
 - `retries: 0` locally, `retries: 2` in CI
@@ -141,8 +148,8 @@ playwright.config.ts     # Top-level config
 ```
 DATABASE_URL=postgresql://kiwiburn:kiwiburn@localhost:6769/voting_portal_test
 BETTER_AUTH_SECRET=test-secret
-BETTER_AUTH_URL=http://localhost:3000
-NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3000
+BETTER_AUTH_URL=http://localhost:3001
+NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3001
 SMTP_HOST=localhost
 SMTP_PORT=1025
 SMTP_USER=test
