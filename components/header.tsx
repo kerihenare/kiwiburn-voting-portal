@@ -80,16 +80,17 @@ const Nav = glide("nav", {
 const NavLeft = glide("div", {
   alignItems: "items-center",
   display: "flex",
-  gap: "gap-6",
+  gap: ["gap-3", "sm:gap-6"],
 })
 
 const NavRight = glide("div", {
   alignItems: "items-center",
   display: "flex",
-  gap: "gap-4",
+  gap: ["gap-2", "sm:gap-4"],
 })
 
 const UserEmail = glide("span", {
   color: "text-white/70",
+  display: ["hidden", "sm:inline"],
   fontSize: "text-sm",
 })
