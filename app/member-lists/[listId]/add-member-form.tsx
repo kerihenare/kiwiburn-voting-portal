@@ -5,8 +5,13 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { addMember } from "@/lib/actions/members"
+import { glide } from "@/lib/glidepath"
 
-export function AddMemberForm({ listId }: { listId: string }) {
+interface AddMemberFormProps {
+  listId: string
+}
+
+export function AddMemberForm(props: AddMemberFormProps) {
   const router = useRouter()
   const [email, setEmail] = useState("")
   const [submitting, setSubmitting] = useState(false)
@@ -17,7 +22,7 @@ export function AddMemberForm({ listId }: { listId: string }) {
     setSubmitting(true)
     setError(null)
     try {
-      await addMember(listId, { email })
+      await addMember(props.listId, { email })
       setEmail("")
       router.refresh()
     } catch (err) {
@@ -28,8 +33,8 @@ export function AddMemberForm({ listId }: { listId: string }) {
   }
 
   return (
-    <form className="flex gap-2 items-start flex-1" onSubmit={handleSubmit}>
-      <div className="flex-1">
+    <AddMemberRow onSubmit={handleSubmit}>
+      <InputWrapper>
         <Input
           aria-invalid={error ? true : undefined}
           aria-label="Email address"
@@ -39,15 +44,28 @@ export function AddMemberForm({ listId }: { listId: string }) {
           type="email"
           value={email}
         />
-        {error && (
-          <p className="text-sm text-destructive mt-1" role="alert">
-            {error}
-          </p>
-        )}
-      </div>
+        {error && <FieldError role="alert">{error}</FieldError>}
+      </InputWrapper>
       <Button disabled={submitting} type="submit">
         {submitting ? "Adding\u2026" : "Add member"}
       </Button>
-    </form>
+    </AddMemberRow>
   )
 }
+
+const AddMemberRow = glide("form", {
+  alignItems: "items-start",
+  display: "flex",
+  flex: "flex-1",
+  gap: "gap-2",
+})
+
+const InputWrapper = glide("div", {
+  flex: "flex-1",
+})
+
+const FieldError = glide("p", {
+  color: "text-destructive",
+  fontSize: "text-sm",
+  marginTop: "mt-1",
+})
