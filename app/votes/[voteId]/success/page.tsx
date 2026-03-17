@@ -33,8 +33,8 @@ export default async function VoteSuccessPage(props: VoteSuccessPageProps) {
           <Badge
             className={`text-3xl px-6 py-3 font-bold ${
               isYes
-                ? "bg-green-100 text-green-800 hover:bg-green-100"
-                : "bg-red-100 text-red-800 hover:bg-red-100"
+                ? "bg-green-100 text-green-800 hover:bg-green-100 dark:bg-green-900 dark:text-green-200 dark:hover:bg-green-900"
+                : "bg-red-100 text-red-800 hover:bg-red-100 dark:bg-red-900 dark:text-red-200 dark:hover:bg-red-900"
             }`}
           >
             {userVote.toUpperCase()}
