@@ -35,6 +35,7 @@ export default defineConfig({
       provider: "v8",
     },
     environment: "jsdom",
+    exclude: ["test/e2e/**", "node_modules/**"],
     globals: true,
     setupFiles: ["./vitest.setup.ts"],
   },

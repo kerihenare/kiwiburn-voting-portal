@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm"
 import { expect, test } from "@playwright/test"
-import { votes } from "../../../../lib/db/schema"
+import { votes } from "../../../lib/db/schema"
 import { authenticateAs } from "../helpers/auth"
 import { testDb } from "../helpers/db"
 import { resetDatabase } from "../helpers/reset"

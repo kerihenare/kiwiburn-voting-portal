@@ -1,30 +1,58 @@
-import { desc, eq } from "drizzle-orm"
+import { randomUUID } from "node:crypto"
+import { eq } from "drizzle-orm"
 import type { Page } from "@playwright/test"
-import { verification } from "../../../lib/db/schema"
+import { session, user } from "../../../lib/db/schema"
 import { testDb } from "./db"
 
+async function signCookieValue(value: string, secret: string) {
+  // Match Better Auth's makeSignature: WebCrypto HMAC-SHA256 + btoa
+  const encoder = new TextEncoder()
+  const key = await crypto.subtle.importKey(
+    "raw",
+    encoder.encode(secret),
+    { hash: "SHA-256", name: "HMAC" },
+    false,
+    ["sign"],
+  )
+  const signature = await crypto.subtle.sign(
+    "HMAC",
+    key,
+    encoder.encode(value),
+  )
+  const base64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
+  return `${value}.${base64}`
+}
+
 export async function authenticateAs(page: Page, email: string) {
-  await page.goto("/sign-in")
-
-  await page.getByRole("textbox", { name: /email/i }).fill(email)
-  await page.getByRole("button", { name: /send login link/i }).click()
-
-  await page.getByText("Check your email").waitFor()
-
-  const [record] = await testDb
+  const [userRecord] = await testDb
     .select()
-    .from(verification)
-    .where(eq(verification.identifier, email))
-    .orderBy(desc(verification.createdAt))
+    .from(user)
+    .where(eq(user.email, email))
     .limit(1)
 
-  if (!record) {
-    throw new Error(`No verification token found for ${email}`)
+  if (!userRecord) {
+    throw new Error(`No user found for ${email}. Seed the user first.`)
   }
 
-  await page.goto(
-    `/api/auth/magic-link/verify?token=${record.value}&callbackURL=/`,
-  )
+  const token = randomUUID()
+  await testDb.insert(session).values({
+    expiresAt: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+    id: randomUUID(),
+    token,
+    userId: userRecord.id,
+  })
 
-  await page.waitForURL("/")
+  const secret = process.env.BETTER_AUTH_SECRET!
+  const signedToken = await signCookieValue(token, secret)
+
+  await page.context().addCookies([
+    {
+      domain: "localhost",
+      name: "better-auth.session_token",
+      path: "/",
+      value: signedToken,
+    },
+  ])
+
+  await page.goto("/")
 }
