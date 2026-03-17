@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { updateTopic } from "@/lib/actions/topics"
+import { glide } from "@/lib/glidepath"
 import { DeleteTopicButton } from "./delete-topic-button"
 
 function toLocalDatetime(dateStr: string) {
@@ -37,14 +38,16 @@ interface EditTopicFormProps {
   }
 }
 
-export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
+export function EditTopicForm(props: EditTopicFormProps) {
   const router = useRouter()
-  const [title, setTitle] = useState(topic.title)
-  const [description, setDescription] = useState(topic.description ?? "")
-  const [memberListId, setMemberListId] = useState(topic.memberListId)
-  const [opensAt, setOpensAt] = useState(toLocalDatetime(topic.opensAt))
-  const [closesAt, setClosesAt] = useState(toLocalDatetime(topic.closesAt))
-  const [isActive, setIsActive] = useState(topic.isActive)
+  const [title, setTitle] = useState(props.topic.title)
+  const [description, setDescription] = useState(props.topic.description ?? "")
+  const [memberListId, setMemberListId] = useState(props.topic.memberListId)
+  const [opensAt, setOpensAt] = useState(toLocalDatetime(props.topic.opensAt))
+  const [closesAt, setClosesAt] = useState(
+    toLocalDatetime(props.topic.closesAt),
+  )
+  const [isActive, setIsActive] = useState(props.topic.isActive)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -54,7 +57,7 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
     setError(null)
 
     try {
-      await updateTopic(topic.id, {
+      await updateTopic(props.topic.id, {
         closesAt,
         description,
         isActive,
@@ -71,8 +74,8 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="space-y-2">
+    <FormStack onSubmit={handleSubmit}>
+      <FieldGroup>
         <Label htmlFor="title">Title</Label>
         <Input
           id="title"
@@ -80,32 +83,32 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
           required
           value={title}
         />
-      </div>
-      <div className="space-y-2">
+      </FieldGroup>
+      <FieldGroup>
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-      </div>
-      <div className="space-y-2">
+      </FieldGroup>
+      <FieldGroup>
         <Label>Member list</Label>
         <Select onValueChange={setMemberListId} value={memberListId}>
           <SelectTrigger className="w-full">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            {memberLists.map((list) => (
+            {props.memberLists.map((list) => (
               <SelectItem key={list.id} value={list.id}>
                 {list.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
+      </FieldGroup>
+      <DateGrid>
+        <FieldGroup>
           <Label htmlFor="opensAt">Opens at</Label>
           <Input
             id="opensAt"
@@ -114,8 +117,8 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
             type="datetime-local"
             value={opensAt}
           />
-        </div>
-        <div className="space-y-2">
+        </FieldGroup>
+        <FieldGroup>
           <Label htmlFor="closesAt">Closes at</Label>
           <Input
             id="closesAt"
@@ -124,9 +127,9 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
             type="datetime-local"
             value={closesAt}
           />
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
+        </FieldGroup>
+      </DateGrid>
+      <CheckboxRow>
         <input
           checked={isActive}
           id="isActive"
@@ -134,18 +137,45 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
           type="checkbox"
         />
         <Label htmlFor="isActive">Active (visible to voters)</Label>
-      </div>
-      {error && (
-        <p className="text-sm text-destructive" role="alert">
-          {error}
-        </p>
-      )}
-      <div className="flex justify-end gap-2">
-        <DeleteTopicButton topicId={topic.id} />
+      </CheckboxRow>
+      {error && <FieldError role="alert">{error}</FieldError>}
+      <FormActions>
+        <DeleteTopicButton topicId={props.topic.id} />
         <Button disabled={submitting} type="submit">
           {submitting ? "Saving\u2026" : "Update topic"}
         </Button>
-      </div>
-    </form>
+      </FormActions>
+    </FormStack>
   )
 }
+
+const FormStack = glide("form", {
+  other: "space-y-6",
+})
+
+const FieldGroup = glide("div", {
+  other: "space-y-2",
+})
+
+const DateGrid = glide("div", {
+  display: "grid",
+  gap: "gap-4",
+  gridTemplateColumns: ["grid-cols-1", "sm:grid-cols-2"],
+})
+
+const CheckboxRow = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  gap: "gap-2",
+})
+
+const FieldError = glide("p", {
+  color: "text-destructive",
+  fontSize: "text-sm",
+})
+
+const FormActions = glide("div", {
+  display: "flex",
+  gap: "gap-2",
+  justifyContent: "justify-end",
+})
