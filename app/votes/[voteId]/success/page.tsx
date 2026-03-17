@@ -6,13 +6,14 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { auth } from "@/lib/auth"
 import { getTopic, getUserVoteForTopic } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 
-export default async function VoteSuccessPage({
-  params,
-}: {
+interface VoteSuccessPageProps {
   params: Promise<{ voteId: string }>
-}) {
-  const { voteId: topicId } = await params
+}
+
+export default async function VoteSuccessPage(props: VoteSuccessPageProps) {
+  const { voteId: topicId } = await props.params
 
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect("/sign-in")
@@ -26,7 +27,7 @@ export default async function VoteSuccessPage({
   const isYes = userVote === "yes"
 
   return (
-    <div className="flex items-center justify-center min-h-[60vh]">
+    <CenterWrapper>
       <Card className="max-w-md w-full text-center">
         <CardContent className="pt-8 pb-8 space-y-6">
           <Badge
@@ -38,17 +39,33 @@ export default async function VoteSuccessPage({
           >
             {userVote.toUpperCase()}
           </Badge>
-          <h1 className="text-2xl font-bold">Vote recorded</h1>
-          <p className="text-muted-foreground">
+          <SuccessTitle>Vote recorded</SuccessTitle>
+          <SuccessMessage>
             Your vote of <strong>{isYes ? "Yes" : "No"}</strong> on &ldquo;
             {topic.title}&rdquo; has been securely recorded. Thank you for
             participating in this KiwiBurn community decision.
-          </p>
+          </SuccessMessage>
           <Button asChild>
             <Link href="/">View all votes</Link>
           </Button>
         </CardContent>
       </Card>
-    </div>
+    </CenterWrapper>
   )
 }
+
+const CenterWrapper = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  justifyContent: "justify-center",
+  minHeight: "min-h-[60vh]",
+})
+
+const SuccessTitle = glide("h1", {
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
+
+const SuccessMessage = glide("p", {
+  color: "text-muted-foreground",
+})
