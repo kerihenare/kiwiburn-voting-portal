@@ -132,6 +132,11 @@ describe("updateMemberList", () => {
     ).rejects.toThrow("Unauthorized")
   })
 
+  it("throws on validation error (empty name)", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    await expect(updateMemberList(memberListId, { name: "" })).rejects.toThrow()
+  })
+
   it("updates member list successfully", async () => {
     mockGetSession.mockResolvedValue(adminSession)
     const result = await updateMemberList(memberListId, {
