@@ -24,7 +24,7 @@ const columns: ColumnDef<Topic>[] = [
         {row.original.title}
         {!row.original.isActive && (
           <Badge
-            className="ml-2 bg-yellow-100 text-yellow-800"
+            className="ml-2 bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
             variant="secondary"
           >
             Draft
@@ -50,9 +50,9 @@ const columns: ColumnDef<Topic>[] = [
           <Badge
             className={
               status === "open"
-                ? "bg-green-100 text-green-800"
+                ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
                 : status === "scheduled"
-                  ? "bg-blue-100 text-blue-800"
+                  ? "bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
                   : ""
             }
             variant={status === "open" ? "default" : "secondary"}
