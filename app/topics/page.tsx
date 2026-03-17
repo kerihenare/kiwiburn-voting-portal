@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth-guard"
 import { getAdminTopicsWithCounts } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 import { TopicsTable } from "./topics-table"
 
 export default async function TopicsPage() {
@@ -19,18 +20,34 @@ export default async function TopicsPage() {
   }))
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-accent">Topics</h1>
+    <PageContent>
+      <PageHeader>
+        <PageTitle>Topics</PageTitle>
         <Button asChild>
           <Link href="/topics/create">Create topic</Link>
         </Button>
-      </div>
+      </PageHeader>
       <Card>
         <CardContent>
           <TopicsTable data={serializedTopics} />
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   )
 }
+
+const PageContent = glide("div", {
+  other: "space-y-6",
+})
+
+const PageHeader = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  justifyContent: "justify-between",
+})
+
+const PageTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
