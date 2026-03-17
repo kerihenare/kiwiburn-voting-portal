@@ -102,6 +102,14 @@ describe("castVote", () => {
     )
   })
 
+  it("throws when topic is inactive", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    mockGetTopic.mockResolvedValue({ ...openTopic, isActive: false })
+    await expect(castVote({ topicId, vote: "yes" })).rejects.toThrow(
+      "Topic not found",
+    )
+  })
+
   it("throws when voting is not open", async () => {
     mockGetSession.mockResolvedValue(adminSession)
     const futureTopic = {
@@ -147,6 +155,22 @@ describe("castVote", () => {
       topicId,
       topicTitle: "Test Topic",
       vote: "yes",
+    })
+  })
+
+  it("casts no vote successfully", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    mockGetTopic.mockResolvedValue(openTopic)
+    vi.mocked(getTopicStatus).mockReturnValue("open")
+    mockCheckEligibility.mockResolvedValue({ eligible: true })
+
+    const result = await castVote({ topicId, vote: "no" })
+
+    expect(result).toEqual({ success: true, vote: "no" })
+    expect(mockDb.values).toHaveBeenCalledWith({
+      topicId,
+      userId: "user-1",
+      vote: "no",
     })
   })
 
