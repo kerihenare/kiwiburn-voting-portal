@@ -56,7 +56,7 @@ export function TopicCard(props: TopicCardProps) {
       {status === "open" && props.userVote !== undefined && (
         <>
           <Separator className="opacity-50" />
-          <CardFooter className="flex items-center justify-between">
+          <CardFooter className="flex flex-wrap items-center justify-between gap-2">
             <div>
               {props.userVote && (
                 <Badge variant="outline">
@@ -81,6 +81,8 @@ export function TopicCard(props: TopicCardProps) {
 const TopicHeader = glide("div", {
   alignItems: "items-center",
   display: "flex",
+  flexWrap: "flex-wrap",
+  gap: "gap-2",
   justifyContent: "justify-between",
 })
 
