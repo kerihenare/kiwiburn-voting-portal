@@ -8,6 +8,7 @@ const { mockDb } = vi.hoisted(() => {
       "from",
       "where",
       "leftJoin",
+      "innerJoin",
       "groupBy",
       "orderBy",
       "limit",
@@ -79,6 +80,7 @@ vi.mock("drizzle-orm", async (importOriginal) => {
 
 import {
   checkEligibility,
+  getAdminTopicsWithCounts,
   getAllMemberLists,
   getMemberList,
   getMemberListsWithCounts,
@@ -86,6 +88,7 @@ import {
   getTopicsWithCounts,
   getUserVoteForTopic,
   getVoteResults,
+  isEmailInAnyMemberList,
 } from "@/lib/db/queries"
 
 const topicId = "019506a0-0000-7000-8000-000000000001"
@@ -111,6 +114,19 @@ describe("queries", () => {
       const mockTopics = [{ id: topicId, title: "Topic 1" }]
       setupSelect(mockTopics)
       const result = await getTopicsWithCounts()
+      expect(result).toEqual(mockTopics)
+      expect(mockDb.select).toHaveBeenCalled()
+    })
+  })
+
+  describe("getAdminTopicsWithCounts", () => {
+    it("returns all non-deleted topics including inactive", async () => {
+      const mockTopics = [
+        { id: topicId, isActive: false, title: "Topic 1" },
+        { id: "topic-2", isActive: true, title: "Topic 2" },
+      ]
+      setupSelect(mockTopics)
+      const result = await getAdminTopicsWithCounts()
       expect(result).toEqual(mockTopics)
       expect(mockDb.select).toHaveBeenCalled()
     })
@@ -225,6 +241,20 @@ describe("queries", () => {
         name: "List A",
         topics: mockTopics,
       })
+    })
+  })
+
+  describe("isEmailInAnyMemberList", () => {
+    it("returns true when email is in a member list", async () => {
+      setupSelect([{ id: memberId }])
+      const result = await isEmailInAnyMemberList("test@example.com")
+      expect(result).toBe(true)
+    })
+
+    it("returns false when email is not in any member list", async () => {
+      setupSelect([])
+      const result = await isEmailInAnyMemberList("unknown@example.com")
+      expect(result).toBe(false)
     })
   })
 
