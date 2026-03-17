@@ -15,14 +15,15 @@ import {
   getUserVoteForTopic,
   getVoteResults,
 } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 import { getTopicStatus } from "@/lib/types"
 
-export default async function VotePage({
-  params,
-}: {
+interface VotePageProps {
   params: Promise<{ voteId: string }>
-}) {
-  const { voteId: topicId } = await params
+}
+
+export default async function VotePage(props: VotePageProps) {
+  const { voteId: topicId } = await props.params
 
   const topic = await getTopic(topicId)
   if (!topic || !topic.isActive) notFound()
@@ -46,27 +47,23 @@ export default async function VotePage({
   }
 
   return (
-    <div className="flex flex-1 flex-col items-center justify-center gap-4">
+    <PageCenter>
       <Card className="max-w-2xl w-full">
         <CardContent className="space-y-6">
-          <div className="flex items-center justify-between">
+          <TopicHeader>
             {topic.memberListName && (
-              <p className="mb-0 text-sm text-muted-foreground">
-                {topic.memberListName}
-              </p>
+              <ListName>{topic.memberListName}</ListName>
             )}
             <TimerBadge closesAt={topic.closesAt} opensAt={topic.opensAt} />
-          </div>
-          <h1 className="text-2xl font-bold text-accent !mb-0">
-            {topic.title}
-          </h1>
+          </TopicHeader>
+          <TopicTitle>{topic.title}</TopicTitle>
           {topic.description && (
-            <p className="text-muted-foreground !mt-0">{topic.description}</p>
+            <TopicDescription>{topic.description}</TopicDescription>
           )}
 
           {status === "closed" ? (
-            <section className="space-y-6">
-              <h2 className="text-lg font-semibold">Results</h2>
+            <ResultsSection>
+              <ResultsHeading>Results</ResultsHeading>
               <ResultBars
                 noCount={results.noCount}
                 totalVotes={results.totalVotes}
@@ -78,7 +75,7 @@ export default async function VotePage({
                   {userVote.charAt(0).toUpperCase() + userVote.slice(1)}
                 </Badge>
               )}
-            </section>
+            </ResultsSection>
           ) : !session ? (
             <Button asChild className="w-full">
               <Link href="/sign-in">Sign in to vote</Link>
@@ -120,6 +117,48 @@ export default async function VotePage({
           Back to votes
         </Link>
       </Button>
-    </div>
+    </PageCenter>
   )
 }
+
+const PageCenter = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  flex: "flex-1",
+  flexDirection: "flex-col",
+  gap: "gap-4",
+  justifyContent: "justify-center",
+})
+
+const TopicHeader = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  justifyContent: "justify-between",
+})
+
+const ListName = glide("p", {
+  color: "text-muted-foreground",
+  fontSize: "text-sm",
+  marginBottom: "mb-0",
+})
+
+const TopicTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+  other: "!mb-0",
+})
+
+const TopicDescription = glide("p", {
+  color: "text-muted-foreground",
+  other: "!mt-0",
+})
+
+const ResultsSection = glide("section", {
+  other: "space-y-6",
+})
+
+const ResultsHeading = glide("h2", {
+  fontSize: "text-lg",
+  fontWeight: "font-semibold",
+})
