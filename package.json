@@ -8,10 +8,12 @@
     "start": "next start",
     "lint": "biome check .",
     "lint:fix": "biome check --fix .",
-    "test": "vitest run",
-    "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
     "db:seed": "npx tsx lib/db/seed.ts",
+    "test": "vitest run",
+    "test:coverage": "vitest run --coverage",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
+    "test:watch": "vitest",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
@@ -42,6 +44,7 @@
   },
   "devDependencies": {
     "@biomejs/biome": "^2.4.7",
+    "@playwright/test": "^1.58.2",
     "@tailwindcss/postcss": "^4.2.0",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",

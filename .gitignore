@@ -159,6 +159,11 @@ yarn-error.log*
 # env files
 .env*
 !.env.example
+!.env.test.example
+
+# Playwright
+test-results/
+playwright-report/
 
 # vercel
 .vercel
