@@ -43,6 +43,8 @@ const PageContent = glide("div", {
 const PageHeader = glide("div", {
   alignItems: "items-center",
   display: "flex",
+  flexWrap: "flex-wrap",
+  gap: "gap-3",
   justifyContent: "justify-between",
 })
 

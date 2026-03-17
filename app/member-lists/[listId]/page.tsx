@@ -97,6 +97,8 @@ const PageContent = glide("div", {
 const TabHeader = glide("div", {
   alignItems: "items-center",
   display: "flex",
+  flexWrap: "flex-wrap",
+  gap: "gap-3",
   justifyContent: "justify-between",
 })
 
@@ -109,6 +111,7 @@ const PageTitle = glide("h1", {
 const MemberActions = glide("div", {
   alignItems: "items-start",
   display: "flex",
+  flexWrap: "flex-wrap",
   gap: "gap-2",
 })
 
