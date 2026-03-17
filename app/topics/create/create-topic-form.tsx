@@ -13,48 +13,31 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { updateTopic } from "@/lib/actions/topics"
-import { DeleteTopicButton } from "./delete-topic-button"
+import { createTopic } from "@/lib/actions/topics"
 
-function toLocalDatetime(dateStr: string) {
-  const date = new Date(dateStr)
-  const offset = date.getTimezoneOffset()
-  const local = new Date(date.getTime() - offset * 60000)
-  return local.toISOString().slice(0, 16)
-}
-
-interface EditTopicFormProps {
+interface CreateTopicFormProps {
   memberLists: { id: string; name: string }[]
-  topic: {
-    id: string
-    title: string
-    description: string | null
-    isActive: boolean
-    memberListId: string
-    memberListName: string | null
-    opensAt: string // serialized from server component
-    closesAt: string
-  }
 }
 
-export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
+export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
   const router = useRouter()
-  const [title, setTitle] = useState(topic.title)
-  const [description, setDescription] = useState(topic.description ?? "")
-  const [memberListId, setMemberListId] = useState(topic.memberListId)
-  const [opensAt, setOpensAt] = useState(toLocalDatetime(topic.opensAt))
-  const [closesAt, setClosesAt] = useState(toLocalDatetime(topic.closesAt))
-  const [isActive, setIsActive] = useState(topic.isActive)
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [memberListId, setMemberListId] = useState<string | null>(null)
+  const [opensAt, setOpensAt] = useState("")
+  const [closesAt, setClosesAt] = useState("")
+  const [isActive, setIsActive] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!memberListId) return
     setSubmitting(true)
     setError(null)
 
     try {
-      await updateTopic(topic.id, {
+      await createTopic({
         closesAt,
         description,
         isActive,
@@ -62,10 +45,9 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
         opensAt,
         title,
       })
-      router.refresh()
+      router.push("/topics")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
-    } finally {
       setSubmitting(false)
     }
   }
@@ -91,9 +73,9 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
       </div>
       <div className="space-y-2">
         <Label>Member list</Label>
-        <Select onValueChange={setMemberListId} value={memberListId}>
+        <Select onValueChange={setMemberListId}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue placeholder="Select a member list" />
           </SelectTrigger>
           <SelectContent>
             {memberLists.map((list) => (
@@ -140,10 +122,9 @@ export function EditTopicForm({ memberLists, topic }: EditTopicFormProps) {
           {error}
         </p>
       )}
-      <div className="flex justify-end gap-2">
-        <DeleteTopicButton topicId={topic.id} />
-        <Button disabled={submitting} type="submit">
-          {submitting ? "Saving\u2026" : "Update topic"}
+      <div className="flex justify-end">
+        <Button disabled={submitting || !memberListId} type="submit">
+          {submitting ? "Creating..." : "Create topic"}
         </Button>
       </div>
     </form>

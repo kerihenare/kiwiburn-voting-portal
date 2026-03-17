@@ -11,11 +11,13 @@ vi.mock("nodemailer", () => ({
 }))
 
 vi.mock("@react-email/components", () => ({
-  render: vi.fn().mockImplementation((_component, options) =>
-    Promise.resolve(
-      options?.plainText ? "plain text version" : "<html>rendered</html>",
+  render: vi
+    .fn()
+    .mockImplementation((_component, options) =>
+      Promise.resolve(
+        options?.plainText ? "plain text version" : "<html>rendered</html>",
+      ),
     ),
-  ),
 }))
 
 vi.mock("@/emails/magic-link", () => ({

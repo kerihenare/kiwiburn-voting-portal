@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto"
-import { eq } from "drizzle-orm"
 import type { Page } from "@playwright/test"
+import { eq } from "drizzle-orm"
 import { session, user } from "../../../lib/db/schema"
 import { testDb } from "./db"
 
@@ -14,11 +14,7 @@ async function signCookieValue(value: string, secret: string) {
     false,
     ["sign"],
   )
-  const signature = await crypto.subtle.sign(
-    "HMAC",
-    key,
-    encoder.encode(value),
-  )
+  const signature = await crypto.subtle.sign("HMAC", key, encoder.encode(value))
   const base64 = btoa(String.fromCharCode(...new Uint8Array(signature)))
   return `${value}.${base64}`
 }

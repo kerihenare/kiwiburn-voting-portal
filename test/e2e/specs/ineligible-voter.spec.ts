@@ -14,18 +14,14 @@ test.describe("Ineligible voter", () => {
     await seedUser("wrong-list@test.com")
     await seedMemberList("List A", ["wrong-list@test.com"])
 
-    const { list: listB } = await seedMemberList("List B", [
-      "other@test.com",
-    ])
+    const { list: listB } = await seedMemberList("List B", ["other@test.com"])
     const topic = await seedTopic(listB.id, { title: "Not for you" })
 
     await authenticateAs(page, "wrong-list@test.com")
 
     await page.goto(`/votes/${topic.id}`)
 
-    await expect(
-      page.getByText(/not eligible to vote/i),
-    ).toBeVisible()
+    await expect(page.getByText(/not eligible to vote/i)).toBeVisible()
 
     await expect(
       page.getByRole("button", { name: /vote yes/i }),

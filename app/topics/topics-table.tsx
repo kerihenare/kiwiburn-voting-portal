@@ -22,7 +22,10 @@ const columns: ColumnDef<Topic>[] = [
       <span className="font-medium">
         {row.original.title}
         {!row.original.isActive && (
-          <Badge className="ml-2 bg-yellow-100 text-yellow-800" variant="secondary">
+          <Badge
+            className="ml-2 bg-yellow-100 text-yellow-800"
+            variant="secondary"
+          >
             Draft
           </Badge>
         )}

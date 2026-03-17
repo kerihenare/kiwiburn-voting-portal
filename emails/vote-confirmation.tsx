@@ -48,9 +48,7 @@ export default function VoteConfirmationEmail({
               </Button>
             </Section>
             <Hr style={divider} />
-            <Text style={footer}>
-              Kiwiburn Voting Portal
-            </Text>
+            <Text style={footer}>Kiwiburn Voting Portal</Text>
           </Section>
         </Container>
       </Body>

@@ -16,9 +16,7 @@ export default function SignInPage() {
     setStatus("sending")
     const { error } = await authClient.signIn.magicLink({ email })
     if (error) {
-      setStatus(
-        error.message?.includes("member") ? "not-member" : "error",
-      )
+      setStatus(error.message?.includes("member") ? "not-member" : "error")
     } else {
       setStatus("sent")
     }

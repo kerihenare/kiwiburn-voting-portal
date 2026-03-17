@@ -16,9 +16,7 @@ describe("VoteConfirmationEmail", () => {
 
   it("renders the preview text with vote and topic title", () => {
     render(<VoteConfirmationEmail {...defaultProps} />)
-    expect(
-      screen.getByText(/You voted YES on/),
-    ).toBeInTheDocument()
+    expect(screen.getByText(/You voted YES on/)).toBeInTheDocument()
   })
 
   it("renders the vote value in uppercase", () => {

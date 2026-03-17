@@ -1,7 +1,7 @@
 import { notFound } from "next/navigation"
 import { Card, CardContent } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth-guard"
-import { getTopic } from "@/lib/db/queries"
+import { getAllMemberLists, getTopic } from "@/lib/db/queries"
 import { EditTopicForm } from "./edit-topic-form"
 
 export default async function TopicEditPage({
@@ -12,7 +12,10 @@ export default async function TopicEditPage({
   await requireAdmin()
   const { topicId: id } = await params
 
-  const topic = await getTopic(id)
+  const [topic, memberLists] = await Promise.all([
+    getTopic(id),
+    getAllMemberLists(),
+  ])
   if (!topic) notFound()
 
   return (
@@ -22,6 +25,7 @@ export default async function TopicEditPage({
       <Card>
         <CardContent>
           <EditTopicForm
+            memberLists={memberLists}
             topic={{
               ...topic,
               closesAt: topic.closesAt.toISOString(),
