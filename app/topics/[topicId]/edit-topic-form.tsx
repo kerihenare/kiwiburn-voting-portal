@@ -28,6 +28,7 @@ interface EditTopicFormProps {
     id: string
     title: string
     description: string | null
+    isActive: boolean
     memberListId: string
     memberListName: string | null
     opensAt: string // serialized from server component
@@ -43,6 +44,7 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
   const [memberListId, setMemberListId] = useState(topic.memberListId)
   const [opensAt, setOpensAt] = useState(toLocalDatetime(topic.opensAt))
   const [closesAt, setClosesAt] = useState(toLocalDatetime(topic.closesAt))
+  const [isActive, setIsActive] = useState(topic.isActive)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -61,6 +63,7 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
       await updateTopic(topic.id, {
         closesAt,
         description,
+        isActive,
         memberListId,
         opensAt,
         title,
@@ -128,6 +131,15 @@ export function EditTopicForm({ topic }: EditTopicFormProps) {
             value={closesAt}
           />
         </div>
+      </div>
+      <div className="flex items-center gap-2">
+        <input
+          checked={isActive}
+          id="isActive"
+          onChange={(e) => setIsActive(e.target.checked)}
+          type="checkbox"
+        />
+        <Label htmlFor="isActive">Active (visible to voters)</Label>
       </div>
       {error && (
         <p className="text-sm text-destructive" role="alert">

@@ -38,7 +38,8 @@
       "mcp__plugin_playwright_playwright__browser_run_code",
       "Bash(npx lighthouse:*)",
       "Bash(pkill:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(PGPASSWORD=kiwiburn psql -h localhost -p 6769 -U kiwiburn -d voting_portal -c \"TRUNCATE votes, topics, members, member_lists, session, account, verification, \\\\\"user\\\\\" CASCADE;\")"
     ]
   }
 }

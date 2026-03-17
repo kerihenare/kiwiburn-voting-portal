@@ -16,7 +16,7 @@ export async function castVote(input: { topicId: string; vote: string }) {
   if (!session) throw new Error("Not authenticated")
 
   const topic = await getTopic(parsed.topicId)
-  if (!topic) throw new Error("Topic not found")
+  if (!topic || !topic.isActive) throw new Error("Topic not found")
 
   const status = getTopicStatus(topic.opensAt, topic.closesAt)
   if (status !== "open") throw new Error("Voting is not open")
@@ -39,6 +39,7 @@ export async function castVote(input: { topicId: string; vote: string }) {
   // Send confirmation email (non-blocking)
   sendVoteConfirmationEmail({
     email: session.user.email,
+    topicId: parsed.topicId,
     topicTitle: topic.title,
     vote: parsed.vote,
   }).catch(console.error)

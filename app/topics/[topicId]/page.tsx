@@ -25,6 +25,7 @@ export default async function TopicEditPage({
             topic={{
               ...topic,
               closesAt: topic.closesAt.toISOString(),
+              isActive: topic.isActive,
               opensAt: topic.opensAt.toISOString(),
             }}
           />

@@ -9,6 +9,7 @@ import { getTopicStatus } from "@/lib/types"
 type Topic = {
   id: string
   title: string
+  isActive: boolean
   memberListName: string | null
   opensAt: string
   closesAt: string
@@ -18,7 +19,14 @@ const columns: ColumnDef<Topic>[] = [
   {
     accessorKey: "title",
     cell: ({ row }) => (
-      <span className="font-medium">{row.original.title}</span>
+      <span className="font-medium">
+        {row.original.title}
+        {!row.original.isActive && (
+          <Badge className="ml-2 bg-yellow-100 text-yellow-800" variant="secondary">
+            Draft
+          </Badge>
+        )}
+      </span>
     ),
     header: "Title",
   },

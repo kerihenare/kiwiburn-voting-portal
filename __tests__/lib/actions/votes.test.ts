@@ -73,6 +73,7 @@ const adminSession = {
 const openTopic = {
   closesAt: new Date(Date.now() + 86400000),
   id: topicId,
+  isActive: true,
   opensAt: new Date(Date.now() - 86400000),
   title: "Test Topic",
 }
@@ -143,6 +144,7 @@ describe("castVote", () => {
     expect(mockDb.onConflictDoUpdate).toHaveBeenCalled()
     expect(mockSendVoteConfirmationEmail).toHaveBeenCalledWith({
       email: "test@example.com",
+      topicId,
       topicTitle: "Test Topic",
       vote: "yes",
     })

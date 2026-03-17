@@ -31,10 +31,10 @@ export default function CreateMemberListPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-screen-xl mx-auto w-full space-y-6">
       <h1 className="text-2xl font-bold text-accent">Create member list</h1>
       <Card>
-        <CardContent className="pt-6">
+        <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="name">Name</Label>
@@ -58,9 +58,11 @@ export default function CreateMemberListPage() {
                 {error}
               </p>
             )}
-            <Button disabled={submitting} type="submit">
-              {submitting ? "Creating..." : "Create member list"}
-            </Button>
+            <div className="flex justify-end">
+              <Button disabled={submitting} type="submit">
+                {submitting ? "Creating..." : "Create member list"}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

@@ -20,6 +20,7 @@ export async function createTopic(input: {
   memberListId: string
   opensAt: string
   closesAt: string
+  isActive?: boolean
 }) {
   await requireAdmin()
   const parsed = createTopicSchema.parse(input)
@@ -27,6 +28,7 @@ export async function createTopic(input: {
   await db.insert(topics).values({
     closesAt: new Date(parsed.closesAt),
     description: parsed.description ?? null,
+    isActive: parsed.isActive ?? false,
     memberListId: parsed.memberListId,
     opensAt: new Date(parsed.opensAt),
     title: parsed.title,
@@ -45,6 +47,7 @@ export async function updateTopic(
     memberListId: string
     opensAt: string
     closesAt: string
+    isActive?: boolean
   },
 ) {
   await requireAdmin()
@@ -55,6 +58,7 @@ export async function updateTopic(
     .set({
       closesAt: new Date(parsed.closesAt),
       description: parsed.description ?? null,
+      isActive: parsed.isActive ?? false,
       memberListId: parsed.memberListId,
       opensAt: new Date(parsed.opensAt),
       title: parsed.title,

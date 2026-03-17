@@ -76,6 +76,7 @@ export const topics = pgTable("topics", {
   deletedBy: text("deleted_by").references(() => user.id),
   description: text("description"),
   id: uuid("id").primaryKey().$defaultFn(uuidv7),
+  isActive: boolean("is_active").notNull().default(false),
   memberListId: uuid("member_list_id")
     .notNull()
     .references(() => memberLists.id),

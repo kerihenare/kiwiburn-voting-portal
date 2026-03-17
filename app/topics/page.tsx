@@ -2,16 +2,17 @@ import Link from "next/link"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth-guard"
-import { getTopicsWithCounts } from "@/lib/db/queries"
+import { getAdminTopicsWithCounts } from "@/lib/db/queries"
 import { TopicsTable } from "./topics-table"
 
 export default async function TopicsPage() {
   await requireAdmin()
-  const topics = await getTopicsWithCounts()
+  const topics = await getAdminTopicsWithCounts()
 
   const serializedTopics = topics.map((t) => ({
     closesAt: t.closesAt.toISOString(),
     id: t.id,
+    isActive: t.isActive,
     memberListName: t.memberListName,
     opensAt: t.opensAt.toISOString(),
     title: t.title,

@@ -86,6 +86,7 @@ describe("createTopic", () => {
     expect(mockDb.values).toHaveBeenCalledWith({
       closesAt: new Date("2026-04-10T00:00:00.000Z"),
       description: "A description",
+      isActive: false,
       memberListId,
       opensAt: new Date("2026-04-01T00:00:00.000Z"),
       title: "Test Topic",

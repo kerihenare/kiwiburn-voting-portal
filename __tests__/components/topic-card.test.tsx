@@ -123,10 +123,16 @@ describe("TopicCard", () => {
     expect(screen.queryByText(/You voted:/)).not.toBeInTheDocument()
   })
 
-  it("shows 'Vote now' button when open and no vote", () => {
+  it("shows 'Vote now' button when open and authenticated with no vote", () => {
+    vi.mocked(getTopicStatus).mockReturnValue("open")
+    render(<TopicCard topic={baseTopic} userVote={null} />)
+    expect(screen.getByText("Vote now")).toBeInTheDocument()
+  })
+
+  it("does not show footer when open but not authenticated", () => {
     vi.mocked(getTopicStatus).mockReturnValue("open")
     render(<TopicCard topic={baseTopic} />)
-    expect(screen.getByText("Vote now")).toBeInTheDocument()
+    expect(screen.queryByText("Vote now")).not.toBeInTheDocument()
   })
 
   it("shows 'Change vote' button when open and has vote", () => {
@@ -144,7 +150,7 @@ describe("TopicCard", () => {
 
   it("links to the correct vote page", () => {
     vi.mocked(getTopicStatus).mockReturnValue("open")
-    render(<TopicCard topic={baseTopic} />)
+    render(<TopicCard topic={baseTopic} userVote={null} />)
     const link = screen.getByText("Vote now").closest("a")
     expect(link).toHaveAttribute(
       "href",

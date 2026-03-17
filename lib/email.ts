@@ -21,33 +21,45 @@ export async function sendMagicLinkEmail({
   email: string
   url: string
 }) {
-  const html = await render(MagicLinkEmail({ url }))
+  const component = MagicLinkEmail({ url })
+  const [html, text] = await Promise.all([
+    render(component),
+    render(component, { plainText: true }),
+  ])
   const transport = getTransport()
 
   await transport.sendMail({
     from: process.env.SMTP_FROM,
     html,
     subject: "Sign in to Kiwiburn Voting Portal",
+    text,
     to: email,
   })
 }
 
 export async function sendVoteConfirmationEmail({
   email,
+  topicId,
   topicTitle,
   vote,
 }: {
   email: string
+  topicId: string
   topicTitle: string
   vote: string
 }) {
-  const html = await render(VoteConfirmationEmail({ topicTitle, vote }))
+  const component = VoteConfirmationEmail({ topicId, topicTitle, vote })
+  const [html, text] = await Promise.all([
+    render(component),
+    render(component, { plainText: true }),
+  ])
   const transport = getTransport()
 
   await transport.sendMail({
     from: process.env.SMTP_FROM,
     html,
     subject: `Vote recorded — ${topicTitle}`,
+    text,
     to: email,
   })
 }

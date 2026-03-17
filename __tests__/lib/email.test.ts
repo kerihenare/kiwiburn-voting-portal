@@ -11,7 +11,11 @@ vi.mock("nodemailer", () => ({
 }))
 
 vi.mock("@react-email/components", () => ({
-  render: vi.fn().mockResolvedValue("<html>rendered</html>"),
+  render: vi.fn().mockImplementation((_component, options) =>
+    Promise.resolve(
+      options?.plainText ? "plain text version" : "<html>rendered</html>",
+    ),
+  ),
 }))
 
 vi.mock("@/emails/magic-link", () => ({
@@ -34,7 +38,7 @@ describe("sendMagicLinkEmail", () => {
     mockSendMail.mockResolvedValue(undefined)
   })
 
-  it("renders the magic link email and sends it", async () => {
+  it("renders the magic link email and sends it with plain text", async () => {
     await sendMagicLinkEmail({
       email: "test@example.com",
       url: "https://example.com/auth",
@@ -44,11 +48,15 @@ describe("sendMagicLinkEmail", () => {
       url: "https://example.com/auth",
     })
     expect(render).toHaveBeenCalledWith("magic-link-component")
+    expect(render).toHaveBeenCalledWith("magic-link-component", {
+      plainText: true,
+    })
     expect(nodemailer.createTransport).toHaveBeenCalled()
     expect(mockSendMail).toHaveBeenCalledWith({
       from: process.env.SMTP_FROM,
       html: "<html>rendered</html>",
       subject: "Sign in to Kiwiburn Voting Portal",
+      text: "plain text version",
       to: "test@example.com",
     })
   })
@@ -60,22 +68,28 @@ describe("sendVoteConfirmationEmail", () => {
     mockSendMail.mockResolvedValue(undefined)
   })
 
-  it("renders the vote confirmation email and sends it", async () => {
+  it("renders the vote confirmation email and sends it with plain text", async () => {
     await sendVoteConfirmationEmail({
       email: "voter@example.com",
+      topicId: "topic-123",
       topicTitle: "Important Vote",
       vote: "yes",
     })
 
     expect(VoteConfirmationEmail).toHaveBeenCalledWith({
+      topicId: "topic-123",
       topicTitle: "Important Vote",
       vote: "yes",
     })
     expect(render).toHaveBeenCalledWith("vote-confirmation-component")
+    expect(render).toHaveBeenCalledWith("vote-confirmation-component", {
+      plainText: true,
+    })
     expect(mockSendMail).toHaveBeenCalledWith({
       from: process.env.SMTP_FROM,
       html: "<html>rendered</html>",
       subject: "Vote recorded — Important Vote",
+      text: "plain text version",
       to: "voter@example.com",
     })
   })

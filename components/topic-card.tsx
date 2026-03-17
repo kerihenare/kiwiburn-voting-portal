@@ -53,7 +53,7 @@ export function TopicCard({ topic, userVote }: TopicCardProps) {
           </>
         )}
       </CardContent>
-      {status === "open" && (
+      {status === "open" && userVote !== undefined && (
         <>
           <Separator className="opacity-50" />
           <CardFooter className="flex items-center justify-between">

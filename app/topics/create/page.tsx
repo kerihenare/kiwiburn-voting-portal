@@ -24,6 +24,7 @@ export default function CreateTopicPage() {
   const [memberListId, setMemberListId] = useState<string | null>(null)
   const [opensAt, setOpensAt] = useState("")
   const [closesAt, setClosesAt] = useState("")
+  const [isActive, setIsActive] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
@@ -40,7 +41,7 @@ export default function CreateTopicPage() {
     setError(null)
 
     try {
-      await createTopic({ closesAt, description, memberListId, opensAt, title })
+      await createTopic({ closesAt, description, isActive, memberListId, opensAt, title })
       router.push("/topics")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
@@ -49,10 +50,10 @@ export default function CreateTopicPage() {
   }
 
   return (
-    <div className="max-w-2xl mx-auto space-y-6">
+    <div className="max-w-screen-xl mx-auto w-full space-y-6">
       <h1 className="text-2xl font-bold text-accent">Create topic</h1>
       <Card>
-        <CardContent className="pt-6">
+        <CardContent>
           <form className="space-y-6" onSubmit={handleSubmit}>
             <div className="space-y-2">
               <Label htmlFor="title">Title</Label>
@@ -74,7 +75,7 @@ export default function CreateTopicPage() {
             <div className="space-y-2">
               <Label>Member list</Label>
               <Select onValueChange={setMemberListId}>
-                <SelectTrigger>
+                <SelectTrigger className="w-full">
                   <SelectValue placeholder="Select a member list" />
                 </SelectTrigger>
                 <SelectContent>
@@ -108,14 +109,25 @@ export default function CreateTopicPage() {
                 />
               </div>
             </div>
+            <div className="flex items-center gap-2">
+              <input
+                checked={isActive}
+                id="isActive"
+                onChange={(e) => setIsActive(e.target.checked)}
+                type="checkbox"
+              />
+              <Label htmlFor="isActive">Active (visible to voters)</Label>
+            </div>
             {error && (
               <p className="text-sm text-destructive" role="alert">
                 {error}
               </p>
             )}
-            <Button disabled={submitting || !memberListId} type="submit">
-              {submitting ? "Creating..." : "Create topic"}
-            </Button>
+            <div className="flex justify-end">
+              <Button disabled={submitting || !memberListId} type="submit">
+                {submitting ? "Creating..." : "Create topic"}
+              </Button>
+            </div>
           </form>
         </CardContent>
       </Card>

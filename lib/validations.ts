@@ -8,6 +8,7 @@ export const createTopicSchema = z
   .object({
     closesAt: z.string().min(1, "Closes at is required"),
     description: z.string().optional(),
+    isActive: z.boolean().optional(),
     memberListId: z
       .string({ required_error: "Member list is required" })
       .uuid(),

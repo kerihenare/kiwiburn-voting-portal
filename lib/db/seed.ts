@@ -139,11 +139,13 @@ async function seed() {
     memberListId: string,
     opensAt: Date,
     closesAt: Date,
+    isActive = true,
   ) {
     return {
       closesAt,
       description,
       id: uuidv7(),
+      isActive,
       memberListId,
       opensAt,
       title,
@@ -243,6 +245,7 @@ async function seed() {
       listCId,
       new Date(now.getTime() + 7 * DAY),
       new Date(now.getTime() + 30 * DAY),
+      false, // draft
     ),
   ]
 

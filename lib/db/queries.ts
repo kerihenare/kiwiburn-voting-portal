@@ -20,6 +20,32 @@ export async function getTopicsWithCounts() {
     .from(topics)
     .leftJoin(memberLists, eq(topics.memberListId, memberLists.id))
     .leftJoin(votes, eq(topics.id, votes.topicId))
+    .where(and(isNull(topics.deletedAt), eq(topics.isActive, true)))
+    .groupBy(topics.id, memberLists.name)
+    .orderBy(desc(topics.closesAt))
+
+  return results
+}
+
+export async function getAdminTopicsWithCounts() {
+  const results = await db
+    .select({
+      closesAt: topics.closesAt,
+      createdAt: topics.createdAt,
+      description: topics.description,
+      id: topics.id,
+      isActive: topics.isActive,
+      memberListId: topics.memberListId,
+      memberListName: memberLists.name,
+      noCount: sql<number>`count(case when ${votes.vote} = 'no' then 1 end)::int`,
+      opensAt: topics.opensAt,
+      title: topics.title,
+      totalVotes: sql<number>`count(${votes.id})::int`,
+      yesCount: sql<number>`count(case when ${votes.vote} = 'yes' then 1 end)::int`,
+    })
+    .from(topics)
+    .leftJoin(memberLists, eq(topics.memberListId, memberLists.id))
+    .leftJoin(votes, eq(topics.id, votes.topicId))
     .where(isNull(topics.deletedAt))
     .groupBy(topics.id, memberLists.name)
     .orderBy(desc(topics.closesAt))
@@ -34,6 +60,7 @@ export async function getTopic(id: string) {
       createdAt: topics.createdAt,
       description: topics.description,
       id: topics.id,
+      isActive: topics.isActive,
       memberListId: topics.memberListId,
       memberListName: memberLists.name,
       opensAt: topics.opensAt,

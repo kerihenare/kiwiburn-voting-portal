@@ -70,6 +70,7 @@ export default function SignInPage() {
                   <Input
                     aria-invalid={status === "error" ? true : undefined}
                     autoComplete="email"
+                    autoFocus={true}
                     id="email"
                     name="email"
                     onChange={(e) => setEmail(e.target.value)}
