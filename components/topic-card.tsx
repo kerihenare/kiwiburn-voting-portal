@@ -87,7 +87,7 @@ const TopicHeader = glide("div", {
 const ListName = glide("p", {
   color: "text-muted-foreground",
   fontSize: "text-sm",
-  margin: "mb-0",
+  marginBottom: "mb-0",
 })
 
 const TopicTitle = glide("h2", {

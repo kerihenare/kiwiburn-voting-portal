@@ -71,10 +71,10 @@ const Nav = glide("nav", {
   display: "flex",
   height: "h-14",
   justifyContent: "justify-between",
-  margin: "mx-auto",
+  marginX: "mx-auto",
   maxWidth: "max-w-4xl",
   other: "container",
-  padding: "px-4",
+  paddingX: "px-4",
 })
 
 const NavLeft = glide("div", {
