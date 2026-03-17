@@ -3,6 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation"
 import { DataTable } from "@/components/ui/data-table"
+import { glide } from "@/lib/glidepath"
 
 type MemberList = {
   id: string
@@ -21,37 +22,48 @@ const columns: ColumnDef<MemberList>[] = [
   {
     accessorKey: "description",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.description || "No description"}
-      </span>
+      <MutedText>{row.original.description || "No description"}</MutedText>
     ),
     header: "Description",
   },
   {
     accessorKey: "memberCount",
-    cell: ({ row }) => (
-      <div className="text-right tabular-nums">{row.original.memberCount}</div>
-    ),
-    header: () => <div className="text-right">Members</div>,
+    cell: ({ row }) => <NumericCell>{row.original.memberCount}</NumericCell>,
+    header: () => <AlignRight>Members</AlignRight>,
   },
   {
     accessorKey: "topicCount",
-    cell: ({ row }) => (
-      <div className="text-right tabular-nums">{row.original.topicCount}</div>
-    ),
-    header: () => <div className="text-right">Topics</div>,
+    cell: ({ row }) => <NumericCell>{row.original.topicCount}</NumericCell>,
+    header: () => <AlignRight>Topics</AlignRight>,
   },
 ]
 
-export function MemberListsTable({ data }: { data: MemberList[] }) {
+interface MemberListsTableProps {
+  data: MemberList[]
+}
+
+export function MemberListsTable(props: MemberListsTableProps) {
   const router = useRouter()
 
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={props.data}
       emptyMessage="No member lists yet."
       onRowClick={(row) => router.push(`/member-lists/${row.id}`)}
     />
   )
 }
+
+const MutedText = glide("span", {
+  color: "text-muted-foreground",
+})
+
+const AlignRight = glide("div", {
+  textAlign: "text-right",
+})
+
+const NumericCell = glide("div", {
+  other: "tabular-nums",
+  textAlign: "text-right",
+})
