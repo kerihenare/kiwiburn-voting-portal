@@ -20,7 +20,10 @@ export function TimerBadge(props: TimerBadgeProps) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge className="bg-blue-100 text-blue-800" variant="secondary">
+          <Badge
+            className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200"
+            variant="secondary"
+          >
             Opens in {formatDistanceToNow(props.opensAt)}
           </Badge>
         </TooltipTrigger>
@@ -35,7 +38,10 @@ export function TimerBadge(props: TimerBadgeProps) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge className="bg-gray-100 text-gray-600" variant="secondary">
+          <Badge
+            className="bg-gray-100 text-gray-600 dark:bg-gray-800 dark:text-gray-300"
+            variant="secondary"
+          >
             Closed {formatDistanceToNow(props.closesAt, { addSuffix: true })}
           </Badge>
         </TooltipTrigger>
@@ -69,8 +75,8 @@ export function TimerBadge(props: TimerBadgeProps) {
         <Badge
           className={
             hoursRemaining < 24
-              ? "bg-orange-100 text-orange-800"
-              : "bg-green-100 text-green-800"
+              ? "bg-orange-100 text-orange-800 dark:bg-orange-900 dark:text-orange-200"
+              : "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
           }
           variant="secondary"
         >
