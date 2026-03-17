@@ -104,6 +104,15 @@ describe("createTopic", () => {
       expect.objectContaining({ description: null }),
     )
   })
+
+  it("creates topic with isActive true", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    await createTopic({ ...validTopicInput, isActive: true })
+
+    expect(mockDb.values).toHaveBeenCalledWith(
+      expect.objectContaining({ isActive: true }),
+    )
+  })
 })
 
 describe("updateTopic", () => {
@@ -165,6 +174,15 @@ describe("updateTopic", () => {
 
     expect(mockDb.set).toHaveBeenCalledWith(
       expect.objectContaining({ description: null }),
+    )
+  })
+
+  it("updates topic with isActive flag", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    await updateTopic(topicId, { ...validTopicInput, isActive: true })
+
+    expect(mockDb.set).toHaveBeenCalledWith(
+      expect.objectContaining({ isActive: true }),
     )
   })
 })
