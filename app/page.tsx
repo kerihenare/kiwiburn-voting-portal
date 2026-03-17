@@ -2,6 +2,7 @@ import { headers } from "next/headers"
 import { TopicCard } from "@/components/topic-card"
 import { auth } from "@/lib/auth"
 import { getTopicsWithCounts, getUserVoteForTopic } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 
 export default async function HomePage() {
   let session = null
@@ -20,20 +21,16 @@ export default async function HomePage() {
   }
 
   return (
-    <div className="space-y-6">
+    <PageContent>
       <section>
-        <h1 className="text-2xl font-bold text-accent !mb-0">
-          Community Votes
-        </h1>
-        <p className="text-muted-foreground !mt-0">
+        <PageTitle>Community Votes</PageTitle>
+        <PageSubtitle>
           View and participate in community decisions.
-        </p>
+        </PageSubtitle>
       </section>
-      <div className="space-y-6">
+      <TopicList>
         {topics.length === 0 ? (
-          <p className="text-muted-foreground text-center py-12">
-            No voting topics yet.
-          </p>
+          <EmptyMessage>No voting topics yet.</EmptyMessage>
         ) : (
           topics.map((topic) => (
             <TopicCard
@@ -43,7 +40,33 @@ export default async function HomePage() {
             />
           ))
         )}
-      </div>
-    </div>
+      </TopicList>
+    </PageContent>
   )
 }
+
+const PageContent = glide("div", {
+  other: "space-y-6",
+})
+
+const PageTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+  other: "!mb-0",
+})
+
+const PageSubtitle = glide("p", {
+  color: "text-muted-foreground",
+  other: "!mt-0",
+})
+
+const TopicList = glide("div", {
+  other: "space-y-6",
+})
+
+const EmptyMessage = glide("p", {
+  color: "text-muted-foreground",
+  paddingY: "py-12",
+  textAlign: "text-center",
+})
