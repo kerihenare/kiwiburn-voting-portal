@@ -14,12 +14,13 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { createTopic } from "@/lib/actions/topics"
+import { glide } from "@/lib/glidepath"
 
 interface CreateTopicFormProps {
   memberLists: { id: string; name: string }[]
 }
 
-export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
+export function CreateTopicForm(props: CreateTopicFormProps) {
   const router = useRouter()
   const [title, setTitle] = useState("")
   const [description, setDescription] = useState("")
@@ -53,8 +54,8 @@ export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
   }
 
   return (
-    <form className="space-y-6" onSubmit={handleSubmit}>
-      <div className="space-y-2">
+    <FormStack onSubmit={handleSubmit}>
+      <FieldGroup>
         <Label htmlFor="title">Title</Label>
         <Input
           id="title"
@@ -62,32 +63,32 @@ export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
           required
           value={title}
         />
-      </div>
-      <div className="space-y-2">
+      </FieldGroup>
+      <FieldGroup>
         <Label htmlFor="description">Description</Label>
         <Textarea
           id="description"
           onChange={(e) => setDescription(e.target.value)}
           value={description}
         />
-      </div>
-      <div className="space-y-2">
+      </FieldGroup>
+      <FieldGroup>
         <Label>Member list</Label>
         <Select onValueChange={setMemberListId}>
           <SelectTrigger className="w-full">
             <SelectValue placeholder="Select a member list" />
           </SelectTrigger>
           <SelectContent>
-            {memberLists.map((list) => (
+            {props.memberLists.map((list) => (
               <SelectItem key={list.id} value={list.id}>
                 {list.name}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
-      </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="space-y-2">
+      </FieldGroup>
+      <DateGrid>
+        <FieldGroup>
           <Label htmlFor="opensAt">Opens at</Label>
           <Input
             id="opensAt"
@@ -96,8 +97,8 @@ export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
             type="datetime-local"
             value={opensAt}
           />
-        </div>
-        <div className="space-y-2">
+        </FieldGroup>
+        <FieldGroup>
           <Label htmlFor="closesAt">Closes at</Label>
           <Input
             id="closesAt"
@@ -106,9 +107,9 @@ export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
             type="datetime-local"
             value={closesAt}
           />
-        </div>
-      </div>
-      <div className="flex items-center gap-2">
+        </FieldGroup>
+      </DateGrid>
+      <CheckboxRow>
         <input
           checked={isActive}
           id="isActive"
@@ -116,17 +117,43 @@ export function CreateTopicForm({ memberLists }: CreateTopicFormProps) {
           type="checkbox"
         />
         <Label htmlFor="isActive">Active (visible to voters)</Label>
-      </div>
-      {error && (
-        <p className="text-sm text-destructive" role="alert">
-          {error}
-        </p>
-      )}
-      <div className="flex justify-end">
+      </CheckboxRow>
+      {error && <FieldError role="alert">{error}</FieldError>}
+      <FormActions>
         <Button disabled={submitting || !memberListId} type="submit">
           {submitting ? "Creating..." : "Create topic"}
         </Button>
-      </div>
-    </form>
+      </FormActions>
+    </FormStack>
   )
 }
+
+const FormStack = glide("form", {
+  other: "space-y-6",
+})
+
+const FieldGroup = glide("div", {
+  other: "space-y-2",
+})
+
+const DateGrid = glide("div", {
+  display: "grid",
+  gap: "gap-4",
+  gridTemplateColumns: ["grid-cols-1", "sm:grid-cols-2"],
+})
+
+const CheckboxRow = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  gap: "gap-2",
+})
+
+const FieldError = glide("p", {
+  color: "text-destructive",
+  fontSize: "text-sm",
+})
+
+const FormActions = glide("div", {
+  display: "flex",
+  justifyContent: "justify-end",
+})
