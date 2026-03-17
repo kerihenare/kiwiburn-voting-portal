@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createMemberList } from "@/lib/actions/member-lists"
+import { glide } from "@/lib/glidepath"
 
 export default function CreateMemberListPage() {
   const router = useRouter()
@@ -31,12 +32,12 @@ export default function CreateMemberListPage() {
   }
 
   return (
-    <div className="max-w-screen-xl mx-auto w-full space-y-6">
-      <h1 className="text-2xl font-bold text-accent">Create member list</h1>
+    <PageContent>
+      <PageTitle>Create member list</PageTitle>
       <Card>
         <CardContent>
-          <form className="space-y-6" onSubmit={handleSubmit}>
-            <div className="space-y-2">
+          <FormStack onSubmit={handleSubmit}>
+            <FieldGroup>
               <Label htmlFor="name">Name</Label>
               <Input
                 id="name"
@@ -44,28 +45,55 @@ export default function CreateMemberListPage() {
                 required
                 value={name}
               />
-            </div>
-            <div className="space-y-2">
+            </FieldGroup>
+            <FieldGroup>
               <Label htmlFor="description">Description</Label>
               <Textarea
                 id="description"
                 onChange={(e) => setDescription(e.target.value)}
                 value={description}
               />
-            </div>
-            {error && (
-              <p className="text-sm text-destructive" role="alert">
-                {error}
-              </p>
-            )}
-            <div className="flex justify-end">
+            </FieldGroup>
+            {error && <FieldError role="alert">{error}</FieldError>}
+            <FormActions>
               <Button disabled={submitting} type="submit">
                 {submitting ? "Creating..." : "Create member list"}
               </Button>
-            </div>
-          </form>
+            </FormActions>
+          </FormStack>
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   )
 }
+
+const PageContent = glide("div", {
+  marginX: "mx-auto",
+  maxWidth: "max-w-screen-xl",
+  other: "space-y-6",
+  width: "w-full",
+})
+
+const PageTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
+
+const FormStack = glide("form", {
+  other: "space-y-6",
+})
+
+const FieldGroup = glide("div", {
+  other: "space-y-2",
+})
+
+const FieldError = glide("p", {
+  color: "text-destructive",
+  fontSize: "text-sm",
+})
+
+const FormActions = glide("div", {
+  display: "flex",
+  justifyContent: "justify-end",
+})

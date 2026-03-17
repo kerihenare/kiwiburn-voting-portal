@@ -1,5 +1,11 @@
 import { v7 as uuidv7 } from "uuid"
-import { memberLists, members, topics, user, votes } from "../../../lib/db/schema"
+import {
+  memberLists,
+  members,
+  topics,
+  user,
+  votes,
+} from "../../../lib/db/schema"
 import { testDb } from "./db"
 
 export async function seedUser(
@@ -62,7 +68,8 @@ export async function seedTopic(
   const [topic] = await testDb
     .insert(topics)
     .values({
-      closesAt: opts?.closesAt ?? new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
+      closesAt:
+        opts?.closesAt ?? new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000),
       description: opts?.description ?? "Test topic description",
       isActive: opts?.isActive ?? true,
       memberListId,

@@ -13,51 +13,32 @@ import {
   SelectValue,
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
-import { updateTopic } from "@/lib/actions/topics"
+import { createTopic } from "@/lib/actions/topics"
 import { glide } from "@/lib/glidepath"
-import { DeleteTopicButton } from "./delete-topic-button"
 
-function toLocalDatetime(dateStr: string) {
-  const date = new Date(dateStr)
-  const offset = date.getTimezoneOffset()
-  const local = new Date(date.getTime() - offset * 60000)
-  return local.toISOString().slice(0, 16)
-}
-
-interface EditTopicFormProps {
+interface CreateTopicFormProps {
   memberLists: { id: string; name: string }[]
-  topic: {
-    id: string
-    title: string
-    description: string | null
-    isActive: boolean
-    memberListId: string
-    memberListName: string | null
-    opensAt: string // serialized from server component
-    closesAt: string
-  }
 }
 
-export function EditTopicForm(props: EditTopicFormProps) {
+export function CreateTopicForm(props: CreateTopicFormProps) {
   const router = useRouter()
-  const [title, setTitle] = useState(props.topic.title)
-  const [description, setDescription] = useState(props.topic.description ?? "")
-  const [memberListId, setMemberListId] = useState(props.topic.memberListId)
-  const [opensAt, setOpensAt] = useState(toLocalDatetime(props.topic.opensAt))
-  const [closesAt, setClosesAt] = useState(
-    toLocalDatetime(props.topic.closesAt),
-  )
-  const [isActive, setIsActive] = useState(props.topic.isActive)
+  const [title, setTitle] = useState("")
+  const [description, setDescription] = useState("")
+  const [memberListId, setMemberListId] = useState<string | null>(null)
+  const [opensAt, setOpensAt] = useState("")
+  const [closesAt, setClosesAt] = useState("")
+  const [isActive, setIsActive] = useState(false)
   const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
+    if (!memberListId) return
     setSubmitting(true)
     setError(null)
 
     try {
-      await updateTopic(props.topic.id, {
+      await createTopic({
         closesAt,
         description,
         isActive,
@@ -65,10 +46,9 @@ export function EditTopicForm(props: EditTopicFormProps) {
         opensAt,
         title,
       })
-      router.refresh()
+      router.push("/topics")
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong")
-    } finally {
       setSubmitting(false)
     }
   }
@@ -94,9 +74,9 @@ export function EditTopicForm(props: EditTopicFormProps) {
       </FieldGroup>
       <FieldGroup>
         <Label>Member list</Label>
-        <Select onValueChange={setMemberListId} value={memberListId}>
+        <Select onValueChange={setMemberListId}>
           <SelectTrigger className="w-full">
-            <SelectValue />
+            <SelectValue placeholder="Select a member list" />
           </SelectTrigger>
           <SelectContent>
             {props.memberLists.map((list) => (
@@ -140,9 +120,8 @@ export function EditTopicForm(props: EditTopicFormProps) {
       </CheckboxRow>
       {error && <FieldError role="alert">{error}</FieldError>}
       <FormActions>
-        <DeleteTopicButton topicId={props.topic.id} />
-        <Button disabled={submitting} type="submit">
-          {submitting ? "Saving\u2026" : "Update topic"}
+        <Button disabled={submitting || !memberListId} type="submit">
+          {submitting ? "Creating..." : "Create topic"}
         </Button>
       </FormActions>
     </FormStack>
@@ -176,6 +155,5 @@ const FieldError = glide("p", {
 
 const FormActions = glide("div", {
   display: "flex",
-  gap: "gap-2",
   justifyContent: "justify-end",
 })

@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
+import { glide } from "@/lib/glidepath"
 import { getTopicStatus } from "@/lib/types"
 
 type Topic = {
@@ -22,7 +23,10 @@ const columns: ColumnDef<Topic>[] = [
       <span className="font-medium">
         {row.original.title}
         {!row.original.isActive && (
-          <Badge className="ml-2 bg-yellow-100 text-yellow-800" variant="secondary">
+          <Badge
+            className="ml-2 bg-yellow-100 text-yellow-800"
+            variant="secondary"
+          >
             Draft
           </Badge>
         )}
@@ -32,11 +36,7 @@ const columns: ColumnDef<Topic>[] = [
   },
   {
     accessorKey: "memberListName",
-    cell: ({ row }) => (
-      <span className="text-muted-foreground">
-        {row.original.memberListName}
-      </span>
-    ),
+    cell: ({ row }) => <MutedText>{row.original.memberListName}</MutedText>,
     header: "List",
   },
   {
@@ -46,7 +46,7 @@ const columns: ColumnDef<Topic>[] = [
         new Date(row.original.closesAt),
       )
       return (
-        <div className="text-right">
+        <AlignRight>
           <Badge
             className={
               status === "open"
@@ -59,41 +59,53 @@ const columns: ColumnDef<Topic>[] = [
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
-        </div>
+        </AlignRight>
       )
     },
-    header: () => <div className="text-right">Status</div>,
+    header: () => <AlignRight>Status</AlignRight>,
     id: "status",
   },
   {
     accessorKey: "opensAt",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">
+      <MutedText>
         {new Date(row.original.opensAt).toLocaleDateString()}
-      </span>
+      </MutedText>
     ),
     header: "Opens",
   },
   {
     accessorKey: "closesAt",
     cell: ({ row }) => (
-      <span className="text-muted-foreground">
+      <MutedText>
         {new Date(row.original.closesAt).toLocaleDateString()}
-      </span>
+      </MutedText>
     ),
     header: "Closes",
   },
 ]
 
-export function TopicsTable({ data }: { data: Topic[] }) {
+interface TopicsTableProps {
+  data: Topic[]
+}
+
+export function TopicsTable(props: TopicsTableProps) {
   const router = useRouter()
 
   return (
     <DataTable
       columns={columns}
-      data={data}
+      data={props.data}
       emptyMessage="No topics yet."
       onRowClick={(row) => router.push(`/topics/${row.id}`)}
     />
   )
 }
+
+const MutedText = glide("span", {
+  color: "text-muted-foreground",
+})
+
+const AlignRight = glide("div", {
+  textAlign: "text-right",
+})

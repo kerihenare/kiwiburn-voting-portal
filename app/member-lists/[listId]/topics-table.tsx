@@ -4,6 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import Link from "next/link"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
+import { glide } from "@/lib/glidepath"
 import { getTopicStatus } from "@/lib/types"
 
 type Topic = {
@@ -33,7 +34,7 @@ const columns: ColumnDef<Topic>[] = [
         new Date(row.original.closesAt),
       )
       return (
-        <div className="text-right">
+        <AlignRight>
           <Badge
             className={
               status === "open"
@@ -46,14 +47,22 @@ const columns: ColumnDef<Topic>[] = [
           >
             {status.charAt(0).toUpperCase() + status.slice(1)}
           </Badge>
-        </div>
+        </AlignRight>
       )
     },
-    header: () => <div className="text-right">Status</div>,
+    header: () => <AlignRight>Status</AlignRight>,
     id: "status",
   },
 ]
 
-export function ListTopicsTable({ data }: { data: Topic[] }) {
-  return <DataTable columns={columns} data={data} />
+interface ListTopicsTableProps {
+  data: Topic[]
 }
+
+export function ListTopicsTable(props: ListTopicsTableProps) {
+  return <DataTable columns={columns} data={props.data} />
+}
+
+const AlignRight = glide("div", {
+  textAlign: "text-right",
+})

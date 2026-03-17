@@ -61,7 +61,7 @@ jobs:
 
       - name: Set up E2E environment
         run: |
-          cat > .env.test << 'EOF'
+          cat > .env.test <<'EOF'
           DATABASE_URL=postgresql://kiwiburn:kiwiburn@localhost:5432/voting_portal_test
           BETTER_AUTH_SECRET=test-secret-for-e2e-tests
           BETTER_AUTH_URL=http://localhost:3001
@@ -72,6 +72,7 @@ jobs:
           SMTP_PASS=test
           SMTP_FROM=test@kiwiburn.com
           EOF
+          sed -i 's/^[[:space:]]*//' .env.test
 
       - name: Run E2E tests
         run: pnpm test:e2e

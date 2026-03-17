@@ -2,6 +2,7 @@ import { headers } from "next/headers"
 import Link from "next/link"
 import { SignOutButton } from "@/components/sign-out-button"
 import { auth } from "@/lib/auth"
+import { glide } from "@/lib/glidepath"
 
 export async function Header() {
   const headersList = await headers()
@@ -14,9 +15,9 @@ export async function Header() {
   const pathname = headersList.get("x-current-path")
 
   return (
-    <header className="bg-[#332d2d] text-white">
-      <nav className="container mx-auto px-4 max-w-4xl flex items-center justify-between h-14">
-        <div className="flex items-center gap-6">
+    <HeaderBar>
+      <Nav>
+        <NavLeft>
           <Link
             className="font-bold text-lg rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/70"
             href="/"
@@ -39,13 +40,11 @@ export async function Header() {
               </Link>
             </>
           )}
-        </div>
-        <div className="flex items-center gap-4">
+        </NavLeft>
+        <NavRight>
           {session ? (
             <>
-              <span className="text-sm text-white/70">
-                {session.user.email}
-              </span>
+              <UserEmail>{session.user.email}</UserEmail>
               <SignOutButton />
             </>
           ) : pathname !== "/sign-in" ? (
@@ -56,8 +55,41 @@ export async function Header() {
               Sign in
             </Link>
           ) : null}
-        </div>
-      </nav>
-    </header>
+        </NavRight>
+      </Nav>
+    </HeaderBar>
   )
 }
+
+const HeaderBar = glide("header", {
+  backgroundColor: "bg-[#332d2d]",
+  color: "text-white",
+})
+
+const Nav = glide("nav", {
+  alignItems: "items-center",
+  display: "flex",
+  height: "h-14",
+  justifyContent: "justify-between",
+  marginX: "mx-auto",
+  maxWidth: "max-w-4xl",
+  other: "container",
+  paddingX: "px-4",
+})
+
+const NavLeft = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  gap: "gap-6",
+})
+
+const NavRight = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  gap: "gap-4",
+})
+
+const UserEmail = glide("span", {
+  color: "text-white/70",
+  fontSize: "text-sm",
+})

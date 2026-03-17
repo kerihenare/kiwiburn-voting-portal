@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
+import { glide } from "@/lib/glidepath"
 
 export default function SignInPage() {
   const [email, setEmail] = useState("")
@@ -16,9 +17,7 @@ export default function SignInPage() {
     setStatus("sending")
     const { error } = await authClient.signIn.magicLink({ email })
     if (error) {
-      setStatus(
-        error.message?.includes("member") ? "not-member" : "error",
-      )
+      setStatus(error.message?.includes("member") ? "not-member" : "error")
     } else {
       setStatus("sent")
     }
@@ -34,18 +33,16 @@ export default function SignInPage() {
   }
 
   return (
-    <div className="flex flex-1 items-center justify-center">
+    <PageCenter>
       <Card className="max-w-md w-full">
         <CardContent className="space-y-6">
           {status === "sent" ? (
-            <div className="text-center space-y-6">
-              <h1 className="text-2xl font-bold text-accent">
-                Check your email
-              </h1>
-              <p className="text-muted-foreground">
+            <SentContent>
+              <Heading>Check your email</Heading>
+              <Description>
                 We sent a login link to <strong>{email}</strong>. Click the link
                 in the email to sign in.
-              </p>
+              </Description>
               <Button
                 className="hover:bg-primary hover:text-primary-foreground"
                 onClick={handleResend}
@@ -53,19 +50,17 @@ export default function SignInPage() {
               >
                 Resend sign in link
               </Button>
-            </div>
+            </SentContent>
           ) : (
             <>
-              <div className="space-y-1">
-                <h1 className="text-2xl font-bold text-accent text-balance">
-                  Sign in to vote
-                </h1>
+              <HeaderGroup>
+                <Heading>Sign in to vote</Heading>
                 <label className="text-muted-foreground" htmlFor="email">
                   Enter your email to receive a secure login link
                 </label>
-              </div>
-              <form className="space-y-6" onSubmit={handleSubmit}>
-                <div className="space-y-2">
+              </HeaderGroup>
+              <FormStack onSubmit={handleSubmit}>
+                <FieldGroup>
                   <Input
                     aria-invalid={
                       status === "error" || status === "not-member"
@@ -84,18 +79,18 @@ export default function SignInPage() {
                     value={email}
                   />
                   {status === "not-member" && (
-                    <p className="text-sm text-destructive" role="alert">
+                    <FieldError role="alert">
                       This email is not on any member list. Only members can
                       sign in.
-                    </p>
+                    </FieldError>
                   )}
                   {status === "error" && (
-                    <p className="text-sm text-destructive" role="alert">
+                    <FieldError role="alert">
                       Unable to send login link. Check your email address and
                       try again.
-                    </p>
+                    </FieldError>
                   )}
-                </div>
+                </FieldGroup>
                 <Button
                   className="w-full"
                   disabled={status === "sending"}
@@ -103,11 +98,50 @@ export default function SignInPage() {
                 >
                   {status === "sending" ? "Sending\u2026" : "Send login link"}
                 </Button>
-              </form>
+              </FormStack>
             </>
           )}
         </CardContent>
       </Card>
-    </div>
+    </PageCenter>
   )
 }
+
+const PageCenter = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  flex: "flex-1",
+  justifyContent: "justify-center",
+})
+
+const SentContent = glide("div", {
+  other: "space-y-6",
+  textAlign: "text-center",
+})
+
+const Heading = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
+
+const Description = glide("p", {
+  color: "text-muted-foreground",
+})
+
+const HeaderGroup = glide("div", {
+  other: "space-y-1",
+})
+
+const FormStack = glide("form", {
+  other: "space-y-6",
+})
+
+const FieldGroup = glide("div", {
+  other: "space-y-2",
+})
+
+const FieldError = glide("p", {
+  color: "text-destructive",
+  fontSize: "text-sm",
+})

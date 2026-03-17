@@ -4,21 +4,22 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { castVote } from "@/lib/actions/votes"
+import { glide } from "@/lib/glidepath"
 
 interface VoteButtonsProps {
   topicId: string
   currentVote: string | null
 }
 
-export function VoteButtons({ topicId, currentVote }: VoteButtonsProps) {
+export function VoteButtons(props: VoteButtonsProps) {
   const router = useRouter()
   const [submitting, setSubmitting] = useState<string | null>(null)
 
   async function handleVote(vote: "yes" | "no") {
     setSubmitting(vote)
     try {
-      await castVote({ topicId, vote })
-      router.push(`/votes/${topicId}/success?vote=${vote}`)
+      await castVote({ topicId: props.topicId, vote })
+      router.push(`/votes/${props.topicId}/success?vote=${vote}`)
     } catch (error) {
       console.error(error)
       setSubmitting(null)
@@ -26,44 +27,61 @@ export function VoteButtons({ topicId, currentVote }: VoteButtonsProps) {
   }
 
   return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row gap-3">
+    <VoteWrapper>
+      <ButtonRow>
         <Button
           aria-label="Vote yes"
           className={`flex-1 h-12 text-lg font-bold ${
-            currentVote === "yes"
+            props.currentVote === "yes"
               ? "bg-green-600 hover:bg-green-700 ring-2 ring-green-600 ring-offset-2"
               : "hover:bg-green-50 hover:text-green-700 hover:border-green-300"
           }`}
           disabled={submitting !== null}
           onClick={() => handleVote("yes")}
-          variant={currentVote === "yes" ? "default" : "outline"}
+          variant={props.currentVote === "yes" ? "default" : "outline"}
         >
           {submitting === "yes" ? "Submitting..." : "YES"}
         </Button>
         <Button
           aria-label="Vote no"
           className={`flex-1 h-12 text-lg font-bold ${
-            currentVote === "no"
+            props.currentVote === "no"
               ? "bg-red-600 hover:bg-red-700 ring-2 ring-red-600 ring-offset-2"
               : "hover:bg-red-50 hover:text-red-700 hover:border-red-300"
           }`}
           disabled={submitting !== null}
           onClick={() => handleVote("no")}
-          variant={currentVote === "no" ? "default" : "outline"}
+          variant={props.currentVote === "no" ? "default" : "outline"}
         >
           {submitting === "no" ? "Submitting..." : "NO"}
         </Button>
-      </div>
-      {currentVote && (
-        <p className="text-sm text-muted-foreground text-center">
+      </ButtonRow>
+      {props.currentVote && (
+        <VoteStatus>
           You voted{" "}
           <strong>
-            {currentVote.charAt(0).toUpperCase() + currentVote.slice(1)}
+            {props.currentVote.charAt(0).toUpperCase() +
+              props.currentVote.slice(1)}
           </strong>
           . You can change your vote while voting is open.
-        </p>
+        </VoteStatus>
       )}
-    </div>
+    </VoteWrapper>
   )
 }
+
+const VoteWrapper = glide("div", {
+  other: "space-y-6",
+})
+
+const ButtonRow = glide("div", {
+  display: "flex",
+  flexDirection: ["flex-col", "sm:flex-row"],
+  gap: "gap-3",
+})
+
+const VoteStatus = glide("p", {
+  color: "text-muted-foreground",
+  fontSize: "text-sm",
+  textAlign: "text-center",
+})

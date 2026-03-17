@@ -16,20 +16,19 @@ import {
 import { Button } from "@/components/ui/button"
 import { removeMember } from "@/lib/actions/members"
 
-export function RemoveMemberButton({
-  memberId,
-  listId,
-}: {
+interface RemoveMemberButtonProps {
   memberId: string
   listId: string
-}) {
+}
+
+export function RemoveMemberButton(props: RemoveMemberButtonProps) {
   const router = useRouter()
   const [removing, setRemoving] = useState(false)
 
   async function handleRemove() {
     setRemoving(true)
     try {
-      await removeMember(memberId, listId)
+      await removeMember(props.memberId, props.listId)
       router.refresh()
     } finally {
       setRemoving(false)
