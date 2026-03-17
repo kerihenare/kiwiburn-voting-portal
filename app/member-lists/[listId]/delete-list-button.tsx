@@ -16,14 +16,18 @@ import {
 import { Button } from "@/components/ui/button"
 import { deleteMemberList } from "@/lib/actions/member-lists"
 
-export function DeleteListButton({ listId }: { listId: string }) {
+interface DeleteListButtonProps {
+  listId: string
+}
+
+export function DeleteListButton(props: DeleteListButtonProps) {
   const router = useRouter()
   const [deleting, setDeleting] = useState(false)
 
   async function handleDelete() {
     setDeleting(true)
     try {
-      await deleteMemberList(listId)
+      await deleteMemberList(props.listId)
       router.push("/member-lists")
     } catch {
       setDeleting(false)
