@@ -175,6 +175,17 @@ export async function getMemberList(id: string) {
   return { ...list[0], members: listMembers, topics: listTopics }
 }
 
+export async function isEmailInAnyMemberList(email: string) {
+  const result = await db
+    .select({ id: members.id })
+    .from(members)
+    .innerJoin(memberLists, eq(members.memberListId, memberLists.id))
+    .where(and(eq(members.email, email), isNull(memberLists.deletedAt)))
+    .limit(1)
+
+  return result.length > 0
+}
+
 export async function getAllMemberLists() {
   return db
     .select({ id: memberLists.id, name: memberLists.name })

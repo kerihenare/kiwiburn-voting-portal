@@ -27,7 +27,12 @@ export default async function VotePage({
   const topic = await getTopic(topicId)
   if (!topic || !topic.isActive) notFound()
 
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   const status = getTopicStatus(topic.opensAt, topic.closesAt)
   const results = await getVoteResults(topicId)
 

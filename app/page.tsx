@@ -4,7 +4,12 @@ import { auth } from "@/lib/auth"
 import { getTopicsWithCounts, getUserVoteForTopic } from "@/lib/db/queries"
 
 export default async function HomePage() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   const topics = await getTopicsWithCounts()
 
   const userVotes: Record<string, string | null> = {}

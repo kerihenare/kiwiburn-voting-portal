@@ -8,30 +8,29 @@ import { authClient } from "@/lib/auth-client"
 
 export default function SignInPage() {
   const [email, setEmail] = useState("")
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">(
-    "idle",
-  )
+  const [status, setStatus] = useState<
+    "idle" | "sending" | "sent" | "error" | "not-member"
+  >("idle")
 
-  async function handleSubmit(e: React.FormEvent) {
-    e.preventDefault()
+  async function sendLink() {
     setStatus("sending")
-
-    try {
-      await authClient.signIn.magicLink({ email })
+    const { error } = await authClient.signIn.magicLink({ email })
+    if (error) {
+      setStatus(
+        error.message?.includes("member") ? "not-member" : "error",
+      )
+    } else {
       setStatus("sent")
-    } catch {
-      setStatus("error")
     }
   }
 
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    await sendLink()
+  }
+
   async function handleResend() {
-    setStatus("sending")
-    try {
-      await authClient.signIn.magicLink({ email })
-      setStatus("sent")
-    } catch {
-      setStatus("error")
-    }
+    await sendLink()
   }
 
   return (
@@ -68,7 +67,11 @@ export default function SignInPage() {
               <form className="space-y-6" onSubmit={handleSubmit}>
                 <div className="space-y-2">
                   <Input
-                    aria-invalid={status === "error" ? true : undefined}
+                    aria-invalid={
+                      status === "error" || status === "not-member"
+                        ? true
+                        : undefined
+                    }
                     autoComplete="email"
                     autoFocus={true}
                     id="email"
@@ -80,6 +83,12 @@ export default function SignInPage() {
                     type="email"
                     value={email}
                   />
+                  {status === "not-member" && (
+                    <p className="text-sm text-destructive" role="alert">
+                      This email is not on any member list. Only members can
+                      sign in.
+                    </p>
+                  )}
                   {status === "error" && (
                     <p className="text-sm text-destructive" role="alert">
                       Unable to send login link. Check your email address and

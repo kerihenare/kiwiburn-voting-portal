@@ -5,7 +5,12 @@ import { auth } from "@/lib/auth"
 
 export async function Header() {
   const headersList = await headers()
-  const session = await auth.api.getSession({ headers: headersList })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: headersList })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   const pathname = headersList.get("x-current-path")
 
   return (

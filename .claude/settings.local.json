@@ -39,7 +39,11 @@
       "Bash(npx lighthouse:*)",
       "Bash(pkill:*)",
       "Bash(curl:*)",
-      "Bash(PGPASSWORD=kiwiburn psql -h localhost -p 6769 -U kiwiburn -d voting_portal -c \"TRUNCATE votes, topics, members, member_lists, session, account, verification, \\\\\"user\\\\\" CASCADE;\")"
+      "Bash(PGPASSWORD=kiwiburn psql -h localhost -p 6769 -U kiwiburn -d voting_portal -c \"TRUNCATE votes, topics, members, member_lists, session, account, verification, \\\\\"user\\\\\" CASCADE;\")",
+      "mcp__plugin_playwright_playwright__browser_evaluate",
+      "mcp__plugin_playwright_playwright__browser_fill_form",
+      "mcp__plugin_playwright_playwright__browser_click",
+      "Bash(xxd)"
     ]
   }
 }
