@@ -133,6 +133,8 @@ const PageCenter = glide("div", {
 const TopicHeader = glide("div", {
   alignItems: "items-center",
   display: "flex",
+  flexWrap: "flex-wrap",
+  gap: "gap-2",
   justifyContent: "justify-between",
 })
 
