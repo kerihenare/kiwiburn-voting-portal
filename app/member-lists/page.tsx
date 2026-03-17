@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { requireAdmin } from "@/lib/auth-guard"
 import { getMemberListsWithCounts } from "@/lib/db/queries"
+import { glide } from "@/lib/glidepath"
 import { MemberListsTable } from "./member-lists-table"
 
 export default async function MemberListsPage() {
@@ -10,18 +11,34 @@ export default async function MemberListsPage() {
   const lists = await getMemberListsWithCounts()
 
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-accent">Member Lists</h1>
+    <PageContent>
+      <PageHeader>
+        <PageTitle>Member Lists</PageTitle>
         <Button asChild>
           <Link href="/member-lists/create">Create member list</Link>
         </Button>
-      </div>
+      </PageHeader>
       <Card>
         <CardContent>
           <MemberListsTable data={lists} />
         </CardContent>
       </Card>
-    </div>
+    </PageContent>
   )
 }
+
+const PageContent = glide("div", {
+  other: "space-y-6",
+})
+
+const PageHeader = glide("div", {
+  alignItems: "items-center",
+  display: "flex",
+  justifyContent: "justify-between",
+})
+
+const PageTitle = glide("h1", {
+  color: "text-accent",
+  fontSize: "text-2xl",
+  fontWeight: "font-bold",
+})
