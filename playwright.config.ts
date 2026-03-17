@@ -8,6 +8,7 @@ export default defineConfig({
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
   retries: process.env.CI ? 2 : 0,
   testDir: "./test/e2e/specs",
+  workers: 1,
   use: {
     baseURL: "http://localhost:3001",
     screenshot: "only-on-failure",

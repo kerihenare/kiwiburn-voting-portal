@@ -51,7 +51,7 @@ test.describe("Admin member lists", () => {
     await page.goto(`/member-lists/${list.id}`)
 
     await expect(
-      page.getByRole("button", { name: /delete/i }),
+      page.getByRole("button", { name: /delete member list/i }),
     ).not.toBeVisible()
   })
 
@@ -63,14 +63,12 @@ test.describe("Admin member lists", () => {
 
     await page.goto(`/member-lists/${list.id}`)
 
-    await page.getByRole("button", { name: /delete/i }).click()
+    await page.getByRole("button", { name: /delete member list/i }).click()
 
-    const confirmButton = page.getByRole("button", {
-      name: /confirm|delete|yes/i,
-    })
-    if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await confirmButton.click()
-    }
+    await page
+      .getByRole("alertdialog")
+      .getByRole("button", { name: /delete/i })
+      .click()
 
     await page.waitForURL("/member-lists")
     await expect(page.getByText("Empty List")).not.toBeVisible()

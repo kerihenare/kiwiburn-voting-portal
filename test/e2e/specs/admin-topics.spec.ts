@@ -45,24 +45,25 @@ test.describe("Admin topics", () => {
     await page.waitForURL("/topics")
     await expect(page.getByText("E2E Test Topic")).toBeVisible()
 
-    await page.getByRole("link", { name: "E2E Test Topic" }).click()
+    await page.getByText("E2E Test Topic").click()
 
     await page.getByLabel("Title").fill("E2E Test Topic (Edited)")
     await page.getByRole("button", { name: /save|update/i }).click()
+    await expect(
+      page.getByRole("button", { name: /update topic/i }),
+    ).toBeVisible()
 
     await page.goto("/topics")
     await expect(page.getByText("E2E Test Topic (Edited)")).toBeVisible()
 
-    await page.getByRole("link", { name: "E2E Test Topic (Edited)" }).click()
+    await page.getByText("E2E Test Topic (Edited)").click()
 
-    await page.getByRole("button", { name: /delete/i }).click()
+    await page.getByRole("button", { name: /delete topic/i }).click()
 
-    const confirmButton = page.getByRole("button", {
-      name: /confirm|delete|yes/i,
-    })
-    if (await confirmButton.isVisible({ timeout: 2000 }).catch(() => false)) {
-      await confirmButton.click()
-    }
+    await page
+      .getByRole("alertdialog")
+      .getByRole("button", { name: /delete/i })
+      .click()
 
     await page.waitForURL("/topics")
     await expect(page.getByText("E2E Test Topic (Edited)")).not.toBeVisible()
