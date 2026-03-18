@@ -6,7 +6,7 @@ import { memberLists, members, topics, user as users, votes } from "./schema"
 
 config({ path: ".env" })
 
-const client = postgres(process.env.DATABASE_URL ?? "", { prepare: false })
+const client = postgres(process.env.POSTGRES_URL ?? "", { prepare: false })
 const db = drizzle(client)
 
 // Deterministic seed for reproducible random values

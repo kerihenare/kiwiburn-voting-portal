@@ -3,10 +3,13 @@
 import { and, count, eq, isNull } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { memberLists, topics } from "@/lib/db/schema"
 import { createMemberListSchema } from "@/lib/validations"
+
+const uuidSchema = z.string().uuid()
 
 async function requireAdmin() {
   let session = null
@@ -43,6 +46,7 @@ export async function updateMemberList(
   input: { name: string; description?: string },
 ) {
   await requireAdmin()
+  uuidSchema.parse(id)
   const parsed = createMemberListSchema.parse(input)
 
   await db
@@ -61,6 +65,7 @@ export async function updateMemberList(
 
 export async function deleteMemberList(id: string) {
   const session = await requireAdmin()
+  uuidSchema.parse(id)
 
   // Check if any non-deleted topics reference this list
   const topicCount = await db

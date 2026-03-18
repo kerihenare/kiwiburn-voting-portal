@@ -34,6 +34,18 @@ export const auth = betterAuth({
       },
     }),
   ],
+  rateLimit: {
+    customRules: {
+      "/sign-in/magic-link": {
+        max: 3,
+        window: 60,
+      },
+    },
+    enabled: true,
+    max: 100,
+    storage: "memory",
+    window: 60,
+  },
   session: {
     cookieCache: {
       enabled: true,

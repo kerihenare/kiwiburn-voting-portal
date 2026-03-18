@@ -9,6 +9,8 @@ import { db } from "@/lib/db"
 import { members } from "@/lib/db/schema"
 import { addMemberSchema } from "@/lib/validations"
 
+const uuidSchema = z.string().uuid()
+
 async function requireAdmin() {
   let session = null
   try {
@@ -22,6 +24,7 @@ async function requireAdmin() {
 
 export async function addMember(listId: string, input: { email: string }) {
   await requireAdmin()
+  uuidSchema.parse(listId)
   const parsed = addMemberSchema.parse(input)
 
   try {
@@ -42,6 +45,7 @@ export async function addMember(listId: string, input: { email: string }) {
 
 export async function removeMember(id: string, listId: string) {
   await requireAdmin()
+  uuidSchema.parse(id)
 
   await db.delete(members).where(eq(members.id, id))
 
@@ -49,8 +53,18 @@ export async function removeMember(id: string, listId: string) {
   return { success: true }
 }
 
+const MAX_UPLOAD_SIZE = 10_000
+
 export async function uploadMembers(listId: string, emails: string[]) {
   await requireAdmin()
+
+  uuidSchema.parse(listId)
+
+  if (emails.length > MAX_UPLOAD_SIZE) {
+    throw new Error(
+      `Upload limited to ${MAX_UPLOAD_SIZE.toLocaleString()} emails at a time`,
+    )
+  }
 
   const emailSchema = z.string().email()
   let added = 0

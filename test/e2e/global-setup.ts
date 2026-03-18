@@ -5,7 +5,7 @@ import postgres from "postgres"
 dotenv.config({ path: ".env.test" })
 
 export default async function globalSetup() {
-  const adminUrl = process.env.DATABASE_URL!.replace(
+  const adminUrl = process.env.POSTGRES_URL!.replace(
     /\/[^/]+$/,
     "/voting_portal",
   )
@@ -22,7 +22,10 @@ export default async function globalSetup() {
   await adminClient.end()
 
   execSync("npx drizzle-kit push --force", {
-    env: { ...process.env, DATABASE_URL: process.env.DATABASE_URL },
+    env: {
+      ...process.env,
+      POSTGRES_URL: process.env.POSTGRES_URL,
+    },
     stdio: "inherit",
   })
 }

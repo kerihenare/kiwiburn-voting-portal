@@ -18,8 +18,8 @@ export default defineConfig({
     env: {
       BETTER_AUTH_SECRET: process.env.BETTER_AUTH_SECRET!,
       BETTER_AUTH_URL: process.env.BETTER_AUTH_URL!,
-      DATABASE_URL: process.env.DATABASE_URL!,
       NEXT_PUBLIC_BETTER_AUTH_URL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL!,
+      POSTGRES_URL: process.env.POSTGRES_URL!,
       SMTP_FROM: process.env.SMTP_FROM!,
       SMTP_HOST: process.env.SMTP_HOST!,
       SMTP_PASS: process.env.SMTP_PASS!,

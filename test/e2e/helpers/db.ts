@@ -5,7 +5,7 @@ import * as schema from "../../../lib/db/schema"
 
 dotenv.config({ path: ".env.test" })
 
-const connectionString = process.env.DATABASE_URL!
+const connectionString = process.env.POSTGRES_URL!
 const client = postgres(connectionString)
 
 export const testDb = drizzle(client, { schema })

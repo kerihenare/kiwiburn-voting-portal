@@ -3,10 +3,13 @@
 import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
+import { z } from "zod"
 import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { topics } from "@/lib/db/schema"
 import { createTopicSchema } from "@/lib/validations"
+
+const uuidSchema = z.string().uuid()
 
 async function requireAdmin() {
   let session = null
@@ -56,6 +59,7 @@ export async function updateTopic(
   },
 ) {
   await requireAdmin()
+  uuidSchema.parse(id)
   const parsed = createTopicSchema.parse(input)
 
   await db
@@ -79,6 +83,7 @@ export async function updateTopic(
 
 export async function deleteTopic(id: string) {
   const session = await requireAdmin()
+  uuidSchema.parse(id)
 
   await db
     .update(topics)

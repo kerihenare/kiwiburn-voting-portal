@@ -62,7 +62,7 @@ jobs:
       - name: Set up E2E environment
         run: |
           cat > .env.test <<'EOF'
-          DATABASE_URL=postgresql://kiwiburn:kiwiburn@localhost:5432/voting_portal_test
+          POSTGRES_URL=postgresql://kiwiburn:kiwiburn@localhost:5432/voting_portal_test
           BETTER_AUTH_SECRET=test-secret-for-e2e-tests
           BETTER_AUTH_URL=http://localhost:3001
           NEXT_PUBLIC_BETTER_AUTH_URL=http://localhost:3001

@@ -58,7 +58,7 @@ export async function sendVoteConfirmationEmail({
   await transport.sendMail({
     from: process.env.SMTP_FROM,
     html,
-    subject: `Vote recorded — ${topicTitle}`,
+    subject: `Vote recorded — ${topicTitle.replace(/[\r\n]/g, "")}`,
     text,
     to: email,
   })
