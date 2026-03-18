@@ -1,12 +1,11 @@
-import { headers } from "next/headers"
 import Link from "next/link"
 import { notFound, redirect } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-import { auth } from "@/lib/auth"
 import { getTopic, getUserVoteForTopic } from "@/lib/db/queries"
 import { glide } from "@/lib/glidepath"
+import { getSession } from "@/lib/session"
 
 interface VoteSuccessPageProps {
   params: Promise<{ voteId: string }>
@@ -15,18 +14,14 @@ interface VoteSuccessPageProps {
 export default async function VoteSuccessPage(props: VoteSuccessPageProps) {
   const { voteId: topicId } = await props.params
 
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
+  const session = await getSession()
   if (!session) redirect("/sign-in")
 
-  const topic = await getTopic(topicId)
+  const [topic, userVote] = await Promise.all([
+    getTopic(topicId),
+    getUserVoteForTopic(topicId, session.user.id),
+  ])
   if (!topic) notFound()
-
-  const userVote = await getUserVoteForTopic(topicId, session.user.id)
   if (!userVote) redirect(`/votes/${topicId}`)
 
   const isYes = userVote === "yes"

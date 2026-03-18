@@ -16,6 +16,8 @@ export default defineConfig({
         "lib/db/schema.ts",
         "lib/db/seed.ts",
         "lib/auth.ts",
+        "lib/glidepath/test/**",
+        "lib/glidepath/types/**",
         "app/api/auth/**",
         "components/ui/**",
       ],

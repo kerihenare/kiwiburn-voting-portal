@@ -1,18 +1,9 @@
-import { headers } from "next/headers"
 import Link from "next/link"
-import { auth } from "@/lib/auth"
 import { glide } from "@/lib/glidepath"
+import { getSession } from "@/lib/session"
 
 export async function AdminNav() {
-  const headersList = await headers()
-
-  let session = null
-
-  try {
-    session = await auth.api.getSession({ headers: headersList })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
+  const session = await getSession()
 
   if (!session?.user.isAdmin) {
     return null

@@ -162,6 +162,14 @@ describe("uploadMembers", () => {
     ).rejects.toThrow("Unauthorized")
   })
 
+  it("throws when email count exceeds upload limit", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    const emails = Array.from({ length: 10_001 }, (_, i) => `e${i}@example.com`)
+    await expect(uploadMembers(memberListId, emails)).rejects.toThrow(
+      "Upload limited to 10,000 emails at a time",
+    )
+  })
+
   it("handles mix of valid, invalid, and duplicate emails", async () => {
     mockGetSession.mockResolvedValue(adminSession)
     mockDb.where.mockResolvedValue([{ email: "existing@example.com" }])

@@ -26,7 +26,10 @@ export async function castVote(input: { topicId: string; vote: string }) {
   const status = getTopicStatus(topic.opensAt, topic.closesAt)
   if (status !== "open") throw new Error("Voting is not open")
 
-  const eligibility = await checkEligibility(parsed.topicId, session.user.id)
+  const eligibility = await checkEligibility(
+    topic.memberListId,
+    session.user.id,
+  )
   if (!eligibility.eligible) throw new Error("Not eligible to vote")
 
   await db

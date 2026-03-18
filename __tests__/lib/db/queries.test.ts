@@ -87,6 +87,7 @@ import {
   getTopic,
   getTopicsWithCounts,
   getUserVoteForTopic,
+  getUserVotes,
   getVoteResults,
   isEmailInAnyMemberList,
 } from "@/lib/db/queries"
@@ -162,6 +163,23 @@ describe("queries", () => {
     })
   })
 
+  describe("getUserVotes", () => {
+    it("returns a map of topicId to vote", async () => {
+      setupSelect([
+        { topicId: "topic-1", vote: "yes" },
+        { topicId: "topic-2", vote: "no" },
+      ])
+      const result = await getUserVotes("user-1")
+      expect(result).toEqual({ "topic-1": "yes", "topic-2": "no" })
+    })
+
+    it("returns empty object when user has no votes", async () => {
+      setupSelect([])
+      const result = await getUserVotes("user-1")
+      expect(result).toEqual({})
+    })
+  })
+
   describe("getUserVoteForTopic", () => {
     it("returns vote when user has voted", async () => {
       setupSelect([{ vote: "yes" }])
@@ -177,35 +195,21 @@ describe("queries", () => {
   })
 
   describe("checkEligibility", () => {
-    it("returns not eligible when topic not found", async () => {
-      setupSelect([])
-      const result = await checkEligibility(topicId, "user-1")
-      expect(result).toEqual({ eligible: false, reason: "Topic not found" })
-    })
-
     it("returns not eligible when user not found", async () => {
-      setupSelect([{ id: topicId, memberListId, title: "Test" }], [])
-      const result = await checkEligibility(topicId, "user-1")
+      setupSelect([])
+      const result = await checkEligibility(memberListId, "user-1")
       expect(result).toEqual({ eligible: false, reason: "User not found" })
     })
 
     it("returns not eligible when member not found", async () => {
-      setupSelect(
-        [{ id: topicId, memberListId, title: "Test" }],
-        [{ email: "test@example.com" }],
-        [],
-      )
-      const result = await checkEligibility(topicId, "user-1")
+      setupSelect([{ email: "test@example.com" }], [])
+      const result = await checkEligibility(memberListId, "user-1")
       expect(result).toEqual({ eligible: false, reason: "Not eligible" })
     })
 
     it("returns eligible when member is found", async () => {
-      setupSelect(
-        [{ id: topicId, memberListId, title: "Test" }],
-        [{ email: "test@example.com" }],
-        [{ id: memberId }],
-      )
-      const result = await checkEligibility(topicId, "user-1")
+      setupSelect([{ email: "test@example.com" }], [{ id: memberId }])
+      const result = await checkEligibility(memberListId, "user-1")
       expect(result).toEqual({ eligible: true, reason: null })
     })
   })

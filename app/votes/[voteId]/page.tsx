@@ -1,4 +1,3 @@
-import { headers } from "next/headers"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ResultBars } from "@/components/result-bars"
@@ -8,7 +7,6 @@ import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { VoteButtons } from "@/components/vote-buttons"
-import { auth } from "@/lib/auth"
 import {
   checkEligibility,
   getTopic,
@@ -16,6 +14,7 @@ import {
   getVoteResults,
 } from "@/lib/db/queries"
 import { glide } from "@/lib/glidepath"
+import { getSession } from "@/lib/session"
 import { getTopicStatus } from "@/lib/types"
 
 interface VotePageProps {
@@ -25,25 +24,26 @@ interface VotePageProps {
 export default async function VotePage(props: VotePageProps) {
   const { voteId: topicId } = await props.params
 
-  const topic = await getTopic(topicId)
+  const [topic, session] = await Promise.all([getTopic(topicId), getSession()])
   if (!topic || !topic.isActive) notFound()
 
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
   const status = getTopicStatus(topic.opensAt, topic.closesAt)
-  const results = await getVoteResults(topicId)
 
   let userVote: string | null = null
   let eligible = false
+  let results = { noCount: 0, totalVotes: 0, yesCount: 0 }
 
   if (session) {
-    userVote = await getUserVoteForTopic(topicId, session.user.id)
-    const eligibility = await checkEligibility(topicId, session.user.id)
+    const [voteResult, eligibility, voteResults] = await Promise.all([
+      getUserVoteForTopic(topicId, session.user.id),
+      checkEligibility(topic.memberListId, session.user.id),
+      getVoteResults(topicId),
+    ])
+    userVote = voteResult
     eligible = eligibility.eligible
+    results = voteResults
+  } else {
+    results = await getVoteResults(topicId)
   }
 
   return (

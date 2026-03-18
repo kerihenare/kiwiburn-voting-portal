@@ -112,10 +112,7 @@ export async function getUserVoteForTopic(topicId: string, userId: string) {
   return result[0]?.vote ?? null
 }
 
-export async function checkEligibility(topicId: string, userId: string) {
-  const topic = await getTopic(topicId)
-  if (!topic) return { eligible: false, reason: "Topic not found" as const }
-
+export async function checkEligibility(memberListId: string, userId: string) {
   const userResult = await db
     .select({ email: user.email })
     .from(user)
@@ -131,7 +128,7 @@ export async function checkEligibility(topicId: string, userId: string) {
     .where(
       and(
         eq(members.email, userResult[0].email),
-        eq(members.memberListId, topic.memberListId),
+        eq(members.memberListId, memberListId),
       ),
     )
     .limit(1)
@@ -171,21 +168,22 @@ export async function getMemberList(id: string) {
 
   if (!list[0]) return null
 
-  const listMembers = await db
-    .select()
-    .from(members)
-    .where(eq(members.memberListId, id))
-    .orderBy(asc(members.email))
-
-  const listTopics = await db
-    .select({
-      closesAt: topics.closesAt,
-      id: topics.id,
-      opensAt: topics.opensAt,
-      title: topics.title,
-    })
-    .from(topics)
-    .where(and(eq(topics.memberListId, id), isNull(topics.deletedAt)))
+  const [listMembers, listTopics] = await Promise.all([
+    db
+      .select()
+      .from(members)
+      .where(eq(members.memberListId, id))
+      .orderBy(asc(members.email)),
+    db
+      .select({
+        closesAt: topics.closesAt,
+        id: topics.id,
+        opensAt: topics.opensAt,
+        title: topics.title,
+      })
+      .from(topics)
+      .where(and(eq(topics.memberListId, id), isNull(topics.deletedAt))),
+  ])
 
   return { ...list[0], members: listMembers, topics: listTopics }
 }

@@ -1,19 +1,14 @@
 import { headers } from "next/headers"
 import Link from "next/link"
-import { auth } from "@/lib/auth"
 import { glide } from "@/lib/glidepath"
+import { getSession } from "@/lib/session"
 import { SignOutButton } from "./sign-out-button"
 
 export async function User() {
   const headersList = await headers()
   const pathname = headersList.get("x-current-path")
 
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: headersList })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
+  const session = await getSession()
 
   if (!session?.user.email) {
     if (pathname === "/sign-in") {

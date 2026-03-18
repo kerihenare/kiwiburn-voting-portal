@@ -1,5 +1,6 @@
 import {
   boolean,
+  index,
   pgTable,
   text,
   timestamp,
@@ -66,24 +67,30 @@ export const members = pgTable(
   },
   (table) => [
     unique("members_email_list_unique").on(table.email, table.memberListId),
+    index("members_email_idx").on(table.email),
+    index("members_list_id_idx").on(table.memberListId),
   ],
 )
 
-export const topics = pgTable("topics", {
-  closesAt: timestamp("closes_at").notNull(),
-  createdAt: timestamp("created_at").notNull().defaultNow(),
-  deletedAt: timestamp("deleted_at"),
-  deletedBy: text("deleted_by").references(() => user.id),
-  description: text("description"),
-  id: uuid("id").primaryKey().$defaultFn(uuidv7),
-  isActive: boolean("is_active").notNull().default(false),
-  memberListId: uuid("member_list_id")
-    .notNull()
-    .references(() => memberLists.id),
-  opensAt: timestamp("opens_at").notNull(),
-  title: text("title").notNull(),
-  updatedAt: timestamp("updated_at").notNull().defaultNow(),
-})
+export const topics = pgTable(
+  "topics",
+  {
+    closesAt: timestamp("closes_at").notNull(),
+    createdAt: timestamp("created_at").notNull().defaultNow(),
+    deletedAt: timestamp("deleted_at"),
+    deletedBy: text("deleted_by").references(() => user.id),
+    description: text("description"),
+    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    isActive: boolean("is_active").notNull().default(false),
+    memberListId: uuid("member_list_id")
+      .notNull()
+      .references(() => memberLists.id),
+    opensAt: timestamp("opens_at").notNull(),
+    title: text("title").notNull(),
+    updatedAt: timestamp("updated_at").notNull().defaultNow(),
+  },
+  (table) => [index("topics_member_list_id_idx").on(table.memberListId)],
+)
 
 export const votes = pgTable(
   "votes",
@@ -101,5 +108,7 @@ export const votes = pgTable(
   },
   (table) => [
     unique("votes_topic_user_unique").on(table.topicId, table.userId),
+    index("votes_topic_id_idx").on(table.topicId),
+    index("votes_user_id_idx").on(table.userId),
   ],
 )

@@ -1,19 +1,14 @@
 import { Flame } from "lucide-react"
-import { headers } from "next/headers"
 import { TopicCard } from "@/components/topic-card/topic-card"
-import { auth } from "@/lib/auth"
 import { getTopicsWithCounts, getUserVotes } from "@/lib/db/queries"
 import { glide } from "@/lib/glidepath"
+import { getSession } from "@/lib/session"
 
 export default async function HomePage() {
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
-
-  const topics = await getTopicsWithCounts()
+  const [session, topics] = await Promise.all([
+    getSession(),
+    getTopicsWithCounts(),
+  ])
   const userVotes = session ? await getUserVotes(session.user.id) : {}
 
   return (
