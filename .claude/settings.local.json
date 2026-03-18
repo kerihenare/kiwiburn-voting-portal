@@ -46,7 +46,11 @@
       "Bash(xxd)",
       "Bash(npx playwright:*)",
       "Bash(DATABASE_URL=postgresql://kiwiburn:kiwiburn@localhost:6769/voting_portal_test npx drizzle-kit push --force 2>&1)",
-      "Bash(gh pr:*)"
+      "Bash(gh pr:*)",
+      "Bash(while read:*)",
+      "Bash(do echo:*)",
+      "Read(//Users/kerihenare/Projects/kiwiburn/voting-portal/**)",
+      "Bash(done)"
     ]
   }
 }

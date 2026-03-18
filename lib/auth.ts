@@ -1,3 +1,4 @@
+import { waitUntil } from "@vercel/functions"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { APIError } from "better-auth/api"
@@ -8,6 +9,10 @@ import * as schema from "@/lib/db/schema"
 import { sendMagicLinkEmail } from "@/lib/email"
 
 export const auth = betterAuth({
+  advanced: {
+    backgroundTasks: { handler: waitUntil },
+  },
+  appName: "Kiwiburn Voting Portal",
   database: drizzleAdapter(db, {
     provider: "pg",
     schema,
@@ -18,11 +23,13 @@ export const auth = betterAuth({
       expiresIn: 900, // 15 minutes
       sendMagicLink: async ({ email, url }) => {
         const isMember = await isEmailInAnyMemberList(email)
+
         if (!isMember) {
           throw new APIError("FORBIDDEN", {
             message: "This email is not on any member list",
           })
         }
+
         await sendMagicLinkEmail({ email, url })
       },
     }),
@@ -32,6 +39,7 @@ export const auth = betterAuth({
       enabled: true,
       maxAge: 5 * 60, // 5 minutes
     },
+    expiresIn: 2 * 60 * 60, // 2 hours
   },
   user: {
     additionalFields: {

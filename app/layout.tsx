@@ -1,7 +1,7 @@
 import { Analytics } from "@vercel/analytics/next"
 import type { Metadata, Viewport } from "next"
 import { Inter } from "next/font/google"
-import { Header } from "@/components/header"
+import { Header } from "@/components/header/header"
 import { glide } from "@/lib/glidepath"
 import "./globals.css"
 

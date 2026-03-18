@@ -2,7 +2,7 @@ import { headers } from "next/headers"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { ResultBars } from "@/components/result-bars"
-import { TimerBadge } from "@/components/timer-badge"
+// import { TimerBadge } from "@/components/timer-badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
@@ -50,12 +50,12 @@ export default async function VotePage(props: VotePageProps) {
     <PageCenter>
       <Card className="max-w-2xl w-full">
         <CardContent className="space-y-6">
-          <TopicHeader>
+          {/* <TopicHeader>
             {topic.memberListName && (
               <ListName>{topic.memberListName}</ListName>
             )}
             <TimerBadge closesAt={topic.closesAt} opensAt={topic.opensAt} />
-          </TopicHeader>
+          </TopicHeader> */}
           <TopicTitle>{topic.title}</TopicTitle>
           {topic.description && (
             <TopicDescription>{topic.description}</TopicDescription>
@@ -130,19 +130,19 @@ const PageCenter = glide("div", {
   justifyContent: "justify-center",
 })
 
-const TopicHeader = glide("div", {
-  alignItems: "items-center",
-  display: "flex",
-  flexWrap: "flex-wrap",
-  gap: "gap-2",
-  justifyContent: "justify-between",
-})
+// const TopicHeader = glide("div", {
+//   alignItems: "items-center",
+//   display: "flex",
+//   flexWrap: "flex-wrap",
+//   gap: "gap-2",
+//   justifyContent: "justify-between",
+// })
 
-const ListName = glide("p", {
-  color: "text-muted-foreground",
-  fontSize: "text-sm",
-  marginBottom: "mb-0",
-})
+// const ListName = glide("p", {
+//   color: "text-muted-foreground",
+//   fontSize: "text-sm",
+//   marginBottom: "mb-0",
+// })
 
 const TopicTitle = glide("h1", {
   color: "text-accent",

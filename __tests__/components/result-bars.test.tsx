@@ -4,20 +4,18 @@ import { describe, expect, it } from "vitest"
 import { ResultBars } from "@/components/result-bars"
 
 describe("ResultBars", () => {
-  it("renders correct percentages with votes", () => {
+  it("renders correct counts with votes", () => {
     render(<ResultBars noCount={1} totalVotes={4} yesCount={3} />)
     expect(screen.getByText("Yes")).toBeInTheDocument()
-    expect(screen.getByText("75%")).toBeInTheDocument()
+    expect(screen.getByText("3")).toBeInTheDocument()
     expect(screen.getByText("No")).toBeInTheDocument()
-    expect(screen.getByText("25%")).toBeInTheDocument()
-    expect(screen.getByText("4 votes")).toBeInTheDocument()
+    expect(screen.getByText("1")).toBeInTheDocument()
   })
 
-  it("renders 0% when totalVotes is 0", () => {
+  it("renders 0 when totalVotes is 0", () => {
     render(<ResultBars noCount={0} totalVotes={0} yesCount={0} />)
-    const zeroPcts = screen.getAllByText("0%")
-    expect(zeroPcts).toHaveLength(2)
-    expect(screen.getByText("0 votes")).toBeInTheDocument()
+    const zeros = screen.getAllByText("0")
+    expect(zeros).toHaveLength(2)
   })
 
   it("renders progress bars with correct widths", () => {

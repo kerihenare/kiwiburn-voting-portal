@@ -60,7 +60,7 @@ export function TimerBadge(props: TimerBadgeProps) {
     return (
       <Tooltip>
         <TooltipTrigger asChild>
-          <Badge variant="destructive">Closes in {"< 1 minute"}</Badge>
+          <Badge variant="destructive">Closes in &lt; 1 hour</Badge>
         </TooltipTrigger>
         <TooltipContent>
           {format(props.closesAt, "d MMM yyyy, h:mm a")}

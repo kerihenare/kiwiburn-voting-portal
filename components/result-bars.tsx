@@ -1,9 +1,9 @@
 import { glide } from "@/lib/glidepath"
 
 interface ResultBarsProps {
-  yesCount: number
   noCount: number
   totalVotes: number
+  yesCount: number
 }
 
 export function ResultBars(props: ResultBarsProps) {
@@ -26,25 +26,13 @@ export function ResultBars(props: ResultBarsProps) {
         <YesBar style={{ width: `${yesPercent}%` }} />
         <NoBar style={{ width: `${noPercent}%` }} />
       </BarTrack>
-      <PercentRow>
-        <span>{yesPercent}%</span>
-        <span>{props.totalVotes} votes</span>
-        <span>{noPercent}%</span>
-      </PercentRow>
+      <ValueRow>
+        <span>{props.yesCount.toLocaleString()}</span>
+        <span>{props.noCount.toLocaleString()}</span>
+      </ValueRow>
     </ResultWrapper>
   )
 }
-
-const ResultWrapper = glide("div", {
-  other: "space-y-1",
-})
-
-const LabelRow = glide("div", {
-  display: "flex",
-  fontSize: "text-sm",
-  fontWeight: "font-medium",
-  justifyContent: "justify-between",
-})
 
 const BarTrack = glide("div", {
   borderRadius: "rounded-full",
@@ -54,9 +42,11 @@ const BarTrack = glide("div", {
   overflow: "overflow-hidden",
 })
 
-const YesBar = glide("div", {
-  backgroundColor: "bg-green-500",
-  borderRadius: "rounded-l-full",
+const LabelRow = glide("div", {
+  display: "flex",
+  fontSize: "text-sm",
+  fontWeight: "font-medium",
+  justifyContent: "justify-between",
 })
 
 const NoBar = glide("div", {
@@ -64,9 +54,19 @@ const NoBar = glide("div", {
   borderRadius: "rounded-r-full",
 })
 
-const PercentRow = glide("div", {
+const ResultWrapper = glide("div", {
+  flexGrow: "grow",
+  spaceY: "space-y-1",
+})
+
+const ValueRow = glide("div", {
   color: "text-muted-foreground",
   display: "flex",
   fontSize: "text-sm",
   justifyContent: "justify-between",
+})
+
+const YesBar = glide("div", {
+  backgroundColor: "bg-green-500",
+  borderRadius: "rounded-l-full",
 })

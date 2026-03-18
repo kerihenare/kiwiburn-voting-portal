@@ -15,7 +15,12 @@ interface VoteSuccessPageProps {
 export default async function VoteSuccessPage(props: VoteSuccessPageProps) {
   const { voteId: topicId } = await props.params
 
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   if (!session) redirect("/sign-in")
 
   const topic = await getTopic(topicId)

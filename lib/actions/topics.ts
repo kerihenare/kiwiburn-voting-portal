@@ -9,7 +9,12 @@ import { topics } from "@/lib/db/schema"
 import { createTopicSchema } from "@/lib/validations"
 
 async function requireAdmin() {
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   if (!session?.user.isAdmin) throw new Error("Unauthorized")
   return session
 }

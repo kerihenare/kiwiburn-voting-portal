@@ -18,11 +18,12 @@ vi.mock("next/link", () => ({
     </a>
   ),
 }))
-vi.mock("@/components/sign-out-button", () => ({
+vi.mock("@/components/header/sign-out-button", () => ({
   SignOutButton: () => <button type="button">Sign out</button>,
 }))
 
-import { Header } from "@/components/header"
+import { AdminNav } from "@/components/header/admin-nav"
+import { User } from "@/components/header/user"
 
 describe("Header", () => {
   beforeEach(() => {
@@ -31,20 +32,19 @@ describe("Header", () => {
 
   it("shows sign in link when no session", async () => {
     mockGetSession.mockResolvedValue(null)
-    const component = await Header()
-    render(component)
+    render(await User())
     expect(screen.getByText("Sign in")).toBeInTheDocument()
-    expect(screen.getByText("Kiwiburn")).toBeInTheDocument()
   })
 
   it("shows user email and sign out when logged in", async () => {
     mockGetSession.mockResolvedValue({
       user: { email: "user@example.com", isAdmin: false },
     })
-    const component = await Header()
-    render(component)
+    const { container } = render(await User())
     expect(screen.getByText("user@example.com")).toBeInTheDocument()
     expect(screen.getByText("Sign out")).toBeInTheDocument()
+
+    render(await AdminNav(), { container })
     expect(screen.queryByText("Member Lists")).not.toBeInTheDocument()
     expect(screen.queryByText("Topics")).not.toBeInTheDocument()
   })
@@ -53,8 +53,7 @@ describe("Header", () => {
     mockGetSession.mockResolvedValue({
       user: { email: "admin@example.com", isAdmin: true },
     })
-    const component = await Header()
-    render(component)
+    render(await AdminNav())
     expect(screen.getByText("Member Lists")).toBeInTheDocument()
     expect(screen.getByText("Topics")).toBeInTheDocument()
   })

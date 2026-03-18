@@ -1,4 +1,4 @@
-import { and, desc, eq, isNull, sql } from "drizzle-orm"
+import { and, asc, desc, eq, isNull, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { memberLists, members, topics, user, votes } from "./schema"
 
@@ -87,6 +87,21 @@ export async function getVoteResults(topicId: string) {
   return results[0] ?? { noCount: 0, totalVotes: 0, yesCount: 0 }
 }
 
+export async function getUserVotes(userId: string) {
+  const results: Record<string, string> = {}
+
+  const result = await db
+    .select({ topicId: votes.topicId, vote: votes.vote })
+    .from(votes)
+    .where(eq(votes.userId, userId))
+
+  for (const row of result) {
+    results[row.topicId] = row.vote
+  }
+
+  return results
+}
+
 export async function getUserVoteForTopic(topicId: string, userId: string) {
   const result = await db
     .select({ vote: votes.vote })
@@ -160,7 +175,7 @@ export async function getMemberList(id: string) {
     .select()
     .from(members)
     .where(eq(members.memberListId, id))
-    .orderBy(desc(members.createdAt))
+    .orderBy(asc(members.email))
 
   const listTopics = await db
     .select({
@@ -191,4 +206,5 @@ export async function getAllMemberLists() {
     .select({ id: memberLists.id, name: memberLists.name })
     .from(memberLists)
     .where(isNull(memberLists.deletedAt))
+    .orderBy(desc(memberLists.createdAt))
 }

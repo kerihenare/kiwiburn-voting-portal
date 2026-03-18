@@ -136,7 +136,12 @@ export function EditTopicForm(props: EditTopicFormProps) {
           onChange={(e) => setIsActive(e.target.checked)}
           type="checkbox"
         />
-        <Label htmlFor="isActive">Active (visible to voters)</Label>
+        <Label htmlFor="isActive">
+          Active{" "}
+          <span className="text-muted-foreground text-sm">
+            (visible to voters)
+          </span>
+        </Label>
       </CheckboxRow>
       {error && <FieldError role="alert">{error}</FieldError>}
       <FormActions>

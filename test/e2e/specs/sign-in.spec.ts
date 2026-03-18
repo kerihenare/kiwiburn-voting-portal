@@ -15,7 +15,7 @@ test.describe("Sign in", () => {
     // Use direct session creation (magic link tokens are hashed by Better Auth)
     await authenticateAs(page, "member@test.com")
 
-    await expect(page.getByText("Community Votes")).toBeVisible()
+    await expect(page.getByText("Kiwiburn Voting Portal")).toBeVisible()
   })
 
   test("magic link form shows check email message for members", async ({

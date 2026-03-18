@@ -12,7 +12,12 @@ import { castVoteSchema } from "@/lib/validations"
 export async function castVote(input: { topicId: string; vote: string }) {
   const parsed = castVoteSchema.parse(input)
 
-  const session = await auth.api.getSession({ headers: await headers() })
+  let session = null
+  try {
+    session = await auth.api.getSession({ headers: await headers() })
+  } catch {
+    // Stale session cookie — treat as unauthenticated
+  }
   if (!session) throw new Error("Not authenticated")
 
   const topic = await getTopic(parsed.topicId)

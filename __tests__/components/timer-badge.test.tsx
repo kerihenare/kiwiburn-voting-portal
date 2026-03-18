@@ -51,7 +51,7 @@ describe("TimerBadge", () => {
     expect(screen.getByTestId("badge")).toHaveClass("bg-gray-100")
   })
 
-  it("shows '< 1 minute' when less than 1 hour remaining", () => {
+  it("shows 'Closes in < 1 hour' when less than 1 hour remaining", () => {
     vi.mocked(isFuture).mockReturnValue(false)
     vi.mocked(isPast).mockReturnValue(false)
 
@@ -64,7 +64,7 @@ describe("TimerBadge", () => {
         opensAt={new Date(now.getTime() - 86400000)}
       />,
     )
-    expect(screen.getByText(/< 1 minute/)).toBeInTheDocument()
+    expect(screen.getByText(/Closes in < 1 hour/)).toBeInTheDocument()
     expect(screen.getByTestId("badge")).toHaveAttribute(
       "data-variant",
       "destructive",

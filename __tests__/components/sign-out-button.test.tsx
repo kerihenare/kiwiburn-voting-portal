@@ -24,7 +24,7 @@ vi.mock("@/components/ui/button", () => ({
   ),
 }))
 
-import { SignOutButton } from "@/components/sign-out-button"
+import { SignOutButton } from "@/components/header/sign-out-button"
 
 describe("SignOutButton", () => {
   beforeEach(() => {
