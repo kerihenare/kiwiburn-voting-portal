@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { authClient } from "@/lib/auth-client"
+import { FieldError, FieldGroup, FormStack } from "@/lib/form-styles"
 import { glide } from "@/lib/glidepath"
 
 export default function SignInPage() {
@@ -131,17 +132,4 @@ const Description = glide("p", {
 
 const HeaderGroup = glide("div", {
   other: "space-y-1",
-})
-
-const FormStack = glide("form", {
-  other: "space-y-6",
-})
-
-const FieldGroup = glide("div", {
-  other: "space-y-2",
-})
-
-const FieldError = glide("p", {
-  color: "text-destructive",
-  fontSize: "text-sm",
 })

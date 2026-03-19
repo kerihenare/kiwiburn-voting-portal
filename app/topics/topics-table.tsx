@@ -4,7 +4,7 @@ import type { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation"
 import { Badge } from "@/components/ui/badge"
 import { DataTable } from "@/components/ui/data-table"
-import { glide } from "@/lib/glidepath"
+import { AlignRight, MutedText } from "@/lib/table-styles"
 import { getTopicStatus } from "@/lib/types"
 
 type Topic = {
@@ -101,11 +101,3 @@ export function TopicsTable(props: TopicsTableProps) {
     />
   )
 }
-
-const MutedText = glide("span", {
-  color: "text-muted-foreground",
-})
-
-const AlignRight = glide("div", {
-  textAlign: "text-right",
-})

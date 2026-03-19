@@ -14,7 +14,14 @@ import {
 } from "@/components/ui/select"
 import { Textarea } from "@/components/ui/textarea"
 import { updateTopic } from "@/lib/actions/topics"
-import { glide } from "@/lib/glidepath"
+import {
+  CheckboxRow,
+  DateGrid,
+  FieldError,
+  FieldGroup,
+  FormActions,
+  FormStack,
+} from "@/lib/form-styles"
 import { DeleteTopicButton } from "./delete-topic-button"
 
 function toLocalDatetime(dateStr: string) {
@@ -153,34 +160,3 @@ export function EditTopicForm(props: EditTopicFormProps) {
     </FormStack>
   )
 }
-
-const FormStack = glide("form", {
-  other: "space-y-6",
-})
-
-const FieldGroup = glide("div", {
-  other: "space-y-2",
-})
-
-const DateGrid = glide("div", {
-  display: "grid",
-  gap: "gap-4",
-  gridTemplateColumns: ["grid-cols-1", "sm:grid-cols-2"],
-})
-
-const CheckboxRow = glide("div", {
-  alignItems: "items-center",
-  display: "flex",
-  gap: "gap-2",
-})
-
-const FieldError = glide("p", {
-  color: "text-destructive",
-  fontSize: "text-sm",
-})
-
-const FormActions = glide("div", {
-  display: "flex",
-  gap: "gap-2",
-  justifyContent: "justify-end",
-})

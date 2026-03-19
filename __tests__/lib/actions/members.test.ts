@@ -55,7 +55,7 @@ describe("addMember", () => {
     mockGetSession.mockResolvedValue(null)
     await expect(
       addMember(memberListId, { email: "new@example.com" }),
-    ).rejects.toThrow("Unauthorized")
+    ).rejects.toThrow("Not authenticated")
   })
 
   it("throws when user is not admin", async () => {
@@ -118,7 +118,7 @@ describe("removeMember", () => {
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
     await expect(removeMember(memberId, memberListId)).rejects.toThrow(
-      "Unauthorized",
+      "Not authenticated",
     )
   })
 
@@ -159,7 +159,7 @@ describe("uploadMembers", () => {
     mockGetSession.mockResolvedValue(null)
     await expect(
       uploadMembers(memberListId, ["a@example.com"]),
-    ).rejects.toThrow("Unauthorized")
+    ).rejects.toThrow("Not authenticated")
   })
 
   it("throws when email count exceeds upload limit", async () => {

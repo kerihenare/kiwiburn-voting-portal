@@ -44,7 +44,7 @@ export function AddMemberForm(props: AddMemberFormProps) {
           type="email"
           value={email}
         />
-        {error && <FieldError role="alert">{error}</FieldError>}
+        {error && <InlineFieldError role="alert">{error}</InlineFieldError>}
       </InputWrapper>
       <Button disabled={submitting} type="submit">
         {submitting ? "Adding\u2026" : "Add member"}
@@ -65,7 +65,7 @@ const InputWrapper = glide("div", {
   flex: "flex-1",
 })
 
-const FieldError = glide("p", {
+const InlineFieldError = glide("p", {
   color: "text-destructive",
   fontSize: "text-sm",
   marginTop: "mt-1",

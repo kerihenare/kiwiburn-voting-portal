@@ -1,24 +1,17 @@
 "use server"
 
-import { headers } from "next/headers"
-import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { checkEligibility, getTopic } from "@/lib/db/queries"
 import { votes } from "@/lib/db/schema"
 import { sendVoteConfirmationEmail } from "@/lib/email"
 import { getTopicStatus } from "@/lib/types"
 import { castVoteSchema } from "@/lib/validations"
+import { requireActionSession } from "./auth"
 
 export async function castVote(input: { topicId: string; vote: string }) {
   const parsed = castVoteSchema.parse(input)
 
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
-  if (!session) throw new Error("Not authenticated")
+  const session = await requireActionSession()
 
   const topic = await getTopic(parsed.topicId)
   if (!topic || !topic.isActive) throw new Error("Topic not found")

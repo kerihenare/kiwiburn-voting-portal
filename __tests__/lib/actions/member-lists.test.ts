@@ -62,7 +62,7 @@ describe("createMemberList", () => {
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
     await expect(createMemberList({ name: "Test List" })).rejects.toThrow(
-      "Unauthorized",
+      "Not authenticated",
     )
   })
 
@@ -120,7 +120,7 @@ describe("updateMemberList", () => {
     mockGetSession.mockResolvedValue(null)
     await expect(
       updateMemberList(memberListId, { name: "Updated" }),
-    ).rejects.toThrow("Unauthorized")
+    ).rejects.toThrow("Not authenticated")
   })
 
   it("throws when user is not admin", async () => {
@@ -181,7 +181,9 @@ describe("deleteMemberList", () => {
 
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
-    await expect(deleteMemberList(memberListId)).rejects.toThrow("Unauthorized")
+    await expect(deleteMemberList(memberListId)).rejects.toThrow(
+      "Not authenticated",
+    )
   })
 
   it("throws when user is not admin", async () => {

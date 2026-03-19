@@ -2,25 +2,10 @@
 
 import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
-import { headers } from "next/headers"
-import { z } from "zod"
-import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { topics } from "@/lib/db/schema"
-import { createTopicSchema } from "@/lib/validations"
-
-const uuidSchema = z.string().uuid()
-
-async function requireAdmin() {
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
-  if (!session?.user.isAdmin) throw new Error("Unauthorized")
-  return session
-}
+import { createTopicSchema, uuidSchema } from "@/lib/validations"
+import { requireActionAdmin } from "./auth"
 
 export async function createTopic(input: {
   title: string
@@ -30,7 +15,7 @@ export async function createTopic(input: {
   closesAt: string
   isActive?: boolean
 }) {
-  await requireAdmin()
+  await requireActionAdmin()
   const parsed = createTopicSchema.parse(input)
 
   await db.insert(topics).values({
@@ -58,7 +43,7 @@ export async function updateTopic(
     isActive?: boolean
   },
 ) {
-  await requireAdmin()
+  await requireActionAdmin()
   uuidSchema.parse(id)
   const parsed = createTopicSchema.parse(input)
 
@@ -82,7 +67,7 @@ export async function updateTopic(
 }
 
 export async function deleteTopic(id: string) {
-  const session = await requireAdmin()
+  const session = await requireActionAdmin()
   uuidSchema.parse(id)
 
   await db

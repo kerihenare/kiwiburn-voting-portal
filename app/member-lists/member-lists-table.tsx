@@ -3,7 +3,7 @@
 import type { ColumnDef } from "@tanstack/react-table"
 import { useRouter } from "next/navigation"
 import { DataTable } from "@/components/ui/data-table"
-import { glide } from "@/lib/glidepath"
+import { AlignRight, MutedText, NumericCell } from "@/lib/table-styles"
 
 type MemberList = {
   id: string
@@ -54,16 +54,3 @@ export function MemberListsTable(props: MemberListsTableProps) {
     />
   )
 }
-
-const MutedText = glide("span", {
-  color: "text-muted-foreground",
-})
-
-const AlignRight = glide("div", {
-  textAlign: "text-right",
-})
-
-const NumericCell = glide("div", {
-  other: "tabular-nums",
-  textAlign: "text-right",
-})

@@ -9,13 +9,15 @@ import {
 } from "drizzle-orm/pg-core"
 import { v7 as uuidv7 } from "uuid"
 
+const uuidv7pk = (column = "id") => uuid(column).primaryKey().$defaultFn(uuidv7)
+
 // Better-Auth managed tables
 // NOTE: Better Auth's Drizzle adapter looks up tables by export name (user, session, verification)
 export const user = pgTable("user", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   email: text("email").unique().notNull(),
   emailVerified: boolean("email_verified").notNull().default(false),
-  id: text("id").primaryKey(),
+  id: uuidv7pk(),
   image: text("image"),
   isAdmin: boolean("is_admin").notNull().default(false),
   name: text("name"),
@@ -25,12 +27,12 @@ export const user = pgTable("user", {
 export const session = pgTable("session", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   expiresAt: timestamp("expires_at").notNull(),
-  id: text("id").primaryKey(),
+  id: uuidv7pk(),
   ipAddress: text("ip_address"),
   token: text("token").unique().notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
   userAgent: text("user_agent"),
-  userId: text("user_id")
+  userId: uuid("user_id")
     .notNull()
     .references(() => user.id, { onDelete: "cascade" }),
 })
@@ -38,7 +40,7 @@ export const session = pgTable("session", {
 export const verification = pgTable("verification", {
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expires_at").notNull(),
-  id: text("id").primaryKey(),
+  id: uuidv7pk(),
   identifier: text("identifier").notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),
   value: text("value").notNull(),
@@ -50,7 +52,7 @@ export const memberLists = pgTable("member_lists", {
   deletedAt: timestamp("deleted_at"),
   deletedBy: text("deleted_by").references(() => user.id),
   description: text("description"),
-  id: uuid("id").primaryKey().$defaultFn(uuidv7),
+  id: uuidv7pk(),
   name: text("name").notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })
@@ -60,7 +62,7 @@ export const members = pgTable(
   {
     createdAt: timestamp("created_at").notNull().defaultNow(),
     email: text("email").notNull(),
-    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    id: uuidv7pk(),
     memberListId: uuid("member_list_id")
       .notNull()
       .references(() => memberLists.id, { onDelete: "cascade" }),
@@ -80,7 +82,7 @@ export const topics = pgTable(
     deletedAt: timestamp("deleted_at"),
     deletedBy: text("deleted_by").references(() => user.id),
     description: text("description"),
-    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    id: uuidv7pk(),
     isActive: boolean("is_active").notNull().default(false),
     memberListId: uuid("member_list_id")
       .notNull()
@@ -96,12 +98,12 @@ export const votes = pgTable(
   "votes",
   {
     createdAt: timestamp("created_at").notNull().defaultNow(),
-    id: uuid("id").primaryKey().$defaultFn(uuidv7),
+    id: uuidv7pk(),
     topicId: uuid("topic_id")
       .notNull()
       .references(() => topics.id, { onDelete: "cascade" }),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
-    userId: text("user_id")
+    userId: uuid("user_id")
       .notNull()
       .references(() => user.id),
     vote: text("vote").notNull(), // 'yes' or 'no'

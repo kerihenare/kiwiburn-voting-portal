@@ -8,6 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { createMemberList } from "@/lib/actions/member-lists"
+import {
+  FieldError,
+  FieldGroup,
+  FormActions,
+  FormStack,
+} from "@/lib/form-styles"
 import { glide } from "@/lib/glidepath"
 
 export default function CreateMemberListPage() {
@@ -78,22 +84,4 @@ const PageTitle = glide("h1", {
   color: "text-accent",
   fontSize: "text-2xl",
   fontWeight: "font-bold",
-})
-
-const FormStack = glide("form", {
-  other: "space-y-6",
-})
-
-const FieldGroup = glide("div", {
-  other: "space-y-2",
-})
-
-const FieldError = glide("p", {
-  color: "text-destructive",
-  fontSize: "text-sm",
-})
-
-const FormActions = glide("div", {
-  display: "flex",
-  justifyContent: "justify-end",
 })

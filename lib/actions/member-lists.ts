@@ -2,31 +2,16 @@
 
 import { and, count, eq, isNull } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
-import { headers } from "next/headers"
-import { z } from "zod"
-import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { memberLists, topics } from "@/lib/db/schema"
-import { createMemberListSchema } from "@/lib/validations"
-
-const uuidSchema = z.string().uuid()
-
-async function requireAdmin() {
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
-  if (!session?.user.isAdmin) throw new Error("Unauthorized")
-  return session
-}
+import { createMemberListSchema, uuidSchema } from "@/lib/validations"
+import { requireActionAdmin } from "./auth"
 
 export async function createMemberList(input: {
   name: string
   description?: string
 }) {
-  await requireAdmin()
+  await requireActionAdmin()
   const parsed = createMemberListSchema.parse(input)
 
   const result = await db
@@ -45,7 +30,7 @@ export async function updateMemberList(
   id: string,
   input: { name: string; description?: string },
 ) {
-  await requireAdmin()
+  await requireActionAdmin()
   uuidSchema.parse(id)
   const parsed = createMemberListSchema.parse(input)
 
@@ -64,7 +49,7 @@ export async function updateMemberList(
 }
 
 export async function deleteMemberList(id: string) {
-  const session = await requireAdmin()
+  const session = await requireActionAdmin()
   uuidSchema.parse(id)
 
   // Check if any non-deleted topics reference this list

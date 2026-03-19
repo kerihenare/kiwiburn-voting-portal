@@ -1,5 +1,6 @@
 import { render } from "@react-email/components"
 import nodemailer from "nodemailer"
+import type { ReactElement } from "react"
 import MagicLinkEmail from "@/emails/magic-link"
 import VoteConfirmationEmail from "@/emails/vote-confirmation"
 
@@ -14,14 +15,15 @@ function getTransport() {
   })
 }
 
-export async function sendMagicLinkEmail({
-  email,
-  url,
+async function sendEmail({
+  component,
+  subject,
+  to,
 }: {
-  email: string
-  url: string
+  component: ReactElement
+  subject: string
+  to: string
 }) {
-  const component = MagicLinkEmail({ url })
   const [html, text] = await Promise.all([
     render(component),
     render(component, { plainText: true }),
@@ -31,8 +33,22 @@ export async function sendMagicLinkEmail({
   await transport.sendMail({
     from: process.env.SMTP_FROM,
     html,
-    subject: "Sign in to Kiwiburn Voting Portal",
+    subject,
     text,
+    to,
+  })
+}
+
+export async function sendMagicLinkEmail({
+  email,
+  url,
+}: {
+  email: string
+  url: string
+}) {
+  await sendEmail({
+    component: MagicLinkEmail({ url }),
+    subject: "Sign in to Kiwiburn Voting Portal",
     to: email,
   })
 }
@@ -48,18 +64,9 @@ export async function sendVoteConfirmationEmail({
   topicTitle: string
   vote: string
 }) {
-  const component = VoteConfirmationEmail({ topicId, topicTitle, vote })
-  const [html, text] = await Promise.all([
-    render(component),
-    render(component, { plainText: true }),
-  ])
-  const transport = getTransport()
-
-  await transport.sendMail({
-    from: process.env.SMTP_FROM,
-    html,
+  await sendEmail({
+    component: VoteConfirmationEmail({ topicId, topicTitle, vote }),
     subject: `Vote recorded — ${topicTitle.replace(/[\r\n]/g, "")}`,
-    text,
     to: email,
   })
 }

@@ -2,28 +2,14 @@
 
 import { eq } from "drizzle-orm"
 import { revalidatePath } from "next/cache"
-import { headers } from "next/headers"
 import { z } from "zod"
-import { auth } from "@/lib/auth"
 import { db } from "@/lib/db"
 import { members } from "@/lib/db/schema"
-import { addMemberSchema } from "@/lib/validations"
-
-const uuidSchema = z.string().uuid()
-
-async function requireAdmin() {
-  let session = null
-  try {
-    session = await auth.api.getSession({ headers: await headers() })
-  } catch {
-    // Stale session cookie — treat as unauthenticated
-  }
-  if (!session?.user.isAdmin) throw new Error("Unauthorized")
-  return session
-}
+import { addMemberSchema, uuidSchema } from "@/lib/validations"
+import { requireActionAdmin } from "./auth"
 
 export async function addMember(listId: string, input: { email: string }) {
-  await requireAdmin()
+  await requireActionAdmin()
   uuidSchema.parse(listId)
   const parsed = addMemberSchema.parse(input)
 
@@ -44,7 +30,7 @@ export async function addMember(listId: string, input: { email: string }) {
 }
 
 export async function removeMember(id: string, listId: string) {
-  await requireAdmin()
+  await requireActionAdmin()
   uuidSchema.parse(id)
 
   await db.delete(members).where(eq(members.id, id))
@@ -56,7 +42,7 @@ export async function removeMember(id: string, listId: string) {
 const MAX_UPLOAD_SIZE = 10_000
 
 export async function uploadMembers(listId: string, emails: string[]) {
-  await requireAdmin()
+  await requireActionAdmin()
 
   uuidSchema.parse(listId)
 

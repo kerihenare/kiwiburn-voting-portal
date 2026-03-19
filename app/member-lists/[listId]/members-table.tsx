@@ -2,7 +2,7 @@
 
 import type { ColumnDef } from "@tanstack/react-table"
 import { DataTable } from "@/components/ui/data-table"
-import { glide } from "@/lib/glidepath"
+import { AlignRight, MutedText } from "@/lib/table-styles"
 import { RemoveMemberButton } from "./remove-member-button"
 
 type Member = {
@@ -53,11 +53,3 @@ export function MembersTable(props: MembersTableProps) {
     />
   )
 }
-
-const MutedText = glide("span", {
-  color: "text-muted-foreground",
-})
-
-const AlignRight = glide("div", {
-  textAlign: "text-right",
-})

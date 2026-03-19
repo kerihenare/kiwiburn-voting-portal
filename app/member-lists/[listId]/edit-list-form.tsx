@@ -7,7 +7,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { updateMemberList } from "@/lib/actions/member-lists"
-import { glide } from "@/lib/glidepath"
+import { FieldGroup, FormActions, FormStack } from "@/lib/form-styles"
 
 interface EditListFormProps {
   list: { id: string; name: string; description: string | null }
@@ -57,16 +57,3 @@ export function EditListForm(props: EditListFormProps) {
     </FormStack>
   )
 }
-
-const FormStack = glide("form", {
-  other: "space-y-6",
-})
-
-const FieldGroup = glide("div", {
-  other: "space-y-2",
-})
-
-const FormActions = glide("div", {
-  display: "flex",
-  justifyContent: "justify-end",
-})

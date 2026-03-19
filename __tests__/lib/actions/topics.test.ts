@@ -60,7 +60,9 @@ describe("createTopic", () => {
 
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
-    await expect(createTopic(validTopicInput)).rejects.toThrow("Unauthorized")
+    await expect(createTopic(validTopicInput)).rejects.toThrow(
+      "Not authenticated",
+    )
   })
 
   it("throws when user is not admin", async () => {
@@ -126,7 +128,7 @@ describe("updateTopic", () => {
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
     await expect(updateTopic(topicId, validTopicInput)).rejects.toThrow(
-      "Unauthorized",
+      "Not authenticated",
     )
   })
 
@@ -197,7 +199,7 @@ describe("deleteTopic", () => {
 
   it("throws when no session", async () => {
     mockGetSession.mockResolvedValue(null)
-    await expect(deleteTopic(topicId)).rejects.toThrow("Unauthorized")
+    await expect(deleteTopic(topicId)).rejects.toThrow("Not authenticated")
   })
 
   it("throws when user is not admin", async () => {

@@ -2,6 +2,12 @@ import { and, asc, desc, eq, isNull, sql } from "drizzle-orm"
 import { db } from "@/lib/db"
 import { memberLists, members, topics, user, votes } from "./schema"
 
+const voteCountColumns = {
+  noCount: sql<number>`count(case when ${votes.vote} = 'no' then 1 end)::int`,
+  totalVotes: sql<number>`count(${votes.id})::int`,
+  yesCount: sql<number>`count(case when ${votes.vote} = 'yes' then 1 end)::int`,
+}
+
 export async function getTopicsWithCounts() {
   const results = await db
     .select({
@@ -11,11 +17,9 @@ export async function getTopicsWithCounts() {
       id: topics.id,
       memberListId: topics.memberListId,
       memberListName: memberLists.name,
-      noCount: sql<number>`count(case when ${votes.vote} = 'no' then 1 end)::int`,
+      ...voteCountColumns,
       opensAt: topics.opensAt,
       title: topics.title,
-      totalVotes: sql<number>`count(${votes.id})::int`,
-      yesCount: sql<number>`count(case when ${votes.vote} = 'yes' then 1 end)::int`,
     })
     .from(topics)
     .leftJoin(memberLists, eq(topics.memberListId, memberLists.id))
@@ -37,11 +41,9 @@ export async function getAdminTopicsWithCounts() {
       isActive: topics.isActive,
       memberListId: topics.memberListId,
       memberListName: memberLists.name,
-      noCount: sql<number>`count(case when ${votes.vote} = 'no' then 1 end)::int`,
+      ...voteCountColumns,
       opensAt: topics.opensAt,
       title: topics.title,
-      totalVotes: sql<number>`count(${votes.id})::int`,
-      yesCount: sql<number>`count(case when ${votes.vote} = 'yes' then 1 end)::int`,
     })
     .from(topics)
     .leftJoin(memberLists, eq(topics.memberListId, memberLists.id))
@@ -76,11 +78,7 @@ export async function getTopic(id: string) {
 
 export async function getVoteResults(topicId: string) {
   const results = await db
-    .select({
-      noCount: sql<number>`count(case when ${votes.vote} = 'no' then 1 end)::int`,
-      totalVotes: sql<number>`count(${votes.id})::int`,
-      yesCount: sql<number>`count(case when ${votes.vote} = 'yes' then 1 end)::int`,
-    })
+    .select(voteCountColumns)
     .from(votes)
     .where(eq(votes.topicId, topicId))
 
