@@ -40,7 +40,7 @@ export const session = pgTable("session", {
 export const verification = pgTable("verification", {
   createdAt: timestamp("created_at").defaultNow(),
   expiresAt: timestamp("expires_at").notNull(),
-  id: uuidv7pk(),
+  id: text("id").primaryKey(),
   identifier: text("identifier").notNull(),
   updatedAt: timestamp("updated_at").defaultNow(),
   value: text("value").notNull(),
