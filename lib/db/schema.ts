@@ -77,7 +77,7 @@ export const members = pgTable(
 export const topics = pgTable(
   "topics",
   {
-    closesAt: timestamp("closes_at").notNull(),
+    closesAt: timestamp("closes_at"),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
     deletedBy: uuid("deleted_by").references(() => user.id),
@@ -87,7 +87,7 @@ export const topics = pgTable(
     memberListId: uuid("member_list_id")
       .notNull()
       .references(() => memberLists.id),
-    opensAt: timestamp("opens_at").notNull(),
+    opensAt: timestamp("opens_at"),
     title: text("title").notNull(),
     updatedAt: timestamp("updated_at").notNull().defaultNow(),
   },
