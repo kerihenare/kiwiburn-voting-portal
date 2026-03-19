@@ -68,7 +68,9 @@ describe("getTopicStatus", () => {
   })
 
   it('returns "scheduled" when opensAt is null even if closesAt is set', () => {
-    expect(getTopicStatus(null, new Date("2026-07-01T00:00:00Z"))).toBe("scheduled")
+    expect(getTopicStatus(null, new Date("2026-07-01T00:00:00Z"))).toBe(
+      "scheduled",
+    )
   })
 
   it('returns "open" when opensAt is in the past and closesAt is null', () => {
@@ -80,6 +82,8 @@ describe("getTopicStatus", () => {
   it('returns "scheduled" when opensAt is in the future and closesAt is null', () => {
     vi.useFakeTimers()
     vi.setSystemTime(new Date("2026-01-01T00:00:00Z"))
-    expect(getTopicStatus(new Date("2026-06-01T00:00:00Z"), null)).toBe("scheduled")
+    expect(getTopicStatus(new Date("2026-06-01T00:00:00Z"), null)).toBe(
+      "scheduled",
+    )
   })
 })
