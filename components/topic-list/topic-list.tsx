@@ -23,9 +23,7 @@ export async function TopicList(props: TopicListProps) {
           <TopicCard
             key={topic.id}
             topic={topic}
-            userVote={
-              props.userId ? (userVotes[topic.id] ?? null) : undefined
-            }
+            userVote={props.userId ? (userVotes[topic.id] ?? null) : undefined}
           />
         ))
       )}

@@ -30,9 +30,7 @@ export default function RootLayout(props: RootLayoutProps) {
         <SkipLink href="#main-content">Skip to content</SkipLink>
         <PageWrapper>
           <Header />
-          <Main id="main-content">
-            {props.children}
-          </Main>
+          <Main id="main-content">{props.children}</Main>
         </PageWrapper>
         <Analytics />
       </Body>
