@@ -100,7 +100,6 @@ export function CreateTopicForm(props: CreateTopicFormProps) {
           <Input
             id="opensAt"
             onChange={(e) => setOpensAt(e.target.value)}
-            required
             type="datetime-local"
             value={opensAt}
           />
@@ -110,7 +109,6 @@ export function CreateTopicForm(props: CreateTopicFormProps) {
           <Input
             id="closesAt"
             onChange={(e) => setClosesAt(e.target.value)}
-            required
             type="datetime-local"
             value={closesAt}
           />
