@@ -82,22 +82,41 @@ describe("createTopicSchema", () => {
     expect(result.success).toBe(false)
   })
 
-  it("rejects empty opensAt", () => {
+  it("accepts empty opensAt as optional", () => {
     const result = createTopicSchema.safeParse({ ...validInput, opensAt: "" })
-    expect(result.success).toBe(false)
-    if (!result.success) {
-      const issue = result.error.issues.find((i) => i.path.includes("opensAt"))
-      expect(issue?.message).toBe("Opens at is required")
-    }
+    expect(result.success).toBe(true)
   })
 
-  it("rejects empty closesAt", () => {
+  it("accepts empty closesAt as optional", () => {
     const result = createTopicSchema.safeParse({ ...validInput, closesAt: "" })
+    expect(result.success).toBe(true)
+  })
+
+  it("accepts input without opensAt", () => {
+    const { opensAt, ...withoutOpensAt } = validInput
+    const result = createTopicSchema.safeParse(withoutOpensAt)
+    expect(result.success).toBe(true)
+  })
+
+  it("accepts input without closesAt", () => {
+    const { closesAt, ...withoutClosesAt } = validInput
+    const result = createTopicSchema.safeParse(withoutClosesAt)
+    expect(result.success).toBe(true)
+  })
+
+  it("accepts input without both dates", () => {
+    const { opensAt, closesAt, ...withoutDates } = validInput
+    const result = createTopicSchema.safeParse(withoutDates)
+    expect(result.success).toBe(true)
+  })
+
+  it("still rejects closesAt before opensAt when both provided", () => {
+    const result = createTopicSchema.safeParse({
+      ...validInput,
+      closesAt: "2026-06-01T00:00:00Z",
+      opensAt: "2026-07-01T00:00:00Z",
+    })
     expect(result.success).toBe(false)
-    if (!result.success) {
-      const issue = result.error.issues.find((i) => i.path.includes("closesAt"))
-      expect(issue?.message).toBe("Closes at is required")
-    }
   })
 
   it("rejects closesAt before opensAt", () => {
