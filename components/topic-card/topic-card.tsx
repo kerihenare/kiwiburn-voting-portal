@@ -9,12 +9,12 @@ import { getTopicStatus } from "@/lib/types"
 
 interface TopicCardProps {
   topic: {
-    closesAt: Date
+    closesAt: Date | null
     description: string | null
     id: string
     memberListName: string | null
     noCount: number
-    opensAt: Date
+    opensAt: Date | null
     title: string
     totalVotes: number
     yesCount: number

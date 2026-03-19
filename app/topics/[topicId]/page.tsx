@@ -29,9 +29,9 @@ export default async function TopicEditPage(props: TopicEditPageProps) {
             memberLists={memberLists}
             topic={{
               ...topic,
-              closesAt: topic.closesAt.toISOString(),
+              closesAt: topic.closesAt?.toISOString() ?? null,
               isActive: topic.isActive,
-              opensAt: topic.opensAt.toISOString(),
+              opensAt: topic.opensAt?.toISOString() ?? null,
             }}
           />
         </CardContent>

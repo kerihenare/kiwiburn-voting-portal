@@ -8,12 +8,12 @@ import { AlignRight, MutedText } from "@/lib/table-styles"
 import { getTopicStatus } from "@/lib/types"
 
 type Topic = {
+  closesAt: string | null
   id: string
-  title: string
   isActive: boolean
   memberListName: string | null
-  opensAt: string
-  closesAt: string
+  opensAt: string | null
+  title: string
 }
 
 const columns: ColumnDef<Topic>[] = [
@@ -42,8 +42,8 @@ const columns: ColumnDef<Topic>[] = [
   {
     cell: ({ row }) => {
       const status = getTopicStatus(
-        new Date(row.original.opensAt),
-        new Date(row.original.closesAt),
+        row.original.opensAt ? new Date(row.original.opensAt) : null,
+        row.original.closesAt ? new Date(row.original.closesAt) : null,
       )
       return (
         <AlignRight>
@@ -69,7 +69,9 @@ const columns: ColumnDef<Topic>[] = [
     accessorKey: "opensAt",
     cell: ({ row }) => (
       <MutedText>
-        {new Date(row.original.opensAt).toLocaleDateString()}
+        {row.original.opensAt
+          ? new Date(row.original.opensAt).toLocaleDateString()
+          : "\u2014"}
       </MutedText>
     ),
     header: "Opens",
@@ -78,7 +80,9 @@ const columns: ColumnDef<Topic>[] = [
     accessorKey: "closesAt",
     cell: ({ row }) => (
       <MutedText>
-        {new Date(row.original.closesAt).toLocaleDateString()}
+        {row.original.closesAt
+          ? new Date(row.original.closesAt).toLocaleDateString()
+          : "\u2014"}
       </MutedText>
     ),
     header: "Closes",

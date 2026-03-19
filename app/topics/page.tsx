@@ -11,11 +11,11 @@ export default async function TopicsPage() {
   const topics = await getAdminTopicsWithCounts()
 
   const serializedTopics = topics.map((t) => ({
-    closesAt: t.closesAt.toISOString(),
+    closesAt: t.closesAt?.toISOString() ?? null,
     id: t.id,
     isActive: t.isActive,
     memberListName: t.memberListName,
-    opensAt: t.opensAt.toISOString(),
+    opensAt: t.opensAt?.toISOString() ?? null,
     title: t.title,
   }))
 

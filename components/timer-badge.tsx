@@ -9,12 +9,14 @@ import {
 } from "@/components/ui/tooltip"
 
 interface TimerBadgeProps {
-  opensAt: Date
-  closesAt: Date
+  closesAt: Date | null
+  opensAt: Date | null
 }
 
 export function TimerBadge(props: TimerBadgeProps) {
   const now = new Date()
+
+  if (!props.opensAt || !props.closesAt) return null
 
   if (isFuture(props.opensAt)) {
     return (

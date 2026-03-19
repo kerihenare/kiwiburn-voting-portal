@@ -8,10 +8,10 @@ import { glide } from "@/lib/glidepath"
 import { getTopicStatus } from "@/lib/types"
 
 type Topic = {
+  closesAt: string | null
   id: string
+  opensAt: string | null
   title: string
-  opensAt: string
-  closesAt: string
 }
 
 const columns: ColumnDef<Topic>[] = [
@@ -30,8 +30,8 @@ const columns: ColumnDef<Topic>[] = [
   {
     cell: ({ row }) => {
       const status = getTopicStatus(
-        new Date(row.original.opensAt),
-        new Date(row.original.closesAt),
+        row.original.opensAt ? new Date(row.original.opensAt) : null,
+        row.original.closesAt ? new Date(row.original.closesAt) : null,
       )
       return (
         <AlignRight>

@@ -24,7 +24,8 @@ import {
 } from "@/lib/form-styles"
 import { DeleteTopicButton } from "./delete-topic-button"
 
-function toLocalDatetime(dateStr: string) {
+function toLocalDatetime(dateStr: string | null) {
+  if (!dateStr) return ""
   const date = new Date(dateStr)
   const offset = date.getTimezoneOffset()
   const local = new Date(date.getTime() - offset * 60000)
@@ -40,8 +41,8 @@ interface EditTopicFormProps {
     isActive: boolean
     memberListId: string
     memberListName: string | null
-    opensAt: string // serialized from server component
-    closesAt: string
+    closesAt: string | null
+    opensAt: string | null // serialized from server component
   }
 }
 

@@ -31,9 +31,9 @@ export default async function MemberListEditPage(
   }))
 
   const serializedTopics = list.topics.map((t) => ({
-    closesAt: t.closesAt.toISOString(),
+    closesAt: t.closesAt?.toISOString() ?? null,
     id: t.id,
-    opensAt: t.opensAt.toISOString(),
+    opensAt: t.opensAt?.toISOString() ?? null,
     title: t.title,
   }))
 
