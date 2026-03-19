@@ -81,6 +81,50 @@ export function EditTopicForm(props: EditTopicFormProps) {
     }
   }
 
+  async function handleOpenNow() {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const now = new Date().toISOString()
+      await updateTopic(props.topic.id, {
+        closesAt,
+        description,
+        isActive,
+        memberListId,
+        opensAt: now,
+        title,
+      })
+      setOpensAt(toLocalDatetime(now))
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
+  async function handleCloseNow() {
+    setSubmitting(true)
+    setError(null)
+    try {
+      const now = new Date().toISOString()
+      await updateTopic(props.topic.id, {
+        closesAt: now,
+        description,
+        isActive,
+        memberListId,
+        opensAt,
+        title,
+      })
+      setClosesAt(toLocalDatetime(now))
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Something went wrong")
+    } finally {
+      setSubmitting(false)
+    }
+  }
+
   return (
     <FormStack onSubmit={handleSubmit}>
       <FieldGroup>
@@ -121,7 +165,6 @@ export function EditTopicForm(props: EditTopicFormProps) {
           <Input
             id="opensAt"
             onChange={(e) => setOpensAt(e.target.value)}
-            required
             type="datetime-local"
             value={opensAt}
           />
@@ -131,7 +174,6 @@ export function EditTopicForm(props: EditTopicFormProps) {
           <Input
             id="closesAt"
             onChange={(e) => setClosesAt(e.target.value)}
-            required
             type="datetime-local"
             value={closesAt}
           />
@@ -154,6 +196,16 @@ export function EditTopicForm(props: EditTopicFormProps) {
       {error && <FieldError role="alert">{error}</FieldError>}
       <FormActions>
         <DeleteTopicButton topicId={props.topic.id} />
+        {!opensAt && !closesAt && (
+          <Button disabled={submitting} onClick={handleOpenNow} type="button">
+            {submitting ? "Opening\u2026" : "Open now"}
+          </Button>
+        )}
+        {opensAt && !closesAt && (
+          <Button disabled={submitting} onClick={handleCloseNow} type="button">
+            {submitting ? "Closing\u2026" : "Close now"}
+          </Button>
+        )}
         <Button disabled={submitting} type="submit">
           {submitting ? "Saving\u2026" : "Update topic"}
         </Button>
