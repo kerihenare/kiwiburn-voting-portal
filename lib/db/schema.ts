@@ -50,7 +50,7 @@ export const verification = pgTable("verification", {
 export const memberLists = pgTable("member_lists", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   deletedAt: timestamp("deleted_at"),
-  deletedBy: text("deleted_by").references(() => user.id),
+  deletedBy: uuid("deleted_by").references(() => user.id),
   description: text("description"),
   id: uuidv7pk(),
   name: text("name").notNull(),
@@ -80,7 +80,7 @@ export const topics = pgTable(
     closesAt: timestamp("closes_at").notNull(),
     createdAt: timestamp("created_at").notNull().defaultNow(),
     deletedAt: timestamp("deleted_at"),
-    deletedBy: text("deleted_by").references(() => user.id),
+    deletedBy: uuid("deleted_by").references(() => user.id),
     description: text("description"),
     id: uuidv7pk(),
     isActive: boolean("is_active").notNull().default(false),

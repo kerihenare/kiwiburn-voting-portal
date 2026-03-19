@@ -33,12 +33,13 @@ export default async function VotePage(props: VotePageProps) {
   let eligible = false
   let results = { noCount: 0, totalVotes: 0, yesCount: 0 }
 
-  if (session) {
+  if (session?.user.id) {
     const [voteResult, eligibility, voteResults] = await Promise.all([
       getUserVoteForTopic(topicId, session.user.id),
       checkEligibility(topic.memberListId, session.user.id),
       getVoteResults(topicId),
     ])
+
     userVote = voteResult
     eligible = eligibility.eligible
     results = voteResults

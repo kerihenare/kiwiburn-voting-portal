@@ -1,15 +1,10 @@
 import { Flame } from "lucide-react"
-import { TopicCard } from "@/components/topic-card/topic-card"
-import { getTopicsWithCounts, getUserVotes } from "@/lib/db/queries"
+import { TopicList } from "@/components/topic-list/topic-list"
 import { glide } from "@/lib/glidepath"
 import { getSession } from "@/lib/session"
 
 export default async function HomePage() {
-  const [session, topics] = await Promise.all([
-    getSession(),
-    getTopicsWithCounts(),
-  ])
-  const userVotes = session ? await getUserVotes(session.user.id) : {}
+  const session = await getSession()
 
   return (
     <PageContent>
@@ -26,28 +21,10 @@ export default async function HomePage() {
         </HeroSubtitle>
       </HeroSection>
 
-      <TopicList>
-        {topics.length === 0 ? (
-          <EmptyMessage>No voting topics yet</EmptyMessage>
-        ) : (
-          topics.map((topic) => (
-            <TopicCard
-              key={topic.id}
-              topic={topic}
-              userVote={session ? (userVotes[topic.id] ?? null) : undefined}
-            />
-          ))
-        )}
-      </TopicList>
+      <TopicList userId={session?.user.id ?? null} />
     </PageContent>
   )
 }
-
-const EmptyMessage = glide("p", {
-  color: "text-muted-foreground",
-  paddingY: "py-12",
-  textAlign: "text-center",
-})
 
 const HeroSection = glide("section", {
   marginBottom: "mb-8",
@@ -83,9 +60,5 @@ const IconRow = glide("div", {
 })
 
 const PageContent = glide("div", {
-  other: "space-y-6",
-})
-
-const TopicList = glide("div", {
   other: "space-y-6",
 })

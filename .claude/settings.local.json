@@ -51,7 +51,8 @@
       "Bash(do echo:*)",
       "Read(//Users/kerihenare/Projects/kiwiburn/voting-portal/**)",
       "Bash(done)",
-      "Bash(find /Users/kerihenare/Projects/kiwiburn/voting-portal/lib/actions -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))"
+      "Bash(find /Users/kerihenare/Projects/kiwiburn/voting-portal/lib/actions -type f \\\\\\(-name *.ts -o -name *.tsx \\\\\\))",
+      "Bash(PGPASSWORD=kiwiburn psql -h localhost -p 6769 -U kiwiburn -d voting_portal -c \"DROP DATABASE IF EXISTS voting_portal_test;\")"
     ]
   }
 }

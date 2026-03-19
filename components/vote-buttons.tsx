@@ -7,8 +7,8 @@ import { castVote } from "@/lib/actions/votes"
 import { glide } from "@/lib/glidepath"
 
 interface VoteButtonsProps {
-  topicId: string
   currentVote: string | null
+  topicId: string
 }
 
 export function VoteButtons(props: VoteButtonsProps) {
@@ -31,11 +31,10 @@ export function VoteButtons(props: VoteButtonsProps) {
       <ButtonRow>
         <Button
           aria-label="Vote yes"
-          className={`flex-1 h-12 text-lg font-bold ${
-            props.currentVote === "yes"
+          className={`flex-1 h-12 text-lg font-bold ${props.currentVote === "yes"
               ? "bg-green-600 hover:bg-green-700 ring-2 ring-green-600 ring-offset-2 dark:ring-offset-background"
               : "hover:bg-green-50 hover:text-green-700 hover:border-green-300 dark:hover:bg-green-950 dark:hover:text-green-400 dark:hover:border-green-700"
-          }`}
+            }`}
           disabled={submitting !== null}
           onClick={() => handleVote("yes")}
           variant={props.currentVote === "yes" ? "default" : "outline"}
@@ -44,11 +43,10 @@ export function VoteButtons(props: VoteButtonsProps) {
         </Button>
         <Button
           aria-label="Vote no"
-          className={`flex-1 h-12 text-lg font-bold ${
-            props.currentVote === "no"
+          className={`flex-1 h-12 text-lg font-bold ${props.currentVote === "no"
               ? "bg-red-600 hover:bg-red-700 ring-2 ring-red-600 ring-offset-2 dark:ring-offset-background"
               : "hover:bg-red-50 hover:text-red-700 hover:border-red-300 dark:hover:bg-red-950 dark:hover:text-red-400 dark:hover:border-red-700"
-          }`}
+            }`}
           disabled={submitting !== null}
           onClick={() => handleVote("no")}
           variant={props.currentVote === "no" ? "default" : "outline"}
