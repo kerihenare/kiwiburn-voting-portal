@@ -115,6 +115,16 @@ describe("createTopic", () => {
       expect.objectContaining({ isActive: true }),
     )
   })
+
+  it("creates topic with null dates when not provided", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    const { opensAt, closesAt, ...inputWithoutDates } = validTopicInput
+    await createTopic(inputWithoutDates)
+
+    expect(mockDb.values).toHaveBeenCalledWith(
+      expect.objectContaining({ closesAt: null, opensAt: null }),
+    )
+  })
 })
 
 describe("updateTopic", () => {
@@ -185,6 +195,16 @@ describe("updateTopic", () => {
 
     expect(mockDb.set).toHaveBeenCalledWith(
       expect.objectContaining({ isActive: true }),
+    )
+  })
+
+  it("updates topic with null dates when not provided", async () => {
+    mockGetSession.mockResolvedValue(adminSession)
+    const { opensAt, closesAt, ...inputWithoutDates } = validTopicInput
+    await updateTopic(topicId, inputWithoutDates)
+
+    expect(mockDb.set).toHaveBeenCalledWith(
+      expect.objectContaining({ closesAt: null, opensAt: null }),
     )
   })
 })

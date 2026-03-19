@@ -11,19 +11,19 @@ export async function createTopic(input: {
   title: string
   description?: string
   memberListId: string
-  opensAt: string
-  closesAt: string
+  opensAt?: string
+  closesAt?: string
   isActive?: boolean
 }) {
   await requireActionAdmin()
   const parsed = createTopicSchema.parse(input)
 
   await db.insert(topics).values({
-    closesAt: new Date(parsed.closesAt),
+    closesAt: parsed.closesAt ? new Date(parsed.closesAt) : null,
     description: parsed.description ?? null,
     isActive: parsed.isActive ?? false,
     memberListId: parsed.memberListId,
-    opensAt: new Date(parsed.opensAt),
+    opensAt: parsed.opensAt ? new Date(parsed.opensAt) : null,
     title: parsed.title,
   })
 
@@ -38,8 +38,8 @@ export async function updateTopic(
     title: string
     description?: string
     memberListId: string
-    opensAt: string
-    closesAt: string
+    opensAt?: string
+    closesAt?: string
     isActive?: boolean
   },
 ) {
@@ -50,11 +50,11 @@ export async function updateTopic(
   await db
     .update(topics)
     .set({
-      closesAt: new Date(parsed.closesAt),
+      closesAt: parsed.closesAt ? new Date(parsed.closesAt) : null,
       description: parsed.description ?? null,
       isActive: parsed.isActive ?? false,
       memberListId: parsed.memberListId,
-      opensAt: new Date(parsed.opensAt),
+      opensAt: parsed.opensAt ? new Date(parsed.opensAt) : null,
       title: parsed.title,
       updatedAt: new Date(),
     })
