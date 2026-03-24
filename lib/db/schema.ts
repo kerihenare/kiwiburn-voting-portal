@@ -27,7 +27,7 @@ export const user = pgTable("user", {
 export const session = pgTable("session", {
   createdAt: timestamp("created_at").notNull().defaultNow(),
   expiresAt: timestamp("expires_at").notNull(),
-  id: uuidv7pk(),
+  id: text("id").primaryKey(),
   ipAddress: text("ip_address"),
   token: text("token").unique().notNull(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),

@@ -1,3 +1,4 @@
+import { connection } from "next/server"
 import { headers } from "next/headers"
 import { cache } from "react"
 import { auth } from "@/lib/auth"
@@ -7,6 +8,7 @@ import { auth } from "@/lib/auth"
  * calls within a single React server render pass (layout + page + components).
  */
 export const getSession = cache(async () => {
+  await connection()
   try {
     return await auth.api.getSession({ headers: await headers() })
   } catch {
