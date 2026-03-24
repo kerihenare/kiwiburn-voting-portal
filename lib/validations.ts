@@ -12,7 +12,7 @@ export const createTopicSchema = z
     description: z.string().max(5000, "Description is too long").optional(),
     isActive: z.boolean().optional(),
     memberListId: z
-      .string({ required_error: "Member list is required" })
+      .string({ error: "Member list is required" })
       .uuid(),
     opensAt: z.string().optional(),
     title: z.string().min(1, "Title is required").max(200, "Title is too long"),

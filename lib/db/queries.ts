@@ -111,6 +111,10 @@ export async function getUserVoteForTopic(topicId: string, userId: string) {
 }
 
 export async function checkEligibility(memberListId: string, userId: string) {
+  if (process.env.OPEN_VOTING === "true") {
+    return { eligible: true, reason: null }
+  }
+
   const userResult = await db
     .select({ email: user.email })
     .from(user)
@@ -187,6 +191,10 @@ export async function getMemberList(id: string) {
 }
 
 export async function isEmailInAnyMemberList(email: string) {
+  if (process.env.OPEN_VOTING === "true") {
+    return true
+  }
+
   const result = await db
     .select({ id: members.id })
     .from(members)
